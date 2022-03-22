@@ -36,6 +36,12 @@ ENT.MeleeAttackAngleRadius = 70
 ENT.MeleeAttackDamageAngleRadius = 70
 ENT.TimeUntilMeleeAttackDamage = 0.7
 ---------------------------------------------------------------------------------------------------------------------------------------------
+ENT.HasGrenadeAttack = true
+ENT.GrenadeAttackEntity = "obj_vj_bbohg_thealyx_emp"
+ENT.AnimTbl_GrenadeAttack = {"ThrowItem"}
+ENT.ThrowGrenadeChance = 2
+ENT.TimeUntilGrenadeIsReleased = 1.05
+---------------------------------------------------------------------------------------------------------------------------------------------
 ENT.FootStepTimeRun = 0.25
 ENT.FootStepTimeWalk = 0.5
 

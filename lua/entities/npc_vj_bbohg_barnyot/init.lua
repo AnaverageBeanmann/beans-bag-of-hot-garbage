@@ -155,7 +155,8 @@ ENT.SoundTbl_MeleeAttack = {"physics/body/body_medium_impact_hard1.wav",
 	"physics/body/body_medium_impact_hard5.wav",
 	"physics/body/body_medium_impact_hard6.wav"}
 ENT.SoundTbl_MeleeAttackMiss = {"weapons/iceaxe/iceaxe_swing1.wav"}
-ENT.SoundTbl_BeforeRangeAttack = {}
+ENT.SoundTbl_BeforeRangeAttack = {"npc/tossers/barnyot/dolphin.mp3",
+	"npc/tossers/barnyot/fu.mp3"}
 ENT.SoundTbl_OnKilledEnemy = {"vo/k_lab/ba_sarcastic03.wav",
 	"vo/k_lab/ba_whoops.wav",
 	"vo/trainyard/ba_sorryscare.wav",
@@ -367,10 +368,23 @@ function ENT:MultipleMeleeAttacks()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnRangeAttack_BeforeStartTimer(seed)
-	if math.random(1,155) == 1 then
-		self.RangeAttackEntityToSpawn = "obj_vj_bbohg_cola"
+	if math.random(1,15) == 1 then
+		self.HasBeforeRangeAttackSound = true
+		self.RangeAttackEntityToSpawn = "obj_vj_bbohg_filing_cabinet"
 	else
+		self.HasBeforeRangeAttackSound = false
 		self.RangeAttackEntityToSpawn = "obj_vj_bbohg_thatbeerheowesyou"
+	end
+
+	if math.random(1,155) == 1 then
+		local TheFunny = math.random(1,3)
+		if TheFunny == 1 then
+			self.RangeAttackEntityToSpawn = "obj_vj_bbohg_cola"
+		elseif TheFunny == 2 then
+			self.RangeAttackEntityToSpawn = "obj_vj_bbohg_pepsi"
+		elseif TheFunny == 3 then
+			self.RangeAttackEntityToSpawn = "obj_vj_bbohg_arbys_sandwich"
+		end
 	end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------

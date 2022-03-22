@@ -974,7 +974,14 @@ function ENT:CustomOnRangeAttack_BeforeStartTimer(seed)
 		self.RangeAttackEntityToSpawn = "obj_vj_bbohg_ammo"
 	end
 	if math.random(1,150) == 1 then
-		self.RangeAttackEntityToSpawn = "obj_vj_bbohg_cola"
+		local TheFunny = math.random(1,3)
+		if TheFunny == 1 then
+			self.RangeAttackEntityToSpawn = "obj_vj_bbohg_cola"
+		elseif TheFunny == 2 then
+			self.RangeAttackEntityToSpawn = "obj_vj_bbohg_pepsi"
+		elseif TheFunny == 3 then
+			self.RangeAttackEntityToSpawn = "obj_vj_bbohg_arbys_sandwich"
+		end
 	end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
