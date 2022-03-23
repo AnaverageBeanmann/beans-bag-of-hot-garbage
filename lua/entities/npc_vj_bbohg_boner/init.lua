@@ -22,16 +22,6 @@ ENT.AnimTbl_Medic_GiveHealth = {"heal"}
 ENT.Medic_TimeUntilHeal = 1.20
 ENT.Medic_HealthAmount = 25
 ENT.Medic_SpawnPropOnHealModel = "models/props_junk/garbage_milkcarton002a.mdl"
--- ENT.Medic_SpawnPropOnHealAttachment = "anim_attachment_RH"
-
-		-- self.IsMedicSNPC = true
-		-- self.AnimTbl_Medic_GiveHealth = {"cheer2"}
-		-- self.Medic_TimeUntilHeal = 2.02
-		-- self.Medic_CheckDistance = 1000
-		-- self.Medic_HealDistance = 150
-		-- self.Medic_HealthAmount = 25
-		-- self.Medic_NextHealTime = VJ_Set(5, 10)
-		-- self.Medic_SpawnPropOnHeal = false
 ---------------------------------------------------------------------------------------------------------------------------------------------
 ENT.Bleeds = false
 ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -200,6 +190,7 @@ function ENT:CustomOnInitialize()
 			self.Weapon:AddEffects(EF_BONEMERGE)
 		
 			self.MeleeAttackDamage = math.Rand(10,15)
+			self.MeleeAttackDamageType = DMG_SLASH
 			self.SoundTbl_MeleeAttack = {"physics/flesh/flesh_impact_bullet1.wav",
 				"physics/flesh/flesh_impact_bullet2.wav",
 				"physics/flesh/flesh_impact_bullet3.wav",
