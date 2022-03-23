@@ -40,6 +40,16 @@ ENT.MeleeAttackDamageDistance = 60
 ENT.MeleeAttackAngleRadius = 70
 ENT.MeleeAttackDamageAngleRadius = 70
 ---------------------------------------------------------------------------------------------------------------------------------------------
+ENT.HasRangeAttack = false
+ENT.RangeAttackEntityToSpawn = "obj_vj_bbohg_lostsoul"
+ENT.AnimTbl_RangeAttack = {"cheer2"}
+ENT.RangeToMeleeDistance = 200
+ENT.TimeUntilRangeAttackProjectileRelease = 2
+ENT.NextRangeAttackTime = 5
+ENT.NextRangeAttackTime_DoRand = 15
+ENT.RangeUseAttachmentForPos = true
+ENT.RangeUseAttachmentForPosID = "chest"
+---------------------------------------------------------------------------------------------------------------------------------------------
 ENT.HasLeapAttack = false
 ENT.LeapAttackDamage = math.random(10,15)
 ENT.LeapAttackDamageType = DMG_CLUB
@@ -131,6 +141,7 @@ function ENT:CustomOnInitialize()
 	if self.SkelllyType == 3 then
 		self:SetSkin(3)
 		self.Reviver = true
+		self.HasRangeAttack = true
 		self.IsMedicSNPC = true
 		
 		
@@ -758,6 +769,16 @@ self.SoundTbl_Death = {"npc/boner/reviver/vo/soldier_autocappedcontrolpoint02.mp
 			"npc/boner/knight/death (2).wav",
 			"npc/boner/knight/death (3).wav"}
 			
+			self.HasRangeAttack = true
+			self.RangeAttackEntityToSpawn = "obj_vj_bbohg_b0nerbomb"
+			self.RangeDistance = 750
+			self.NextRangeAttackTime = 15
+			self.NextRangeAttackTime_DoRand = 35
+			self.AnimTbl_RangeAttack = {"ThrowItem"}
+			self.TimeUntilRangeAttackProjectileRelease = 1.05
+			self.RangeUseAttachmentForPosID = "anim_attachment_LH"
+
+			
 		local Weapon = math.random(1,3)
 		if Weapon == 1 then
 			self.Weapon = ents.Create("prop_physics")
@@ -866,7 +887,7 @@ end
 function ENT:CustomOnThink_AIEnabled()
 	if self.Reviver == false then return end
 	for _,v in ipairs(ents.FindInSphere(self:GetPos(),1000)) do
-		if self.infect == true && self.MoveToCorpose == false && self.MeleeAttacking == false then
+		if self.infect == true && self.MoveToCorpose == false && self.MeleeAttacking == false && self.RangeAttacking == false then
 			if IsValid(v) && v:GetClass() == "prop_ragdoll" &&
 			v:GetClass() != "prop_physics" &&
 			v:GetModel() != "models/combine_strider.mdl" &&
@@ -904,7 +925,7 @@ function ENT:CustomOnThink_AIEnabled()
 			end
 		end
 	end
-	if self.infect2 == true && self.MeleeAttacking == false then 
+	if self.infect2 == true && self.MeleeAttacking == false && self.RangeAttacking == false  then 
 		for _,v in ipairs(ents.FindInSphere(self:GetPos(),20)) do
 			if IsValid(v) &&
 			v:GetClass() == "prop_ragdoll" &&
@@ -935,7 +956,7 @@ function ENT:CustomOnThink_AIEnabled()
 			v:GetModel() != "models/props_c17/furnituremattress001a.mdl" &&
 			v:GetModel() != "models/dog.mdl" then
 			
-			self:VJ_ACT_PLAYACTIVITY("cheer2",true,4.6999999019504,false)
+			self:VJ_ACT_PLAYACTIVITY("cheer2", true, false, false)
 			
 			ParticleEffectAttach("generic_smoke", PATTACH_POINT_FOLLOW, v, 0)
 			for i = 0,v:GetBoneCount() -1 do
@@ -1012,7 +1033,7 @@ function ENT:CustomOnThink_AIEnabled()
 				self.sworm13:SetPos(v:GetPos() + self:GetUp()*10)
 				self.sworm13:SetAngles(self:GetAngles())
 				self.sworm13:Spawn()
-				self.sworm13:VJ_ACT_PLAYACTIVITY("zombie_slump_rise_01",true,2.8,false)
+				self.sworm13:VJ_ACT_PLAYACTIVITY("zombie_slump_rise_01", true, false, false)
 				self.sworm13:Activate()
 				self.sworm13:SetOwner(self)
 				
@@ -1111,6 +1132,15 @@ function ENT:MultipleMeleeAttacks()
 		self.MeleeAttackKnockBack_Up1 = 35
 		self.MeleeAttackKnockBack_Up2 = 45
 		
+	end
+end
+-------------------------------------------------------------------------------------------------------------------
+function ENT:RangeAttackCode_GetShootPos(projectile)
+	if self.SkelllyType == 3 then
+	return self:CalculateProjectile("Line", self:GetAttachment(self:LookupAttachment(self.RangeUseAttachmentForPosID)).Pos, self:GetEnemy():GetPos() + self:GetEnemy():OBBCenter(), 500)
+	end
+	if self.SkelllyType == 1 then
+	return self:CalculateProjectile("Curve", self:GetAttachment(self:LookupAttachment(self.RangeUseAttachmentForPosID)).Pos, self:GetEnemy():GetPos() + self:GetEnemy():OBBCenter(), 1500)
 	end
 end
 -------------------------------------------------------------------------------------------------------------------
