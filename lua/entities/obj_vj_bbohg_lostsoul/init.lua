@@ -35,10 +35,18 @@ ENT.SoundTbl_OnRemove = {"fx/lostsoul_explode.mp3"}
 	
 ENT.NextSoundTime_Idle = VJ_Set(0.001,0.001)
 ENT.StartupSoundLevel = 90
-ENT.IdleSoundLevel = 70
-ENT.OnRemoveSoundLevel = 75
+ENT.IdleSoundLevel = 90
+ENT.OnRemoveSoundLevel = 90
 
 ENT.StartupSoundPitch = VJ_Set(85, 90)
+ENT.IdleSoundPitch = VJ_Set(100, 100)
+---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:CustomOnPreInitialize()
+	if math.random(1,10) == 1 then
+		self.NextSoundTime_Idle = VJ_Set(0.0001,0.0001)
+		self.SoundTbl_Idle = {"fx/rockefeller.mp3"}
+	end
+end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnInitialize()
 	ParticleEffectAttach("fire_small_01", PATTACH_ABSORIGIN_FOLLOW, self, 0)
@@ -87,7 +95,7 @@ function ENT:DeathEffects()
 	//effectData:SetScale( 500 )
 	util.Effect( "HelicopterMegaBomb", effectData )
 	util.Effect( "ThumperDust", effectData )
-	util.Effect( "Explosion", effectData )
+	-- util.Effect( "Explosion", effectData )
 	util.Effect( "VJ_Small_Explosion1", effectData )
 
 	local ExplosionLight1 = ents.Create("light_dynamic")
