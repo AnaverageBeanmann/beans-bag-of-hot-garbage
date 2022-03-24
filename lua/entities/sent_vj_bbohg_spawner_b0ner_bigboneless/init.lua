@@ -10,10 +10,10 @@ ENT.Model = {}
 ENT.EntitiesToSpawn = {}
 		ENT.EntitiesToSpawn = {
 			{SpawnPosition = {vForward=0, vRight=0, vUp=10}, Entities = {"npc_vj_bbohg_boner:1"}},
-			{SpawnPosition = {vForward=-50, vRight=50, vUp=10}, Entities = {"npc_vj_bbohg_boner:1"}},
-			{SpawnPosition = {vForward=-50, vRight=-50, vUp=10}, Entities = {"npc_vj_bbohg_boner:1"}},
-			{SpawnPosition = {vForward=50, vRight=50, vUp=10}, Entities = {"npc_vj_bbohg_boner:1"}},
-			{SpawnPosition = {vForward=50, vRight=-50, vUp=10}, Entities = {"npc_vj_bbohg_boner:1"}},
+			{SpawnPosition = {vForward=-30, vRight=30, vUp=10}, Entities = {"npc_vj_bbohg_boner:1"}},
+			{SpawnPosition = {vForward=-30, vRight=-30, vUp=10}, Entities = {"npc_vj_bbohg_boner:1"}},
+			{SpawnPosition = {vForward=30, vRight=30, vUp=10}, Entities = {"npc_vj_bbohg_boner:1"}},
+			{SpawnPosition = {vForward=30, vRight=-30, vUp=10}, Entities = {"npc_vj_bbohg_boner:1"}},
 		}
 		Entities = {"npc_vj_bbohg_boner:1"}
 		SpawnPosition = {vForward=0, vRight=0, vUp=10}

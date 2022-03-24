@@ -8,10 +8,6 @@ include('shared.lua')
 ENT.Model = {}
 ENT.EntitiesToSpawn = {
 	{SpawnPosition = {vForward=0, vRight=0, vUp=10}, Entities = {"npc_vj_bbohg_hobo:1"}},
-	{SpawnPosition = {vForward=30, vRight=30, vUp=10}, Entities = {"npc_vj_bbohg_hobo:1"}},
-	{SpawnPosition = {vForward=30, vRight=-30, vUp=10}, Entities = {"npc_vj_bbohg_hobo:1"}},
-	{SpawnPosition = {vForward=-30, vRight=30, vUp=10}, Entities = {"npc_vj_bbohg_hobo:1"}},
-	{SpawnPosition = {vForward=-30, vRight=-30, vUp=10}, Entities = {"npc_vj_bbohg_hobo:1"}},
 }
 /*-----------------------------------------------
 	*** Copyright (c) 2012-2019 by DrVrej, All rights reserved. ***
