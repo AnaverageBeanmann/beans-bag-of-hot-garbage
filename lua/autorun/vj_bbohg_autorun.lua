@@ -58,8 +58,8 @@ if VJExists == true then
 		-- VJ.AddNPC("Explosive Zombie","npc_vj_bbohg_exploder",vCat)
 		-- VJ.AddNPC("Explosive Fast Zombie","npc_vj_bbohg_exploder_fast",vCat)
 		-- VJ.AddNPC("Explosive Poison Zombie","npc_vj_bbohg_exploder_poison",vCat)
-		VJ.AddNPC("le bebe","npc_vj_bbohg_lebebe",vCat)
-		VJ.AddNPC("Giga Gore Child","npc_vj_bbohg_gorechild_giga",vCat)
+		-- VJ.AddNPC("le bebe","npc_vj_bbohg_lebebe",vCat)
+		-- VJ.AddNPC("Giga Gore Child","npc_vj_bbohg_gorechild_giga",vCat)
 	
 	-- Faction Unaffiliated
 		VJ.AddNPC("Flemming","npc_vj_bbohg_flemming",vCat)
@@ -67,7 +67,7 @@ if VJExists == true then
 		VJ.AddNPC("Mark","npc_vj_bbohg_mark",vCat)
 		-- VJ.AddNPC("ERR","npc_vj_bbohg_error",vCat)
 		-- VJ.AddNPC("The_","npc_vj_bbohg_the",vCat)
-		VJ.AddNPC("Grampa","npc_vj_bbohg_grampa",vCat)
+		-- VJ.AddNPC("Grampa","npc_vj_bbohg_grampa",vCat)
 		VJ.AddNPC("The Rock","npc_vj_bbohg_therock",vCat)
 		-- VJ.AddNPC("Dr. Hax","npc_vj_bbohg_hax",vCat)
 		VJ.AddNPC("Griefer Grigori","npc_vj_bbohg_griggs",vCat)
