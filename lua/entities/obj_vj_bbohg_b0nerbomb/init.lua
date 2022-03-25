@@ -61,6 +61,19 @@ local defAngle = Angle(0, 0, 0)
 local vecZ4 = Vector(0, 0, 4)
 local vezZ100 = Vector(0, 0, 100)
 ---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:CustomOnPhysicsCollide(data, phys)
+	local getVel = phys:GetVelocity()
+	local curVelSpeed = getVel:Length()
+	//print(curVelSpeed)
+	if curVelSpeed > 500 then -- Or else it will go flying!
+		phys:SetVelocity(getVel * 0.1)
+	end
+	
+	if curVelSpeed > 100 then -- If the grenade is going faster than 100, then play the touch sound
+		self:OnCollideSoundCode()
+	end
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:DeathEffects()
 	local selfPos = self:GetPos()
 	

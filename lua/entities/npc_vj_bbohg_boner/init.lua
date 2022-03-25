@@ -116,6 +116,7 @@ ENT.KnightWeapon = 0
 -- 2 = Pipe
 -- 3 = Stunstick
 ENT.Reviver = false
+ENT.CanReviveStuff = true
 
 ENT.infect = true
 ENT.infect2 = false
@@ -134,6 +135,9 @@ function ENT:CustomOnPreInitialize()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnInitialize()
+	if GetConVarNumber("vj_BBOHG_Gibs") == 0 then
+		self.AllowedToGib = false
+	end
 	if GetConVarNumber("vj_BBOHG_NoGodsNoMasters") == 1 then
 		self.VJ_NPC_Class = {"CLASS_BBOHG"}
 		self.FriendsWithAllPlayerAllies = false
@@ -1169,7 +1173,7 @@ function ENT:GetSightDirection()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnThink_AIEnabled()
-	if self.Reviver == false then return end
+	if self.CanReviveStuff == false or self.Reviver == false then return end
 	for _,v in ipairs(ents.FindInSphere(self:GetPos(),1000)) do
 		if self.infect == true && self.MoveToCorpose == false && self.MeleeAttacking == false && self.RangeAttacking == false then
 			if IsValid(v) && v:GetClass() == "prop_ragdoll" &&
@@ -1319,7 +1323,7 @@ function ENT:CustomOnThink_AIEnabled()
 				self.sworm13:Spawn()
 				self.sworm13:VJ_ACT_PLAYACTIVITY("zombie_slump_rise_01", true, false, false)
 				self.sworm13:Activate()
-				self.sworm13:SetOwner(self)
+				-- self.sworm13:SetOwner(self)
 				
 				for i = 0,self.sworm13:GetBoneCount() -1 do
 					ParticleEffect("vortigaunt_glow_beam_cp1",self.sworm13:GetBonePosition(i),Angle(0,0,0),nil)
@@ -1437,6 +1441,7 @@ end
 -------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnInitialKilled(dmginfo, hitgroup)
     self:AddFlags(FL_NOTARGET)
+	self.CanReviveStuff = false
 end
 -------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnDeath_AfterCorpseSpawned(dmginfo,hitgroup,GetCorpse)
