@@ -82,7 +82,7 @@ if VJExists == true then
 	VJ.AddNPC("b0ne(r) spawner","sent_vj_bbohg_spawner_b0ner",vCat2)
 	VJ.AddNPC("b0ne(r) spawner (big boneless)","sent_vj_bbohg_spawner_b0ner_bigboneless",vCat2)
 	-- VJ.AddNPC("Zombknee Spawner","sent_vj_bbohg_spawner_zombknee",vCat2)
-	-- VJ.AddNPC("Flemming Spawner","sent_vj_bbohg_spawner_flemming",vCat2)
+	VJ.AddNPC("Flemming Spawner","sent_vj_bbohg_spawner_flemming",vCat2)
 	VJ.AddNPC("Mark Spawner","sent_vj_bbohg_spawner_mark",vCat2)
 	VJ.AddNPC("Fully Loaded Spawner","sent_vj_bbohg_spawner_fl",vCat2)
 	
@@ -92,11 +92,12 @@ if VJExists == true then
 	VJ.AddNPC("b0ne(r) spawner (single)","sent_vj_bbohg_spawner_b0ner_single",vCat2)
 	VJ.AddNPC("b0ne(r) spawner (big boneless, single)","sent_vj_bbohg_spawner_b0ner_bigboneless_single",vCat2)
 	-- VJ.AddNPC("Zombknee Spawner (Single)","sent_vj_bbohg_spawner_zombknee_single",vCat2)
-	-- VJ.AddNPC("Flemming Spawner (Single)","sent_vj_bbohg_spawner_flemming_single",vCat2)
+	VJ.AddNPC("Flemming Spawner (Single)","sent_vj_bbohg_spawner_flemming_single",vCat2)
 	VJ.AddNPC("Mark Spawner (Single)","sent_vj_bbohg_spawner_mark_single",vCat2)
 	VJ.AddNPC("Fully Loaded Spawner (Single)","sent_vj_bbohg_spawner_fl_single",vCat2)
 	
-	VJ.AddNPC("Random Tosser","sent_vj_bbohg_randomtosser",vCat2)
+	VJ.AddNPC("Random Tosser","sent_vj_bbohg_random_tosser",vCat2)
+	-- VJ.AddNPC("Random Pizza Gang Member","sent_vj_bbohg_random_pizza",vCat2)
 	
 	-- VJ.AddNPC("Worshiper of Pii'zza Spawner","sent_vj_bbohg_piizaaspawner",vCat2)
 	-- VJ.AddNPC("Worshiper of Pii'zza Spawner (Single)","sent_vj_bbohg_piizaaspawner_single",vCat2)
