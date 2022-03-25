@@ -13,15 +13,11 @@ ENT.VJC_Data = {
 	FirstP_Bone = "ValveBiped.Bip01_Spine4",
 	FirstP_Offset = Vector(0, 0, 5),
 }
-
-
 ---------------------------------------------------------------------------------------------------------------------------------------------
 ENT.VJ_NPC_Class = {"CLASS_HOBO"} 
 ---------------------------------------------------------------------------------------------------------------------------------------------
-
 ENT.BloodColor = "Red"
 ---------------------------------------------------------------------------------------------------------------------------------------------
-
 ENT.CanFlinch = 1
 ENT.FlinchChance = 3
 ENT.AnimTbl_Flinch = {} 
@@ -53,7 +49,6 @@ ENT.NextRangeAttackTime_DoRand = 15
 ENT.RangeUseAttachmentForPos = true
 ENT.RangeUseAttachmentForPosID = "anim_attachment_RH"
 ---------------------------------------------------------------------------------------------------------------------------------------------
-
 ENT.FootStepTimeRun = 0.25
 ENT.FootStepTimeWalk = 0.5
 
@@ -104,6 +99,13 @@ ENT.SoundTbl_RangeAttack = {"npc/zombie/claw_miss2.wav",
 	"npc/zombie/claw_miss1.wav"}
 -------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnInitialize()
+	if GetConVarNumber("vj_BBOHG_Gibs") == 0 then
+		self.AllowedToGib = false
+	end
+	if GetConVarNumber("vj_BBOHG_NoGodsNoMasters") == 1 then
+		self.VJ_NPC_Class = {"CLASS_BBOHG"}
+		self.FriendsWithAllPlayerAllies = false
+	end
 	self.SoundTbl_CombatIdle = {"npc/hobo/voice1/cidle_1.mp3",
 		"npc/hobo/voice1/cidle_2.mp3",
 		"npc/hobo/voice1/cidle_3.mp3",
@@ -144,9 +146,6 @@ function ENT:CustomOnInitialize()
 		"npc/hobo/voice1/pain_2.mp3",
 		"npc/hobo/voice1/pain_3.mp3",
 		"npc/hobo/voice1/pain_4.mp3",
-		"npc/hobo/voice1/cant_reach_10.mp3",
-		"npc/hobo/voice1/cant_reach_7.mp3",
-		"npc/hobo/voice1/cant_reach_8.mp3",
 		"npc/hobo/voice1/death_2.mp3"}
 	self.SoundTbl_Death = {"npc/hobo/voice1/death_1.mp3",
 		"npc/hobo/voice1/death_2.mp3",
@@ -231,8 +230,7 @@ function ENT:CustomOnInitialize()
 			"npc/hobo/voice2/pain_7.mp3",
 			"npc/hobo/voice2/pain_8.mp3",
 			"npc/hobo/voice2/pain_9.mp3",
-			"npc/hobo/voice2/pain_10.mp3",
-			"npc/hobo/voice2/pain_11.mp3"}
+			"npc/hobo/voice2/pain_10.mp3"}
 		self.SoundTbl_Pain = {"npc/hobo/voice2/pain_1.mp3",
 			"npc/hobo/voice2/pain_2.mp3",
 			"npc/hobo/voice2/pain_3.mp3",
@@ -253,8 +251,7 @@ function ENT:CustomOnInitialize()
 			"npc/hobo/voice2/pain_7.mp3",
 			"npc/hobo/voice2/pain_8.mp3",
 			"npc/hobo/voice2/pain_9.mp3",
-			"npc/hobo/voice2/pain_10.mp3",
-			"npc/hobo/voice2/pain_11.mp3"}
+			"npc/hobo/voice2/pain_10.mp3"}
 		self.SoundTbl_IdleDialogue = {"npc/hobo/voice2/cidle_1.mp3",
 			"npc/hobo/voice2/cidle_2.mp3",
 			"npc/hobo/voice2/cidle_3.mp3",
@@ -314,13 +311,25 @@ function ENT:CustomOnInitialize()
 			"npc/hobo/voice2/kill_2.mp3",
 			"npc/hobo/voice2/kill_3.mp3"}
 		end
-	elseif VoicePack == 2 then
-		self.SoundTbl_CombatIdle = {"npc/hobo/voice3/ass.mp3",
+	elseif VoicePack == 2 || VoicePack == 5 then
+		self.SoundTbl_CombatIdle = {"npc/hobo/voice3/200poundsofbirdsht.mp3",
+			"npc/hobo/voice3/ass.mp3",
 			"npc/hobo/voice3/banana.mp3",
 			"npc/hobo/voice3/bosshark.mp3",
+			"npc/hobo/voice3/btch (1).mp3",
+			"npc/hobo/voice3/consumeshort.mp3",
+			"npc/hobo/voice3/fyoukid.mp3",
+			"npc/hobo/voice3/georgeforeman.mp3",
+			"npc/hobo/voice3/kickass_ (1).mp3",
+			"npc/hobo/voice3/kissmyass.mp3",
 			"npc/hobo/voice3/laugh (1).mp3",
 			"npc/hobo/voice3/laugh (2).mp3",
 			"npc/hobo/voice3/laugh (3).mp3",
+			"npc/hobo/voice3/machoman.mp3",
+			"npc/hobo/voice3/mfs.mp3",
+			"npc/hobo/voice3/myass.mp3",
+			"npc/hobo/voice3/scotchtape.mp3",
+			"npc/hobo/voice3/waste.mp3",
 			}
 		self.SoundTbl_Idle = {"npc/hobo/voice3/btch (2).mp3",
 			"npc/hobo/voice3/f (5).mp3",
@@ -509,13 +518,20 @@ function ENT:CustomOnInitialize()
 			"npc/hobo/voice3/whatisit.mp3",
 			}
 		self.SoundTbl_CallForHelp = {"npc/hobo/voice3/btch (1).mp3"}
-		self.SoundTbl_BeforeMeleeAttack = {"npc/hobo/voice3/bosshark.mp3",
-			"npc/hobo/voice3/btch (1).mp3",
+		self.SoundTbl_BeforeMeleeAttack = {"npc/hobo/voice3/btch (1).mp3",
 			"npc/hobo/voice3/btch (2).mp3",
 			"npc/hobo/voice3/f (5).mp3",
 			"npc/hobo/voice3/f (6).mp3",
 			"npc/hobo/voice3/f (7).mp3",
+			"npc/hobo/voice3/fyou (3).mp3",
 			"npc/hobo/voice3/kissmyass.mp3",
+			"npc/hobo/voice3/sht (1).mp3",
+			"npc/hobo/voice3/sht (20).mp3",
+			"npc/hobo/voice3/sht (21).mp3",
+			"npc/hobo/voice3/sht (22).mp3",
+			"npc/hobo/voice3/sht (23).mp3",
+			"npc/hobo/voice3/sht (24).mp3",
+			"npc/hobo/voice3/shut (1).mp3",
 			}
 		self.SoundTbl_BeforeRangeAttack = {"npc/hobo/voice3/ass.mp3",
 			"npc/hobo/voice3/btch (1).mp3",
@@ -611,18 +627,88 @@ function ENT:CustomOnInitialize()
 		self.SoundTbl_CallForHelp = {"npc/hobo/voice4/cidle (1).wav",
 			"npc/hobo/voice4/cidle (2).wav",
 			"npc/hobo/voice4/cidle (3).wav"}
-		self.SoundTbl_BeforeMeleeAttack = {"npc/hobo/voice4/cidle (1).wav",
-			"npc/hobo/voice4/cidle (2).wav",
-			"npc/hobo/voice4/cidle (3).wav"}
-		self.SoundTbl_BeforeRangeAttack = {"npc/hobo/voice4/cidle (1).wav",
-			"npc/hobo/voice4/cidle (2).wav",
-			"npc/hobo/voice4/cidle (3).wav"}
+		self.SoundTbl_BeforeMeleeAttack = {"npc/hobo/voice4/attack (1).wav",
+			"npc/hobo/voice4/attack (2).wav",
+			"npc/hobo/voice4/attack (3).wav",
+			"npc/hobo/voice4/attack (4).wav",
+			"npc/hobo/voice4/attack (5).wav",
+			"npc/hobo/voice4/attack (6).wav",
+			"npc/hobo/voice4/attack (7).wav",
+			"npc/hobo/voice4/attack (8).wav",
+			"npc/hobo/voice4/attack (9).wav",
+			"npc/hobo/voice4/attack (10).wav",
+			"npc/hobo/voice4/attack (11).wav"}
+		self.SoundTbl_BeforeRangeAttack = {"npc/hobo/voice4/attack (1).wav",
+			"npc/hobo/voice4/attack (2).wav",
+			"npc/hobo/voice4/attack (3).wav",
+			"npc/hobo/voice4/attack (4).wav",
+			"npc/hobo/voice4/attack (5).wav",
+			"npc/hobo/voice4/attack (6).wav",
+			"npc/hobo/voice4/attack (7).wav",
+			"npc/hobo/voice4/attack (8).wav",
+			"npc/hobo/voice4/attack (9).wav",
+			"npc/hobo/voice4/attack (10).wav",
+			"npc/hobo/voice4/attack (11).wav"}
+	end
+	
+	if math.random(1,10) == 1 then
+	self.SoundTbl_CombatIdle = {"npc/shadowwalk/npc/stalker/stalker_scream1.wav",
+		"npc/shadowwalk/npc/stalker/stalker_scream2.wav",
+		"npc/shadowwalk/npc/stalker/stalker_scream3.wav",	
+		"npc/shadowwalk/npc/stalker/stalker_scream4.wav"}
+	self.SoundTbl_Alert = {"npc/shadowwalk/npc/stalker/stalker_alert1b.wav",	
+		"npc/shadowwalk/npc/stalker/stalker_alert2b.wav",
+		"npc/shadowwalk/npc/stalker/stalker_alert3b.wav"}
+	self.SoundTbl_LostEnemy = {"npc/zombie_poison/pz_alert2.wav",
+		"npc/shadowwalk/npc/stalker/stalker_die2.wav",
+		"npc/shadowwalk/npc/stalker/stalker_scream4.wav"}
+	self.SoundTbl_Pain = {"npc/shadowwalk/npc/stalker/stalker_pain1.wav",
+		"npc/shadowwalk/npc/stalker/stalker_pain2.wav",
+		"npc/shadowwalk/npc/stalker/stalker_pain3.wav"}
+	self.SoundTbl_Death = {"ambient/creatures/town_child_scream1.wav"}
+	self.SoundTbl_Idle = {}
+	self.SoundTbl_OnKilledEnemy = {}
+	self.SoundTbl_IdleDialogue = {}
+	self.SoundTbl_IdleDialogueAnswer = {}
+	self.SoundTbl_Investigate = {}
+	self.SoundTbl_CallForHelp = {}
+	self.SoundTbl_BeforeMeleeAttack = {}
+	self.SoundTbl_BeforeRangeAttack = {}
+		if math.random (1,20) == 1 then
+			self.CombatIdleSoundPitch = VJ_Set(62, 62)
+			self.AlertSoundPitch = VJ_Set(62, 62)
+			self.LostEnemySoundPitch = VJ_Set(62, 62)
+		self.SoundTbl_CombatIdle = {"npc/shadowwalk/vo/episode_1/citadel/al_stalk_pleasestopscreaming01.wav",
+			"npc/shadowwalk/vo/episode_1/citadel/al_stalk_pleasestopscreaming02.wav",
+			"npc/shadowwalk/vo/episode_1/citadel/al_stalk_pleasestopscreaming03.wav",
+			"npc/shadowwalk/vo/episode_1/citadel/al_stalk_pleasestopscreaming04.wav",
+			"npc/shadowwalk/vo/episode_1/citadel/al_stalk_pleasestopscreaming05.wav",
+			"vo/k_lab2/al_optimism.wav",
+			"npc/shadowwalk/vo/episode_1/c17/al_elev_whereselev.wav",
+			"npc/shadowwalk/vo/episode_1/intro/al_wheredoeshethink.wav",
+			"npc/shadowwalk/vo/outland_02/griggs_everywhere.wav",
+			"npc/shadowwalk/vo/outland_11a/silo/kl_silo_wheredata01.wav",
+			"npc/shadowwalk/vo/episode_1/intro/al_cantbelieveit.wav",
+			"npc/shadowwalk/vo/episode_1/npc/alyx/al_deaf_canthearanything.wav",
+			"npc/shadowwalk/vo/episode_1/npc/alyx/al_deaf_canthearyou.wav",
+			"vo/k_lab/ba_cantlook.wav"}
+		self.SoundTbl_Alert = {"vo/citadel/al_bitofit.wav",
+			"npc/shadowwalk/vo/outland_01/intro/al_rbed_notalone.wav"}
+		self.SoundTbl_LostEnemy = {"vo/citadel/al_notagain02.wav",	
+			"npc/shadowwalk/vo/episode_1/npc/alyx/al_light_lost05.wav",
+			"npc/shadowwalk/vo/episode_1/npc/alyx/al_light_lost11.wav",
+			"vo/citadel/al_wonderwhere.wav",	
+			"npc/shadowwalk/vo/outland_12a/launch/al_launch_damnit.wav",	
+			"vo/streetwar/alyx_gate/al_no.wav",	
+			"vo/k_lab/kl_thenwhere.wav"}
+		end
 	end
 
 	if math.random(1,5) == 1 then
 		self.HasWeapon = true
 		self.AnimTbl_MeleeAttack = {"swing"}
 		self.HoboClass = 1
+		self.TimeUntilMeleeAttackDamage = 0.4
 		
 		local Weapon = math.random(1,3)
 		if Weapon == 1 then
