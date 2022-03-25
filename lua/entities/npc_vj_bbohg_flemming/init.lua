@@ -75,9 +75,6 @@ ENT.MeleeAttackDamageAngleRadius = 70
 ENT.FootStepTimeRun = 0.25
 ENT.FootStepTimeWalk = 0.5
 
--- ENT.IdleSoundChance = 15
--- ENT.CombatIdleSoundChance = 15
-
 ENT.GeneralSoundPitch1 = 100
 ENT.GeneralSoundPitch2 = 95
 
@@ -139,9 +136,6 @@ ENT.SoundTbl_Death = {"vo/npc/male01/moan01.wav",
 	"vo/npc/male01/moan04.wav",
 	"vo/npc/male01/moan05.wav"}
 ---------------------------------------------------------------------------------------------------------------------------------------------
-function ENT:CustomOnPreInitialize()
-end
----------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnInitialize()
 	if GetConVarNumber("vj_BBOHG_Gibs") == 0 then
 		self.AllowedToGib = false
@@ -157,9 +151,6 @@ end
 -----------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:GetSightDirection()
 	return self:GetAttachment(self:LookupAttachment("eyes")).Ang:Forward()
-end
----------------------------------------------------------------------------------------------------------------------------------------------
-function ENT:CustomOnAlert(argent)
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:MultipleMeleeAttacks()
@@ -236,14 +227,8 @@ function ENT:MultipleMeleeAttacks()
 	end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
-function ENT:CustomOnRangeAttack_BeforeStartTimer(seed)
-end
----------------------------------------------------------------------------------------------------------------------------------------------
-function ENT:RangeAttackCode_GetShootPos(projectile)
-	return self:CalculateProjectile("Curve", self:GetAttachment(self:LookupAttachment(self.RangeUseAttachmentForPosID)).Pos, self:GetEnemy():GetPos() + self:GetEnemy():OBBCenter(), 1500)
-end
----------------------------------------------------------------------------------------------------------------------------------------------
-function ENT:CustomOnTakeDamage_BeforeDamage(dmginfo, hitgroup)
+function ENT:CustomOnInitialKilled(dmginfo, hitgroup)
+    self:AddFlags(FL_NOTARGET)
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:SetUpGibesOnDeath(dmginfo, hitgroup)

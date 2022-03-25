@@ -22,7 +22,7 @@ ENT.SoundTbl_OnRemove = {"ambient/energy/zap1.wav",
 	"ambient/energy/zap8.wav",
 	"ambient/energy/zap9.wav"}
 
-ENT.StartupSoundLevel = 100
+ENT.StartupSoundLevel = 90
 ENT.OnRemoveSoundLevel = 100
 
 ENT.StartupSoundPitch = VJ_Set(95, 105)
@@ -72,7 +72,7 @@ function ENT:DeathEffects()
 	local effectData = EffectData()
 	effectData:SetOrigin(self:GetPos())
 	//effectData:SetScale(500)
-	-- //util.Effect("HelicopterMegaBomb", effectData)
+	//util.Effect("HelicopterMegaBomb", effectData)
 	//util.Effect("ThumperDust", effectData)
 	-- util.Effect("Explosion", effectData)
 	-- //util.Effect("VJ_Small_Explosion1", effectData)

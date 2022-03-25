@@ -11,6 +11,7 @@ ENT.EntitiesToSpawn = {
 	"npc_vj_bbohg_medkit:3",
 	"npc_vj_bbohg_cheese:5",
 	"npc_vj_bbohg_barnyot:4",
+	"npc_vj_bbohg_medvial:9",
 	"npc_vj_bbohg_alyx:10"}},
 }
 /*-----------------------------------------------

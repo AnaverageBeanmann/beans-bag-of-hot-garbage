@@ -5,16 +5,12 @@ include('shared.lua')
 	No parts of this code or any of its contents may be reproduced, copied, modified or adapted,
 	without the prior written consent of the author, unless otherwise indicated for stand-alone materials.
 -----------------------------------------------*/
-ENT.Model = {"models/Humans/Group03m/male_07.mdl"} 
+ENT.Model = {"models/Humans/Group03m/male_09.mdl"} 
 ENT.StartHealth = 50
 ENT.HasHealthRegeneration = true
-ENT.HealthRegenerationAmount = math.Rand(1,2)
+ENT.HealthRegenerationAmount = math.random(1,5)
 ENT.HealthRegenerationDelay = VJ_Set(0.5,1)
-ENT.HullType = HULL_HUMAN
-ENT.CanFlinch = 1
-ENT.FlinchChance = 5
-ENT.NextFlinchTime = 1.5
-ENT.AnimTbl_Flinch = {"cower"}
+ENT.HealthRegenerationResetOnDmg = false
 ENT.VJC_Data = {
 	CameraMode = 1,
 	ThirdP_Offset = Vector(40, 20, -50),
@@ -22,113 +18,102 @@ ENT.VJC_Data = {
 	FirstP_Offset = Vector(0, 0, 5),
 }
 ---------------------------------------------------------------------------------------------------------------------------------------------
-ENT.VJ_NPC_Class = {"CLASS_TOSSER"} 
+ENT.VJ_NPC_Class = {"CLASS_TOSSER"}
+ENT.FriendsWithAllPlayerAllies = false
+ENT.BecomeEnemyToPlayer = true
+ENT.BecomeEnemyToPlayerLevel = 3
+ENT.HasOnPlayerSight = true
+---------------------------------------------------------------------------------------------------------------------------------------------
+ENT.IsMedicSNPC = true
+ENT.AnimTbl_Medic_GiveHealth = {"heal"}
+ENT.Medic_TimeUntilHeal = 1.20
+ENT.Medic_HealthAmount = 10
+ENT.Medic_SpawnPropOnHealModel = "models/healthvial.mdl"
+---------------------------------------------------------------------------------------------------------------------------------------------
 ENT.BloodColor = "Green"
 ---------------------------------------------------------------------------------------------------------------------------------------------
-ENT.HasMeleeAttack = true 
+ENT.CanFlinch = 1
+ENT.AnimTbl_Flinch = {"cower"}
+---------------------------------------------------------------------------------------------------------------------------------------------
+ENT.HasDeathAnimation = true
+ENT.DeathAnimationTime = false
+ENT.DeathAnimationChance = 1
+ENT.AnimTbl_Death = {"deathpose_back",
+	"deathpose_front",
+	"deathpose_left",
+	"deathpose_right"}
+ENT.HasDeathRagdoll = false
+---------------------------------------------------------------------------------------------------------------------------------------------
+ENT.HasItemDropsOnDeath = true
+ENT.ItemDropsOnDeathChance = 3
+ENT.ItemDropsOnDeath_EntityList = {"item_healthvial"}
+---------------------------------------------------------------------------------------------------------------------------------------------
 ENT.MeleeAttackDamage = math.Rand(1,1)
-ENT.MeleeAttackDamageType = DMG_ALWAYSGIB
+ENT.MeleeAttackDamageType = DMG_CLUB
 ENT.AnimTbl_MeleeAttack = {"swing"}
-ENT.MeleeAttackDistance = 28
+ENT.MeleeAttackDistance = 40
 ENT.MeleeAttackDamageDistance = 60
 ENT.MeleeAttackAngleRadius = 70
 ENT.MeleeAttackDamageAngleRadius = 70
-ENT.TimeUntilMeleeAttackDamage = 0.6
-ENT.HasOnKilledEnemySound = false
 ---------------------------------------------------------------------------------------------------------------------------------------------
-ENT.HasRangeAttack = true -- Should the SNPC have a range attack?
-ENT.RangeAttackEntityToSpawn = "obj_vj_bbohg_medvial" -- The entity that is spawned when range attacking
-	-- ====== Animation Variables ====== --
-ENT.AnimTbl_RangeAttack = {"swing"} -- Range Attack Animations
-ENT.RangeAttackAnimationDelay = 0 -- It will wait certain amount of time before playing the animation
-ENT.RangeAttackAnimationFaceEnemy = true -- Should it face the enemy while playing the range attack animation?
-ENT.RangeAttackAnimationDecreaseLengthAmount = 0 -- This will decrease the time until starts chasing again. Use it to fix animation pauses until it chases the enemy.
-ENT.RangeAttackAnimationStopMovement = true -- Should it stop moving when performing a range attack?
-	-- ====== Distance Variables ====== --
-ENT.RangeDistance = 2000 -- This is how far away it can shoot
-ENT.RangeToMeleeDistance = 50 -- How close does it have to be until it uses melee?
-ENT.RangeAttackAngleRadius = 100 -- What is the attack angle radius? | 100 = In front of the SNPC | 180 = All around the SNPC
-	-- ====== Timer Variables ====== --
-	-- To use event-based attacks, set this to false:
-ENT.TimeUntilRangeAttackProjectileRelease = 0.35 -- How much time until the projectile code is ran?
-ENT.NextRangeAttackTime = 2 -- How much time until it can use a range attack?
-ENT.NextRangeAttackTime_DoRand = false -- False = Don't use random time | Number = Picks a random number between the regular timer and this timer
-	-- To let the base automatically detect the attack duration, set this to false:
-ENT.NextAnyAttackTime_Range = false -- How much time until it can use any attack again? | Counted in Seconds
-ENT.NextAnyAttackTime_Range_DoRand = false -- False = Don't use random time | Number = Picks a random number between the regular timer and this timer
-ENT.RangeAttackReps = 1 -- How many times does it run the projectile code?
-ENT.RangeAttackExtraTimers = nil -- Extra range attack timers, EX: {1, 1.4} | it will run the projectile code after the given amount of seconds
-	-- ====== Projectile Spawn Position Variables ====== --
-ENT.RangeUseAttachmentForPos = false -- Should the projectile spawn on a attachment?
-ENT.RangeUseAttachmentForPosID = "anim_attachment_RH" -- The attachment used on the range attack if RangeUseAttachmentForPos is set to true
-ENT.RangeAttackPos_Up = 35 -- Up/Down spawning position for range attack
-ENT.RangeAttackPos_Forward = 0 -- Forward/Backward spawning position for range attack
-ENT.RangeAttackPos_Right = 0 -- Right/Left spawning position for range attack
-	-- ====== Control Variables ====== --
-ENT.DisableRangeAttackAnimation = false -- if true, it will disable the animation code
-ENT.DisableDefaultRangeAttackCode = false -- When true, it won't spawn the range attack entity, allowing you to make your own
+ENT.HasRangeAttack = true
+ENT.RangeAttackEntityToSpawn = "obj_vj_bbohg_medvial"
+ENT.AnimTbl_RangeAttack = {"throw1"}
+ENT.RangeToMeleeDistance = 200
+ENT.TimeUntilRangeAttackProjectileRelease = 0.9
+ENT.NextRangeAttackTime = 5
+ENT.NextRangeAttackTime_DoRand = 15
+ENT.RangeUseAttachmentForPos = true
+ENT.RangeUseAttachmentForPosID = "anim_attachment_RH"
 ---------------------------------------------------------------------------------------------------------------------------------------------
-ENT.IsMedicSNPC = true
-ENT.AnimTbl_Medic_GiveHealth = {"ThrowItem"}
-ENT.Medic_TimeUntilHeal = 1
-ENT.Medic_HealthAmount = math.Rand(5,10)
-ENT.Medic_NextHealTime = VJ_Set(0.5,1)
-ENT.Medic_SpawnPropOnHeal = true
-ENT.Medic_SpawnPropOnHealModel = "models/healthvial.mdl"
-ENT.Medic_SpawnPropOnHealAttachment = "anim_attachment_LH"
----------------------------------------------------------------------------------------------------------------------------------------------
-ENT.HasDeathAnimation = false
-ENT.FootStepSoundLevel = 70
-ENT.MeleeAttackSoundLevel = 75
-ENT.GeneralSoundPitch1 = 125
-ENT.GeneralSoundPitch2 = 150
-ENT.IdleSoundChance = 5
-ENT.CombatIdleSoundChance = 4
-ENT.IdleSoundLevel = 45
-ENT.CombatIdleSoundLevel = 60
 ENT.FootStepTimeRun = 0.25
 ENT.FootStepTimeWalk = 0.5
+
+ENT.IdleSoundChance = 15
+ENT.CombatIdleSoundChance = 15
+
+ENT.GeneralSoundPitch1 = 125
+ENT.GeneralSoundPitch2 = 150
+
 ENT.IdleDialogueDistance = 175
-ENT.NoChaseAfterCertainRange = true
-ENT.NoChaseAfterCertainRange_FarDistance = 500 
-ENT.NoChaseAfterCertainRange_CloseDistance = 200 
-ENT.NoChaseAfterCertainRange_Type = "Regular"
 
+ENT.BreathSoundLevel = 90
+ENT.NextSoundTime_Breath = VJ_Set(100, 100)
 
-ENT.CanAnnounceGuardStatus = true
-ENT.CanDoDeathSound = true
-ENT.move = false
-ENT.move2 = false
-ENT.move3 = false
-ENT.infect = true
-ENT.infect2 = false
-ENT.MoveToCorpose = false
-ENT.HasEnemy = false
+ENT.Gender = 0
+ENT.LNR_HealerHeal = true
+ENT.LNR_HealerNextT = CurTime()
+ENT.LNR_Heal = true
+ENT.HealBombTime = CurTime()
+ENT.CanHealBomb = true
 ---------------------------------------------------------------------------------------------------------------------------------------------
 	-- ====== Sound File Paths ====== --
 -- Leave blank if you don't want any sounds to play
-ENT.SoundTbl_FootStep = {"player/footsteps/concrete1.wav",
-	"player/footsteps/concrete2.wav",
-	"player/footsteps/concrete3.wav",
-	"player/footsteps/concrete4.wav",}
-ENT.SoundTbl_Idle = {}
-ENT.SoundTbl_IdleDialogue = {"vo/npc/male01/vquestion02.wav",
-	"vo/npc/male01/doingsomething.wav",
-	"vo/npc/male01/getgoingsoon.wav",
-	"vo/npc/male01/gordead_ans01.wav",
-	"vo/npc/male01/gordead_ques16.wav",
-	"vo/npc/male01/question01.wav",
+ENT.SoundTbl_FootStep = {"npc/footsteps/hardboot_generic1.wav",
+	"npc/footsteps/hardboot_generic2.wav",
+	"npc/footsteps/hardboot_generic3.wav",
+	"npc/footsteps/hardboot_generic4.wav",
+	"npc/footsteps/hardboot_generic5.wav",
+	"npc/footsteps/hardboot_generic6.wav",
+	"npc/footsteps/hardboot_generic8.wav"}
+ENT.SoundTbl_Idle = {"ambient/voices/cough1.wav",
+	"ambient/voices/cough2.wav",
+	"ambient/voices/cough3.wav",
+	"ambient/voices/cough4.wav"}
+ENT.SoundTbl_IdleDialogue = {"vo/npc/male01/question01.wav",
 	"vo/npc/male01/question02.wav",
 	"vo/npc/male01/question03.wav",
 	"vo/npc/male01/question04.wav",
 	"vo/npc/male01/question05.wav",
 	"vo/npc/male01/question06.wav",
 	"vo/npc/male01/question07.wav",
+	"vo/npc/male01/question08.wav",
 	"vo/npc/male01/question09.wav",
 	"vo/npc/male01/question10.wav",
 	"vo/npc/male01/question11.wav",
 	"vo/npc/male01/question12.wav",
 	"vo/npc/male01/question13.wav",
+	"vo/npc/male01/question14.wav",
 	"vo/npc/male01/question15.wav",
 	"vo/npc/male01/question16.wav",
 	"vo/npc/male01/question17.wav",
@@ -138,20 +123,25 @@ ENT.SoundTbl_IdleDialogue = {"vo/npc/male01/vquestion02.wav",
 	"vo/npc/male01/question21.wav",
 	"vo/npc/male01/question22.wav",
 	"vo/npc/male01/question23.wav",
-	"vo/npc/male01/question24.wav",
 	"vo/npc/male01/question25.wav",
 	"vo/npc/male01/question26.wav",
 	"vo/npc/male01/question27.wav",
 	"vo/npc/male01/question28.wav",
 	"vo/npc/male01/question29.wav",
 	"vo/npc/male01/question30.wav",
-	"vo/npc/male01/question31.wav"}
+	"vo/npc/male01/question31.wav",
+	"vo/npc/male01/hi01.wav",
+	"vo/npc/male01/hi02.wav",
+	"vo/npc/male01/getgoingsoon.wav",
+	"vo/npc/male01/doingsomething.wav",
+	"vo/npc/male01/vquestion01.wav",
+	"vo/npc/male01/vquestion02.wav",
+	"vo/npc/male01/gordead_ans01.wav"}
 ENT.SoundTbl_IdleDialogueAnswer = {"vo/npc/male01/answer01.wav",
 	"vo/npc/male01/answer02.wav",
 	"vo/npc/male01/answer03.wav",
 	"vo/npc/male01/answer04.wav",
 	"vo/npc/male01/answer05.wav",
-	"vo/npc/male01/answer06.wav",
 	"vo/npc/male01/answer07.wav",
 	"vo/npc/male01/answer08.wav",
 	"vo/npc/male01/answer09.wav",
@@ -178,7 +168,6 @@ ENT.SoundTbl_IdleDialogueAnswer = {"vo/npc/male01/answer01.wav",
 	"vo/npc/male01/answer30.wav",
 	"vo/npc/male01/answer31.wav",
 	"vo/npc/male01/answer32.wav",
-	"vo/npc/male01/answer32.wav",
 	"vo/npc/male01/answer33.wav",
 	"vo/npc/male01/answer34.wav",
 	"vo/npc/male01/answer35.wav",
@@ -187,99 +176,213 @@ ENT.SoundTbl_IdleDialogueAnswer = {"vo/npc/male01/answer01.wav",
 	"vo/npc/male01/answer38.wav",
 	"vo/npc/male01/answer39.wav",
 	"vo/npc/male01/answer40.wav",
+	"vo/npc/male01/sorry01.wav",
+	"vo/npc/male01/sorry02.wav",
+	"vo/npc/male01/sorry03.wav",
+	"vo/npc/male01/busy02.wav",
 	"vo/npc/male01/vanswer01.wav",
 	"vo/npc/male01/vanswer03.wav",
-	"vo/npc/male01/vanswer04.wav",
 	"vo/npc/male01/vanswer05.wav",
-	"vo/npc/male01/vanswer06.wav",
 	"vo/npc/male01/vanswer07.wav",
 	"vo/npc/male01/vanswer08.wav",
 	"vo/npc/male01/vanswer09.wav",
 	"vo/npc/male01/vanswer10.wav",
+	"vo/npc/male01/vanswer13.wav",
 	"vo/npc/male01/vanswer14.wav",
-	"vo/npc/male01/vquestion04.wav",
-	"vo/npc/male01/question14.wav",
-	"vo/npc/male01/yeah02.wav"}
---ENT.SoundTbl_CombatIdle = {}
-ENT.SoundTbl_OnReceiveOrder = {"vo/npc/male01/ok01.wav",
+	"vo/npc/male01/vquestion04.wav"}
+ENT.SoundTbl_CombatIdle = {}
+ENT.SoundTbl_OnReceiveOrder = {"vo/npc/male01/yougotit02.wav",
+	"vo/npc/male01/squad_reinforce_single04.wav",
+	"vo/npc/male01/squad_reinforce_group04.wav",
+	"vo/npc/male01/squad_follow03.wav",
+	"vo/npc/male01/squad_approach04.wav",
+	"vo/npc/male01/squad_approach03.wav",
+	"vo/npc/male01/squad_approach02.wav",
+	"vo/npc/male01/squad_affirm06.wav",
+	"vo/npc/male01/squad_affirm05.wav",
+	"vo/npc/male01/squad_affirm04.wav",
+	"vo/npc/male01/squad_affirm03.wav",
+	"vo/npc/male01/readywhenyouare01.wav",
+	"vo/npc/male01/readywhenyouare02.wav",
+	"vo/npc/male01/ok01.wav",
 	"vo/npc/male01/ok02.wav",
 	"vo/npc/male01/okimready01.wav",
 	"vo/npc/male01/okimready02.wav",
 	"vo/npc/male01/okimready03.wav",
-	"vo/npc/male01/readywhenyouare01.wav",
-	"vo/npc/male01/readywhenyouare02.wav"}
-ENT.SoundTbl_FollowPlayer = {"vo/npc/male01/leadtheway01.wav",
-	"vo/npc/male01/leadtheway02.wav",
-	"vo/npc/male01/readywhenyouare01.wav",
-	"vo/npc/male01/readywhenyouare02.wav"}
-ENT.SoundTbl_UnFollowPlayer = {}
-ENT.SoundTbl_MoveOutOfPlayersWay = {"vo/npc/male01/outofyourway02.wav",
+	"vo/npc/male01/letsgo01.wav",
+	"vo/npc/male01/letsgo02.wav",
+	"vo/npc/male01/leadtheway01.wav",
+	"vo/npc/male01/leadtheway02.wav"}
+ENT.SoundTbl_FollowPlayer = {"vo/npc/male01/squad_affirm01.wav",
+	"vo/npc/male01/squad_affirm02.wav",
+	"vo/npc/male01/squad_affirm03.wav",
+	"vo/npc/male01/squad_affirm04.wav",
+	"vo/npc/male01/squad_affirm05.wav",
+	"vo/npc/male01/squad_affirm06.wav",
+	"vo/npc/male01/squad_affirm07.wav",
+	"vo/npc/male01/squad_affirm08.wav",
+	"vo/npc/male01/squad_affirm09.wav",
+	"vo/npc/male01/squad_train01.wav",
+	"vo/npc/male01/squad_train02.wav",
+	"vo/npc/male01/squad_train03.wav",
+	"vo/npc/male01/squad_train04.wav"}
+ENT.SoundTbl_UnFollowPlayer = {"vo/npc/male01/littlecorner01.wav",
+	"vo/npc/male01/imstickinghere01.wav",
+	"vo/npc/male01/illstayhere01.wav",
+	"vo/npc/male01/holddownspot01.wav",
+	"vo/npc/male01/holddownspot02.wav",
+	"vo/npc/male01/doingsomething.wav"}
+ENT.SoundTbl_MoveOutOfPlayersWay = {"vo/npc/male01/excuseme01.wav",
+	"vo/npc/male01/excuseme02.wav",
 	"vo/npc/male01/pardonme01.wav",
 	"vo/npc/male01/pardonme02.wav",
-	"vo/npc/male01/excuseme01.wav",
-	"vo/npc/male01/excuseme02.wav",
 	"vo/npc/male01/sorry01.wav",
 	"vo/npc/male01/sorry02.wav",
 	"vo/npc/male01/sorry03.wav",
-	"vo/npc/male01/whoops01.wav"}
+	"vo/npc/male01/sorrydoc01.wav",
+	"vo/npc/male01/sorrydoc02.wav",
+	"vo/npc/male01/sorrydoc04.wav",
+	"vo/npc/male01/sorryfm01.wav",
+	"vo/npc/male01/sorryfm02.wav",
+	"vo/npc/male01/outofyourway02.wav"}
 ENT.SoundTbl_MedicBeforeHeal = {"vo/npc/male01/health01.wav",
 	"vo/npc/male01/health02.wav",
 	"vo/npc/male01/health03.wav",
 	"vo/npc/male01/health04.wav",
 	"vo/npc/male01/health05.wav"}
---ENT.SoundTbl_MedicAfterHeal = {}
---ENT.SoundTbl_MedicReceiveHeal = {}
+ENT.SoundTbl_MedicAfterHeal = {"items/smallmedkit1.wav"}
+ENT.SoundTbl_OnPlayerSight = {"vo/npc/male01/abouttime01.wav",
+	"vo/npc/male01/abouttime02.wav",
+	"vo/npc/male01/ahgordon01.wav",
+	"vo/npc/male01/ahgordon02.wav",
+	"vo/npc/male01/docfreeman01.wav",
+	"vo/npc/male01/docfreeman02.wav",
+	"vo/npc/male01/freeman.wav",
+	"vo/npc/male01/hellodrfm01.wav",
+	"vo/npc/male01/hellodrfm02.wav",
+	"vo/npc/male01/heydoc01.wav",
+	"vo/npc/male01/heydoc02.wav",
+	"vo/npc/male01/hi01.wav",
+	"vo/npc/male01/hi02.wav",
+	"vo/npc/male01/squad_greet01.wav",
+	"vo/npc/male01/squad_greet02.wav",
+	"vo/npc/male01/squad_greet04.wav"}
 ENT.SoundTbl_Investigate = {"vo/npc/male01/startle01.wav",
 	"vo/npc/male01/startle02.wav"}
-ENT.SoundTbl_LostEnemy = {}
-ENT.SoundTbl_Alert = {"vo/npc/male01/cit_dropper01.wav",
-	"vo/npc/male01/evenodds.wav",
-	"vo/npc/male01/gethellout.wav",
+ENT.SoundTbl_LostEnemy = {"vo/npc/male01/uhoh.wav",
+	"vo/npc/male01/ohno.wav"}
+ENT.SoundTbl_Alert = {"vo/npc/male01/squad_affirm06.wav",
+	"vo/npc/male01/squad_affirm05.wav",
 	"vo/npc/male01/overthere01.wav",
 	"vo/npc/male01/overthere02.wav",
-	"vo/npc/male01/overhere01.wav",
-	}
-ENT.SoundTbl_CallForHelp = {"vo/npc/male01/help01.wav",
 	"vo/npc/male01/letsgo01.wav",
-	"vo/npc/male01/letsgo02.wav"}
-ENT.SoundTbl_BecomeEnemyToPlayer = {"vo/npc/male01/heretohelp01.wav",
-	"vo/npc/male01/heretohelp02.wav",
+	"vo/npc/male01/letsgo02.wav",
+	"vo/npc/male01/incoming02.wav",
+	"vo/npc/male01/upthere01.wav",
+	"vo/npc/male01/upthere02.wav",
+	"vo/npc/male01/heretheycome01.wav",
+	"vo/npc/male01/headsup01.wav",
+	"vo/npc/male01/headsup02.wav",
+	"vo/npc/male01/gethellout.wav",
+	"vo/npc/male01/evenodds.wav"}
+ENT.SoundTbl_CallForHelp = {"vo/npc/male01/help01.wav",
+	"vo/npc/male01/squad_follow03.wav",
+	"vo/npc/male01/squad_follow02.wav",
+	"vo/npc/male01/squad_away03.wav",
+	"vo/npc/male01/squad_away02.wav",
+	"vo/npc/male01/squad_away01.wav",
+	"vo/npc/male01/overhere01.wav",
+	"vo/npc/male01/overthere01.wav",
+	"vo/npc/male01/overthere02.wav",
+	"vo/npc/male01/letsgo01.wav",
+	"vo/npc/male01/letsgo02.wav",
+	"vo/npc/male01/upthere01.wav",
+	"vo/npc/male01/upthere02.wav",
+	"vo/npc/male01/headsup01.wav",
+	"vo/npc/male01/headsup02.wav"}
+ENT.SoundTbl_BecomeEnemyToPlayer = {"vo/npc/male01/wetrustedyou01.wav",
+	"vo/npc/male01/wetrustedyou02.wav",
 	"vo/npc/male01/notthemanithought01.wav",
 	"vo/npc/male01/notthemanithought02.wav",
-	"vo/npc/male01/wetrustedyou01.wav",
-	"vo/npc/male01/wetrustedyou02.wav"}
---ENT.SoundTbl_BeforeMeleeAttack = {}
+	"vo/npc/male01/gethellout.wav",
+	"vo/npc/male01/answer03.wav",
+	"vo/npc/male01/gordead_ans02.wav",
+	"vo/npc/male01/gordead_ans17.wav",
+	"vo/npc/male01/gordead_ques12.wav",
+	"vo/npc/male01/gordead_ques17.wav"}
 ENT.SoundTbl_MeleeAttack = {"physics/body/body_medium_impact_hard1.wav",
-"physics/body/body_medium_impact_hard2.wav",
-"physics/body/body_medium_impact_hard3.wav",
-"physics/body/body_medium_impact_hard4.wav",
-"physics/body/body_medium_impact_hard5.wav"}
-ENT.SoundTbl_MeleeAttackExtra = {}
-ENT.SoundTbl_MeleeAttackMiss = {"npc/zombie/claw_miss2.wav",
-	"npc/zombie/claw_miss1.wav"}
-ENT.SoundTbl_MeleeAttackSlowPlayer = {"vj_player/heartbeat.wav"}
-ENT.SoundTbl_BeforeRangeAttack = {"vo/npc/male01/health01.wav",
+	"physics/body/body_medium_impact_hard2.wav",
+	"physics/body/body_medium_impact_hard3.wav",
+	"physics/body/body_medium_impact_hard4.wav",
+	"physics/body/body_medium_impact_hard5.wav",
+	"physics/body/body_medium_impact_hard6.wav"}
+ENT.SoundTbl_MeleeAttackMiss = {"weapons/iceaxe/iceaxe_swing1.wav"}
+ENT.SoundTbl_BeforeRangeAttack = {"vo/npc/male01/overhere01.wav",
+	"vo/npc/male01/cit_dropper01.wav",
+	"vo/npc/male01/cit_dropper04.wav",
+	"vo/npc/male01/behindyou01.wav",
+	"vo/npc/male01/behindyou02.wav",
+	"vo/npc/male01/health01.wav",
 	"vo/npc/male01/health02.wav",
 	"vo/npc/male01/health03.wav",
 	"vo/npc/male01/health04.wav",
 	"vo/npc/male01/health05.wav"}
-ENT.SoundTbl_RangeAttack = {"npc/zombie/claw_miss2.wav",
-	"npc/zombie/claw_miss1.wav"}
-ENT.SoundTbl_OnKilledEnemy = {"vo/npc/male01/fantastic01.wav",
-	"vo/npc/male01/fantastic02.wav",
-	"vo/npc/male01/finally.wav",
-	"vo/npc/male01/goodgod.wav",
-	"vo/npc/male01/gordead_ques01.wav",
+ENT.SoundTbl_OnKilledEnemy = {"vo/npc/male01/pardonme01.wav",
+	"vo/npc/male01/pardonme02.wav",
+	"vo/npc/male01/likethat.wav",
 	"vo/npc/male01/gotone01.wav",
 	"vo/npc/male01/gotone02.wav",
-	"vo/npc/male01/likethat.wav",
+	"vo/npc/male01/gordead_ques01.wav",
+	"vo/npc/male01/goodgod.wav",
+	"vo/npc/male01/gethellout.wav",
+	"vo/npc/male01/finally.wav",
+	"vo/npc/male01/fantastic01.wav",
+	"vo/npc/male01/fantastic02.wav",
+	"vo/npc/male01/excuseme01.wav",
+	"vo/npc/male01/excuseme02.wav",
+	"vo/npc/male01/sorry01.wav",
+	"vo/npc/male01/sorry02.wav",
+	"vo/npc/male01/sorry03.wav",
+	"vo/npc/male01/whoops01.wav",
+	"vo/npc/male01/yeah02.wav",
+	"vo/npc/male01/oneforme.wav",
 	"vo/npc/male01/nice.wav",
-	"vo/npc/male01/oneforme.wav"}
-ENT.SoundTbl_Pain = {"vo/npc/male01/imhurt01.wav",
-	"vo/npc/male01/imhurt02.wav",
-	"vo/npc/male01/ow01.wav",
-	"vo/npc/male01/ow02.wav",
-	"vo/npc/male01/pain01.wav",
+	"vo/npc/male01/answer17.wav",
+	"vo/npc/male01/answer25.wav",
+	"vo/npc/male01/answer32.wav",
+	"vo/npc/male01/answer39.wav",
+	"vo/npc/male01/answer40.wav",
+	"vo/npc/male01/vanswer01.wav",
+	"vo/npc/male01/vquestion03.wav"}
+ENT.SoundTbl_AllyDeath = {"vo/npc/male01/ohno.wav",
+	"vo/npc/male01/uhoh.wav",
+	"vo/npc/male01/goodgod.wav",
+	"vo/npc/male01/fantastic01.wav",
+	"vo/npc/male01/answer03.wav",
+	"vo/npc/male01/no01.wav",
+	"vo/npc/male01/no02.wav",
+	"vo/npc/male01/answer29.wav",
+	"vo/npc/male01/question14.wav",
+	"vo/npc/male01/question25.wav",
+	"vo/npc/male01/question26.wav",
+	"vo/npc/male01/question30.wav",
+	"vo/npc/male01/gordead_ans02.wav",
+	"vo/npc/male01/gordead_ans03.wav",
+	"vo/npc/male01/gordead_ans04.wav",
+	"vo/npc/male01/gordead_ans05.wav",
+	"vo/npc/male01/gordead_ans06.wav",
+	"vo/npc/male01/gordead_ans07.wav",
+	"vo/npc/male01/gordead_ans08.wav",
+	"vo/npc/male01/gordead_ans14.wav",
+	"vo/npc/male01/gordead_ans15.wav",
+	"vo/npc/male01/gordead_ans18.wav",
+	"vo/npc/male01/gordead_ans19.wav",
+	"vo/npc/male01/gordead_ques01.wav",
+	"vo/npc/male01/gordead_ques02.wav",
+	"vo/npc/male01/gordead_ques06.wav",
+	"vo/npc/male01/gordead_ques07.wav",
+	"vo/npc/male01/gordead_ques10.wav"}
+ENT.SoundTbl_Pain = {"vo/npc/male01/pain01.wav",
 	"vo/npc/male01/pain02.wav",
 	"vo/npc/male01/pain03.wav",
 	"vo/npc/male01/pain04.wav",
@@ -287,9 +390,20 @@ ENT.SoundTbl_Pain = {"vo/npc/male01/imhurt01.wav",
 	"vo/npc/male01/pain06.wav",
 	"vo/npc/male01/pain07.wav",
 	"vo/npc/male01/pain08.wav",
-	"vo/npc/male01/pain09.wav"}
-ENT.SoundTbl_DamageByPlayer = {"vo/npc/male01/stopitfm.wav",
-	"vo/npc/male01/watchwhat.wav"}
+	"vo/npc/male01/pain09.wav",
+	"vo/npc/male01/ow01.wav",
+	"vo/npc/male01/ow02.wav",
+	"vo/npc/male01/imhurt01.wav",
+	"vo/npc/male01/imhurt02.wav"}
+ENT.SoundTbl_DamageByPlayer = {"vo/npc/male01/watchwhat.wav",
+	"vo/npc/male01/watchwhat.wav",
+	"vo/npc/male01/stopitfm.wav",
+	"vo/npc/male01/onyourside.wav",
+	"vo/npc/male01/lookoutfm01.wav",
+	"vo/npc/male01/lookoutfm02.wav",
+	"vo/npc/male01/freeman.wav",
+	"vo/npc/male01/vanswer03.wav",
+	"vo/npc/male01/vanswer04.wav"}
 ENT.SoundTbl_Death = {"vo/npc/male01/pain01.wav",
 	"vo/npc/male01/pain02.wav",
 	"vo/npc/male01/pain03.wav",
@@ -301,349 +415,524 @@ ENT.SoundTbl_Death = {"vo/npc/male01/pain01.wav",
 	"vo/npc/male01/pain09.wav"}
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnPreInitialize()
-	if GetConVarNumber("vj_BBOHG_FriendlyTossers") == 1 then
-		self.VJ_NPC_Class = {"CLASS_PLAYER_ALLY"}
-		self.FriendsWithAllPlayerAllies = true
-		self.HasOnPlayerSight = true
-		self.OnPlayerSightOnlyOnce = false
-		self.OnPlayerSightNextTime = VJ_Set(30, 40)
+self.Model = {"models/Humans/Group03m/male_02.mdl",
+	"models/Humans/Group03m/Male_04.mdl",
+	"models/Humans/Group03m/male_06.mdl",
+	"models/Humans/Group03m/male_08.mdl"}
+	if math.random(1,3) == 1 then
+		self.Gender = 1
+		self.Model = {"models/Humans/Group03m/Female_02.mdl",
+	"models/Humans/Group03m/Female_04.mdl",
+	"models/Humans/Group03m/Female_06.mdl"} 
 	end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnInitialize()
 	self:SetModelScale(0.65)
 	self:SetCollisionBounds(Vector(13, 13, 70), Vector(-13, -13, 0))
+	if GetConVarNumber("vj_BBOHG_Gibs") == 0 then
+		self.AllowedToGib = false
+	end
+	if GetConVarNumber("vj_BBOHG_FriendlyTossers") == 1 then
+		self.VJ_NPC_Class = {"CLASS_TOSSER","CLASS_PLAYER_ALLY"}
+		self.FriendsWithAllPlayerAllies = true
+	end
+	if GetConVarNumber("vj_BBOHG_NoGodsNoMasters") == 1 then
+		self.VJ_NPC_Class = {"CLASS_BBOHG"}
+		self.FriendsWithAllPlayerAllies = false
+	end
+	if math.random(1,4) == 1 then
+		self.AnimTbl_Run = {ACT_RUN_CROUCH}
+	end
+	if self.Gender == 1 then
+		self.IdleSoundPitch = VJ_Set(115, 130)
+		self.SoundTbl_IdleDialogue = {"vo/npc/female01/question01.wav",
+			"vo/npc/female01/question02.wav",
+			"vo/npc/female01/question03.wav",
+			"vo/npc/female01/question04.wav",
+			"vo/npc/female01/question05.wav",
+			"vo/npc/female01/question06.wav",
+			"vo/npc/female01/question07.wav",
+			"vo/npc/female01/question08.wav",
+			"vo/npc/female01/question09.wav",
+			"vo/npc/female01/question10.wav",
+			"vo/npc/female01/question11.wav",
+			"vo/npc/female01/question12.wav",
+			"vo/npc/female01/question13.wav",
+			"vo/npc/female01/question14.wav",
+			"vo/npc/female01/question15.wav",
+			"vo/npc/female01/question16.wav",
+			"vo/npc/female01/question17.wav",
+			"vo/npc/female01/question18.wav",
+			"vo/npc/female01/question19.wav",
+			"vo/npc/female01/question20.wav",
+			"vo/npc/female01/question21.wav",
+			"vo/npc/female01/question22.wav",
+			"vo/npc/female01/question23.wav",
+			"vo/npc/female01/question25.wav",
+			"vo/npc/female01/question26.wav",
+			"vo/npc/female01/question27.wav",
+			"vo/npc/female01/question28.wav",
+			"vo/npc/female01/question29.wav",
+			"vo/npc/female01/question30.wav",
+			"vo/npc/female01/question31.wav",
+			"vo/npc/female01/hi01.wav",
+			"vo/npc/female01/hi02.wav",
+			"vo/npc/female01/getgoingsoon.wav",
+			"vo/npc/female01/doingsomething.wav",
+			"vo/npc/female01/vquestion01.wav",
+			"vo/npc/female01/vquestion02.wav",
+			"vo/npc/female01/gordead_ans01.wav"}
+		self.SoundTbl_IdleDialogueAnswer = {"vo/npc/female01/answer01.wav",
+			"vo/npc/female01/answer02.wav",
+			"vo/npc/female01/answer03.wav",
+			"vo/npc/female01/answer04.wav",
+			"vo/npc/female01/answer05.wav",
+			"vo/npc/female01/answer07.wav",
+			"vo/npc/female01/answer08.wav",
+			"vo/npc/female01/answer09.wav",
+			"vo/npc/female01/answer10.wav",
+			"vo/npc/female01/answer11.wav",
+			"vo/npc/female01/answer12.wav",
+			"vo/npc/female01/answer13.wav",
+			"vo/npc/female01/answer14.wav",
+			"vo/npc/female01/answer15.wav",
+			"vo/npc/female01/answer16.wav",
+			"vo/npc/female01/answer17.wav",
+			"vo/npc/female01/answer18.wav",
+			"vo/npc/female01/answer19.wav",
+			"vo/npc/female01/answer20.wav",
+			"vo/npc/female01/answer21.wav",
+			"vo/npc/female01/answer22.wav",
+			"vo/npc/female01/answer23.wav",
+			"vo/npc/female01/answer24.wav",
+			"vo/npc/female01/answer25.wav",
+			"vo/npc/female01/answer26.wav",
+			"vo/npc/female01/answer27.wav",
+			"vo/npc/female01/answer28.wav",
+			"vo/npc/female01/answer29.wav",
+			"vo/npc/female01/answer30.wav",
+			"vo/npc/female01/answer31.wav",
+			"vo/npc/female01/answer32.wav",
+			"vo/npc/female01/answer33.wav",
+			"vo/npc/female01/answer34.wav",
+			"vo/npc/female01/answer35.wav",
+			"vo/npc/female01/answer36.wav",
+			"vo/npc/female01/answer37.wav",
+			"vo/npc/female01/answer38.wav",
+			"vo/npc/female01/answer39.wav",
+			"vo/npc/female01/answer40.wav",
+			"vo/npc/female01/sorry01.wav",
+			"vo/npc/female01/sorry02.wav",
+			"vo/npc/female01/sorry03.wav",
+			"vo/npc/female01/busy02.wav",
+			"vo/npc/female01/vanswer01.wav",
+			"vo/npc/female01/vanswer03.wav",
+			"vo/npc/female01/vanswer05.wav",
+			"vo/npc/female01/vanswer07.wav",
+			"vo/npc/female01/vanswer08.wav",
+			"vo/npc/female01/vanswer09.wav",
+			"vo/npc/female01/vanswer10.wav",
+			"vo/npc/female01/vanswer13.wav",
+			"vo/npc/female01/vanswer14.wav",
+			"vo/npc/female01/vquestion04.wav"}
+		self.SoundTbl_CombatIdle = {}
+		self.SoundTbl_OnReceiveOrder = {"vo/npc/female01/yougotit02.wav",
+			"vo/npc/female01/squad_reinforce_single04.wav",
+			"vo/npc/female01/squad_reinforce_group04.wav",
+			"vo/npc/female01/squad_follow03.wav",
+			"vo/npc/female01/squad_approach04.wav",
+			"vo/npc/female01/squad_approach03.wav",
+			"vo/npc/female01/squad_approach02.wav",
+			"vo/npc/female01/squad_affirm06.wav",
+			"vo/npc/female01/squad_affirm05.wav",
+			"vo/npc/female01/squad_affirm04.wav",
+			"vo/npc/female01/squad_affirm03.wav",
+			"vo/npc/female01/readywhenyouare01.wav",
+			"vo/npc/female01/readywhenyouare02.wav",
+			"vo/npc/female01/ok01.wav",
+			"vo/npc/female01/ok02.wav",
+			"vo/npc/female01/okimready01.wav",
+			"vo/npc/female01/okimready02.wav",
+			"vo/npc/female01/okimready03.wav",
+			"vo/npc/female01/letsgo01.wav",
+			"vo/npc/female01/letsgo02.wav",
+			"vo/npc/female01/leadtheway01.wav",
+			"vo/npc/female01/leadtheway02.wav"}
+		self.SoundTbl_FollowPlayer = {"vo/npc/female01/squad_affirm01.wav",
+			"vo/npc/female01/squad_affirm02.wav",
+			"vo/npc/female01/squad_affirm03.wav",
+			"vo/npc/female01/squad_affirm04.wav",
+			"vo/npc/female01/squad_affirm05.wav",
+			"vo/npc/female01/squad_affirm06.wav",
+			"vo/npc/female01/squad_affirm07.wav",
+			"vo/npc/female01/squad_affirm08.wav",
+			"vo/npc/female01/squad_affirm09.wav",
+			"vo/npc/female01/squad_train01.wav",
+			"vo/npc/female01/squad_train02.wav",
+			"vo/npc/female01/squad_train03.wav",
+			"vo/npc/female01/squad_train04.wav"}
+		self.SoundTbl_UnFollowPlayer = {"vo/npc/female01/littlecorner01.wav",
+			"vo/npc/female01/imstickinghere01.wav",
+			"vo/npc/female01/illstayhere01.wav",
+			"vo/npc/female01/holddownspot01.wav",
+			"vo/npc/female01/holddownspot02.wav",
+			"vo/npc/female01/doingsomething.wav"}
+		self.SoundTbl_MoveOutOfPlayersWay = {"vo/npc/female01/excuseme01.wav",
+			"vo/npc/female01/excuseme02.wav",
+			"vo/npc/female01/pardonme01.wav",
+			"vo/npc/female01/pardonme02.wav",
+			"vo/npc/female01/sorry01.wav",
+			"vo/npc/female01/sorry02.wav",
+			"vo/npc/female01/sorry03.wav",
+			"vo/npc/female01/sorrydoc01.wav",
+			"vo/npc/female01/sorrydoc02.wav",
+			"vo/npc/female01/sorrydoc04.wav",
+			"vo/npc/female01/sorryfm01.wav",
+			"vo/npc/female01/sorryfm02.wav",
+			"vo/npc/female01/outofyourway02.wav"}
+		self.SoundTbl_MedicBeforeHeal = {"vo/npc/female01/health01.wav",
+			"vo/npc/female01/health02.wav",
+			"vo/npc/female01/health03.wav",
+			"vo/npc/female01/health04.wav",
+			"vo/npc/female01/health05.wav"}
+		self.SoundTbl_OnPlayerSight = {"vo/npc/female01/abouttime01.wav",
+			"vo/npc/female01/abouttime02.wav",
+			"vo/npc/female01/ahgordon01.wav",
+			"vo/npc/female01/ahgordon02.wav",
+			"vo/npc/female01/docfreeman01.wav",
+			"vo/npc/female01/docfreeman02.wav",
+			"vo/npc/female01/freeman.wav",
+			"vo/npc/female01/hellodrfm01.wav",
+			"vo/npc/female01/hellodrfm02.wav",
+			"vo/npc/female01/heydoc01.wav",
+			"vo/npc/female01/heydoc02.wav",
+			"vo/npc/female01/hi01.wav",
+			"vo/npc/female01/hi02.wav",
+			"vo/npc/female01/squad_greet01.wav",
+			"vo/npc/female01/squad_greet02.wav",
+			"vo/npc/female01/squad_greet04.wav"}
+		self.SoundTbl_Investigate = {"vo/npc/female01/startle01.wav",
+			"vo/npc/female01/startle02.wav"}
+		self.SoundTbl_LostEnemy = {"vo/npc/female01/uhoh.wav",
+			"vo/npc/female01/ohno.wav"}
+		self.SoundTbl_Alert = {"vo/npc/female01/squad_affirm06.wav",
+			"vo/npc/female01/squad_affirm05.wav",
+			"vo/npc/female01/overthere01.wav",
+			"vo/npc/female01/overthere02.wav",
+			"vo/npc/female01/letsgo01.wav",
+			"vo/npc/female01/letsgo02.wav",
+			"vo/npc/female01/incoming02.wav",
+			"vo/npc/female01/upthere01.wav",
+			"vo/npc/female01/upthere02.wav",
+			"vo/npc/female01/heretheycome01.wav",
+			"vo/npc/female01/headsup01.wav",
+			"vo/npc/female01/headsup02.wav",
+			"vo/npc/female01/gethellout.wav"}
+		self.SoundTbl_CallForHelp = {"vo/npc/female01/help01.wav",
+			"vo/npc/female01/squad_follow03.wav",
+			"vo/npc/female01/squad_follow02.wav",
+			"vo/npc/female01/squad_away03.wav",
+			"vo/npc/female01/squad_away02.wav",
+			"vo/npc/female01/squad_away01.wav",
+			"vo/npc/female01/overhere01.wav",
+			"vo/npc/female01/overthere01.wav",
+			"vo/npc/female01/overthere02.wav",
+			"vo/npc/female01/letsgo01.wav",
+			"vo/npc/female01/letsgo02.wav",
+			"vo/npc/female01/upthere01.wav",
+			"vo/npc/female01/upthere02.wav",
+			"vo/npc/female01/headsup01.wav",
+			"vo/npc/female01/headsup02.wav"}
+		self.SoundTbl_BecomeEnemyToPlayer = {"vo/npc/female01/wetrustedyou01.wav",
+			"vo/npc/female01/wetrustedyou02.wav",
+			"vo/npc/female01/notthemanithought01.wav",
+			"vo/npc/female01/notthemanithought02.wav",
+			"vo/npc/female01/gethellout.wav",
+			"vo/npc/female01/answer03.wav",
+			"vo/npc/female01/gordead_ans02.wav",
+			"vo/npc/female01/gordead_ans17.wav",
+			"vo/npc/female01/gordead_ques12.wav",
+			"vo/npc/female01/gordead_ques17.wav"}
+		self.SoundTbl_BeforeRangeAttack = {"vo/npc/female01/overhere01.wav",
+			"vo/npc/female01/cit_dropper01.wav",
+			"vo/npc/female01/cit_dropper04.wav",
+			"vo/npc/female01/behindyou01.wav",
+			"vo/npc/female01/behindyou02.wav",
+			"vo/npc/female01/health01.wav",
+			"vo/npc/female01/health02.wav",
+			"vo/npc/female01/health03.wav",
+			"vo/npc/female01/health04.wav",
+			"vo/npc/female01/health05.wav"}
+		self.SoundTbl_OnKilledEnemy = {"vo/npc/female01/pardonme01.wav",
+			"vo/npc/female01/pardonme02.wav",
+			"vo/npc/female01/likethat.wav",
+			"vo/npc/female01/gotone01.wav",
+			"vo/npc/female01/gotone02.wav",
+			"vo/npc/female01/gordead_ques01.wav",
+			"vo/npc/female01/goodgod.wav",
+			"vo/npc/female01/gethellout.wav",
+			"vo/npc/female01/finally.wav",
+			"vo/npc/female01/fantastic01.wav",
+			"vo/npc/female01/fantastic02.wav",
+			"vo/npc/female01/excuseme01.wav",
+			"vo/npc/female01/excuseme02.wav",
+			"vo/npc/female01/sorry01.wav",
+			"vo/npc/female01/sorry02.wav",
+			"vo/npc/female01/sorry03.wav",
+			"vo/npc/female01/whoops01.wav",
+			"vo/npc/female01/yeah02.wav",
+			"vo/npc/female01/oneforme.wav",
+			"vo/npc/female01/answer17.wav",
+			"vo/npc/female01/answer25.wav",
+			"vo/npc/female01/answer32.wav",
+			"vo/npc/female01/answer39.wav",
+			"vo/npc/female01/answer40.wav",
+			"vo/npc/female01/vanswer01.wav",
+			"vo/npc/female01/vquestion03.wav"}
+		self.SoundTbl_AllyDeath = {"vo/npc/female01/ohno.wav",
+			"vo/npc/female01/uhoh.wav",
+			"vo/npc/female01/goodgod.wav",
+			"vo/npc/female01/fantastic01.wav",
+			"vo/npc/female01/answer03.wav",
+			"vo/npc/female01/no01.wav",
+			"vo/npc/female01/no02.wav",
+			"vo/npc/female01/answer29.wav",
+			"vo/npc/female01/question14.wav",
+			"vo/npc/female01/question25.wav",
+			"vo/npc/female01/question26.wav",
+			"vo/npc/female01/question30.wav",
+			"vo/npc/female01/gordead_ans02.wav",
+			"vo/npc/female01/gordead_ans03.wav",
+			"vo/npc/female01/gordead_ans04.wav",
+			"vo/npc/female01/gordead_ans05.wav",
+			"vo/npc/female01/gordead_ans06.wav",
+			"vo/npc/female01/gordead_ans07.wav",
+			"vo/npc/female01/gordead_ans08.wav",
+			"vo/npc/female01/gordead_ans14.wav",
+			"vo/npc/female01/gordead_ans15.wav",
+			"vo/npc/female01/gordead_ans18.wav",
+			"vo/npc/female01/gordead_ans19.wav",
+			"vo/npc/female01/gordead_ques01.wav",
+			"vo/npc/female01/gordead_ques02.wav",
+			"vo/npc/female01/gordead_ques06.wav",
+			"vo/npc/female01/gordead_ques07.wav",
+			"vo/npc/female01/gordead_ques10.wav"}
+		self.SoundTbl_Pain = {"vo/npc/female01/pain01.wav",
+			"vo/npc/female01/pain02.wav",
+			"vo/npc/female01/pain03.wav",
+			"vo/npc/female01/pain04.wav",
+			"vo/npc/female01/pain05.wav",
+			"vo/npc/female01/pain06.wav",
+			"vo/npc/female01/pain07.wav",
+			"vo/npc/female01/pain08.wav",
+			"vo/npc/female01/pain09.wav",
+			"vo/npc/female01/ow01.wav",
+			"vo/npc/female01/ow02.wav",
+			"vo/npc/female01/imhurt01.wav",
+			"vo/npc/female01/imhurt02.wav"}
+		self.SoundTbl_DamageByPlayer = {"vo/npc/female01/watchwhat.wav",
+			"vo/npc/female01/watchwhat.wav",
+			"vo/npc/female01/stopitfm.wav",
+			"vo/npc/female01/onyourside.wav",
+			"vo/npc/female01/lookoutfm01.wav",
+			"vo/npc/female01/lookoutfm02.wav",
+			"vo/npc/female01/freeman.wav",
+			"vo/npc/female01/vanswer03.wav",
+			"vo/npc/female01/vanswer04.wav"}
+		self.SoundTbl_Death = {"vo/npc/female01/pain01.wav",
+			"vo/npc/female01/pain02.wav",
+			"vo/npc/female01/pain03.wav",
+			"vo/npc/female01/pain04.wav",
+			"vo/npc/female01/pain05.wav",
+			"vo/npc/female01/pain06.wav",
+			"vo/npc/female01/pain07.wav",
+			"vo/npc/female01/pain08.wav",
+			"vo/npc/female01/pain09.wav"}
+	end
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:GetSightDirection()
 	return self:GetAttachment(self:LookupAttachment("eyes")).Ang:Forward()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
-function ENT:CustomOnAllyDeath(ent) 
-	if math.random(1,4) == 1 then
-		VJ_EmitSound(self,{"vo/npc/male01/fantastic01.wav",
-	"vo/npc/male01/gordead_ans02.wav",
-	"vo/npc/male01/gordead_ans03.wav",
-	"vo/npc/male01/gordead_ans04.wav",
-	"vo/npc/male01/gordead_ans05.wav",
-	"vo/npc/male01/gordead_ans06.wav",
-	"vo/npc/male01/gordead_ans07.wav",
-	"vo/npc/male01/gordead_ans08.wav",
-	"vo/npc/male01/gordead_ans18.wav",
-	"vo/npc/male01/gordead_ans19.wav",
-	"vo/npc/male01/gordead_ques02.wav",
-	"vo/npc/male01/gordead_ques07.wav",
-	"vo/npc/male01/no01.wav",
-	"vo/npc/male01/no02.wav",
-	"vo/npc/male01/ohno.wav",
-	"vo/npc/male01/uhoh.wav"},70,math.random(125,150))
-		self.CanDoDeathSound = false
-	end
-end
----------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnThink_AIEnabled()
-	if IsValid(self:GetEnemy()) then
-		self.HasIdleDialogueSounds = false
-		self.HasIdleDialogueAnswerSounds = false
-		self.HasEnemy = true
-	else
-		self.HasIdleDialogueSounds = true
-		self.HasIdleDialogueAnswerSounds = true
-		self.HasEnemy = false
+	if self.CanHealBomb == false then return end
+	if CurTime() > self.HealBombTime then
+		self.CannotHealStuff = false
 	end
-	if self.IsGuard == true then
-		self.SoundTbl_OnPlayerSight = {"vo/npc/male01/busy02.wav",
-			"vo/npc/male01/excuseme01.wav",
-			"vo/npc/male01/excuseme02.wav",
-			"vo/npc/male01/waitingsomebody.wav"}
-	    else
-			self.SoundTbl_OnPlayerSight = {"vo/npc/male01/hi01.wav",
-			"vo/npc/male01/hi02.wav"}
-	end
-		if self.IsGuard == true then
-			if self.CanAnnounceGuardStatus == true then
-				VJ_EmitSound(self,{"vo/npc/male01/holddownspot01.wav",
-									"vo/npc/male01/holddownspot02.wav",
-									"vo/npc/male01/illstayhere01.wav",
-									"vo/npc/male01/imstickinghere01.wav",
-									"vo/npc/male01/littlecorner01.wav"},70,math.random(125,150))
-				self.CanAnnounceGuardStatus = false
-		elseif self.IsGuard == false then
-			self.CanAnnounceGuardStatus = true
+	if self.CannotHealStuff == true then return end
+	for _,v in ipairs(ents.FindInSphere(self:GetPos(),75)) do
+		if v:IsNPC() && v:GetClass() != self:GetClass() && v:Disposition(self) == D_LI then
+			if v:Health() < v:GetMaxHealth() && CurTime() > self.LNR_HealerNextT then
+				VJ_EmitSound(self,{"items/smallmedkit1.wav"},100,math.random(100,95))
+				self.SoundTbl_Breath = {"items/medcharge4.wav"}
+				for i = 0,v:GetBoneCount() -1 do
+					ParticleEffect("vortigaunt_glow_beam_cp0",v:GetBonePosition(i),Angle(0,0,0),nil)
 				end
+				for i = 0,self:GetBoneCount() -1 do
+					ParticleEffect("vortigaunt_glow_beam_cp1",self:GetBonePosition(i),Angle(0,0,0),nil)
+				end
+	            effects.BeamRingPoint(self:GetPos(), 0.3, 2, 200, 16, 0, Color(33, 255, 0, 255), {material="sprites/orangelight1", framerate=20})
+	            effects.BeamRingPoint(self:GetPos(), 0.3, 2, 100, 16, 0, Color(33, 255, 0, 255), {material="sprites/orangelight1", framerate=20})
+				-- VJ_EmitSound(self,{"items/smallmedkit1.wav"},100,math.random(100,95))
+				v:SetHealth(v:Health() +25)
+				if v:Health() > v:GetMaxHealth() then
+					v:SetHealth(v:GetMaxHealth())
+				end
+				self.LNR_HealerNextT = CurTime() + (math.Rand(0.5,0.5))
+				timer.Simple(10,function() if IsValid(self) then
+				VJ_STOPSOUND(self.CurrentBreathSound)
+				self.SoundTbl_Breath = {}
+				self.HealBombTime = CurTime() + (math.Rand(15,30))
+				self.CannotHealStuff = true
+				end end)
+			end				
+		end
 	end
-	
-	if self.HasEnemy == false then
-	
-for _,v in ipairs(ents.FindInSphere(self:GetPos(),2600)) do
-if self.infect == true && self.MoveToCorpose == false && self.MeleeAttacking == false then
-if IsValid(v) && v:GetClass() == "prop_ragdoll" && v:GetClass() != "prop_physics" && v:GetModel() !="models/player/skeleton.mdl" && v:GetModel() != "models/combine_strider.mdl" && v:GetModel() != "models/lamarr.mdl" && v:GetModel() != "models/combine_scanner.mdl" && v:GetModel() != "models/manhack.mdl" && v:GetModel() != "models/antlion.mdl" && v:GetModel() != "models/antlion_guard.mdl" && v:GetModel() != "models/headcrabclassic.mdl" && v:GetModel() != "models/headcrab.mdl" && v:GetModel() != "models/headcrabblack.mdl" && v:GetModel() != "models/gibs/fast_zombie_legs.mdl" && v:GetModel() != "models/gibs/fast_zombie_torso.mdl" && v:GetModel() != "models/zombie/classic_legs.mdl" && v:GetModel() != "models/zombie/classic_torso.mdl" && v:GetModel() != "models/humans/charple03.mdl" && v:GetModel() != "models/combine_dropship.mdl" && v:GetModel() != "models/props_vehicles/car001a_phy.mdl" && v:GetModel() != "models/props_vehicles/wagon001a_phy.mdl" && v:GetModel() != "models/shield_scanner.mdl" && v:GetModel() != "models/gunship.mdl" && v:GetModel() != "models/hunter.mdl" && v:GetModel() != "models/Humans/Charple02.mdl"  && v:GetModel() != "models/Humans/Charple01.mdl" && v:GetModel() != "models/Humans/Charple04.mdl" && v:GetModel() != "models/props_c17/furnituremattress001a.mdl" && v:GetModel() != "models/dog.mdl" then
-self.infect2 = true
-self.MoveToCorpose = true
-self:SetTarget(v)
-self:VJ_TASK_GOTO_TARGET("TASK_RUN_PATH")
-timer.Simple(math.random(1.2,2.5),function() if IsValid(self) then self.MoveToCorpose = false end end)
-end
-end
-end
-if self.infect2 == true && self.MeleeAttacking == false then 
-for _,v in ipairs(ents.FindInSphere(self:GetPos(),20)) do
-if IsValid(v) && v:GetClass() == "prop_ragdoll" && v:GetClass() != "prop_physics" && v:GetModel() !="models/player/skeleton.mdl" && v:GetModel() != "models/combine_strider.mdl" && v:GetModel() != "models/lamarr.mdl" && v:GetModel() != "models/combine_scanner.mdl" && v:GetModel() != "models/manhack.mdl" && v:GetModel() != "models/antlion.mdl" && v:GetModel() != "models/antlion_guard.mdl" && v:GetModel() != "models/headcrabclassic.mdl" && v:GetModel() != "models/headcrab.mdl" && v:GetModel() != "models/headcrabblack.mdl" && v:GetModel() != "models/gibs/fast_zombie_legs.mdl" && v:GetModel() != "models/gibs/fast_zombie_torso.mdl" && v:GetModel() != "models/zombie/classic_legs.mdl" && v:GetModel() != "models/zombie/classic_torso.mdl" && v:GetModel() != "models/humans/charple03.mdl" && v:GetModel() != "models/combine_dropship.mdl" && v:GetModel() != "models/props_vehicles/car001a_phy.mdl" && v:GetModel() != "models/props_vehicles/wagon001a_phy.mdl" && v:GetModel() != "models/shield_scanner.mdl" && v:GetModel() != "models/gunship.mdl" && v:GetModel() != "models/hunter.mdl" && v:GetModel() != "models/Humans/Charple02.mdl"  && v:GetModel() != "models/Humans/Charple01.mdl" && v:GetModel() != "models/Humans/Charple04.mdl" && v:GetModel() != "models/props_c17/furnituremattress001a.mdl" && v:GetModel() != "models/dog.mdl" then
-self:VJ_ACT_PLAYACTIVITY("roofidle1",true,4.6999999019504,false)
-timer.Simple(1.9,function() if IsValid(self) then
- end end)
-timer.Simple(0.2,function() if IsValid(self) && IsValid(v) then
-self:FaceCertainEntity(v) end end)
-
-
-v:SetPersistent(true) 
-v:SetCollisionGroup(COLLISION_GROUP_DEBRIS)
-
-self.MovementType = VJ_MOVETYPE_STATIONARY
- self.CanTurnWhileStationary = false
-self.infect = false
-self.DisableChasingEnemy = true
-self.DisableFindEnemy = true
-self.infect2 = false
-timer.Simple(3.8,function()
-if IsValid(self) && IsValid(v) then
-if IsValid(v) && v:GetClass() == "prop_ragdoll" && v:GetClass() != "prop_physics" && v:GetModel() !="models/player/skeleton.mdl" && v:GetModel() != "models/combine_strider.mdl" && v:GetModel() != "models/lamarr.mdl" && v:GetModel() != "models/combine_scanner.mdl" && v:GetModel() != "models/manhack.mdl" && v:GetModel() != "models/antlion.mdl" && v:GetModel() != "models/antlion_guard.mdl" && v:GetModel() != "models/headcrabclassic.mdl" && v:GetModel() != "models/headcrab.mdl" && v:GetModel() != "models/headcrabblack.mdl" && v:GetModel() != "models/gibs/fast_zombie_legs.mdl" && v:GetModel() != "models/gibs/fast_zombie_torso.mdl" && v:GetModel() != "models/zombie/classic_legs.mdl" && v:GetModel() != "models/zombie/classic_torso.mdl" && v:GetModel() != "models/humans/charple03.mdl" && v:GetModel() != "models/combine_dropship.mdl" && v:GetModel() != "models/props_vehicles/car001a_phy.mdl" && v:GetModel() != "models/props_vehicles/wagon001a_phy.mdl" && v:GetModel() != "models/shield_scanner.mdl" && v:GetModel() != "models/gunship.mdl" && v:GetModel() != "models/hunter.mdl" && v:GetModel() != "models/Humans/Charple02.mdl"  && v:GetModel() != "models/Humans/Charple01.mdl" && v:GetModel() != "models/Humans/Charple04.mdl" && v:GetModel() != "models/props_c17/furnituremattress001a.mdl" && v:GetModel() != "models/dog.mdl" then
-v:Remove()
-
-
-local spawn = math.random(1,6)
-if spawn == 1 then
-self.sworm13 = ents.Create("npc_vj_bbohg_medkit")
-self.sworm13:SetPos(v:GetPos() + self:GetUp()*10)
-self.sworm13:SetAngles(self:GetAngles())
-self.sworm13:Spawn()
-timer.Simple(0.15,function() if IsValid(self) && IsValid(self.sworm13) then
-VJ_EmitSound(self,"items/medshot4.wav",70,100) 
- end end)
-self.sworm13:VJ_ACT_PLAYACTIVITY("Sit_Ground_to_Idle",true,2.5,false)
-self.sworm13:Activate()
-end
-
-if spawn == 2 then
-self.sworm13 = ents.Create("npc_vj_bbohg_medkit")
-self.sworm13:SetPos(v:GetPos() + self:GetUp()*10)
-self.sworm13:SetAngles(self:GetAngles())
-self.sworm13:Spawn()
-timer.Simple(0.15,function() if IsValid(self) && IsValid(self.sworm13) then
-VJ_EmitSound(self,"items/medshot4.wav",70,100) 
- end end)
-self.sworm13:VJ_ACT_PLAYACTIVITY("Sit_Ground_to_Idle",true,2.5,false)
-self.sworm13:Activate()
-end
-
-if spawn == 3 then
-self.sworm13 = ents.Create("npc_vj_bbohg_medvial")
-self.sworm13:SetPos(v:GetPos() + self:GetUp()*10)
-self.sworm13:SetAngles(self:GetAngles())
-self.sworm13:Spawn()
-timer.Simple(0.15,function() if IsValid(self) && IsValid(self.sworm13) then
-VJ_EmitSound(self,"items/medshot4.wav",70,100) 
- end end)
-self.sworm13:VJ_ACT_PLAYACTIVITY("Sit_Ground_to_Idle",true,2.5,false)
-self.sworm13:Activate()
-end
-
-if spawn == 4 then
-self.sworm13 = ents.Create("npc_vj_bbohg_ammo")
-self.sworm13:SetPos(v:GetPos() + self:GetUp()*10)
-self.sworm13:SetAngles(self:GetAngles())
-self.sworm13:Spawn()
-timer.Simple(0.15,function() if IsValid(self) && IsValid(self.sworm13) then
-VJ_EmitSound(self,"items/medshot4.wav",70,100) 
- end end)
-self.sworm13:VJ_ACT_PLAYACTIVITY("Sit_Ground_to_Idle",true,2.5,false)
-self.sworm13:Activate()
-end
-
-if spawn == 5 then
-self.sworm13 = ents.Create("npc_vj_bbohg_cheese")
-self.sworm13:SetPos(v:GetPos() + self:GetUp()*10)
-self.sworm13:SetAngles(self:GetAngles())
-self.sworm13:Spawn()
-timer.Simple(0.15,function() if IsValid(self) && IsValid(self.sworm13) then
-VJ_EmitSound(self,"items/medshot4.wav",70,100) 
- end end)
-self.sworm13:VJ_ACT_PLAYACTIVITY("Sit_Ground_to_Idle",true,2.5,false)
-self.sworm13:Activate()
-end
-
-if spawn == 6 then
-self.sworm13 = ents.Create("npc_vj_bbohg_barnyot")
-self.sworm13:SetPos(v:GetPos() + self:GetUp()*10)
-self.sworm13:SetAngles(self:GetAngles())
-self.sworm13:Spawn()
-timer.Simple(0.15,function() if IsValid(self) && IsValid(self.sworm13) then
-VJ_EmitSound(self,"items/medshot4.wav",70,100) 
- end end)
-self.sworm13:VJ_ACT_PLAYACTIVITY("Sit_Ground_to_Idle",true,2.5,false)
-self.sworm13:Activate()
-end
-end
-  end end)
-timer.Simple(7,function() if IsValid(self) then self.infect = true
-self.DisableChasingEnemy = false
-self.DisableFindEnemy = false
-self.MovementType = VJ_MOVETYPE_GROUND
- end end)
-end
-end
-end
-
-end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnAlert(argent)
-	if math.random(1,1) == 1 && argent:IsNPC() then
-		if argent:GetClass() == "npc_zombie"
-				or argent:GetClass() == "npc_zombie_torso"
-				or argent:GetClass() == "npc_fastzombie"
-				or argent:GetClass() == "npc_fastzombie"
-				or argent:GetClass() == "npc_poisonzombie"
-				or argent:GetClass() == "npc_zombine"
-				or argent:GetClass() == "npc_vj_hlr1_zombie"
-				or argent:GetClass() == "npc_vj_hlrof_zombie_sec"
-				or argent:GetClass() == "npc_vj_hlrof_zombie_soldier"
-				or argent:GetClass() == "npc_vj_hlrof_gonome"
-				or argent:GetClass() == "npc_vj_cofraom_twitcher"
-				or argent:GetClass() == "npc_vj_cofraom_twitcher_da"
-				or argent:GetClass() == "npc_vj_cofr_faceless"
-				or argent:GetClass() == "npc_vj_cofr_faceless_crawler"
-				or argent:GetClass() == "npc_vj_cofr_faceless_faced"
-				or argent:GetClass() == "npc_vj_cofr_faceless_twisterv"
-				or argent:GetClass() == "npc_vj_cofr_faceless_twister"
-				or argent:GetClass() == "npc_vj_cofrc_faceless_boss"
-				or argent:GetClass() == "npc_vj_cofrc_faceless_mummycrawl"
-				or argent:GetClass() == "npc_vj_cofrc_faceless_mummytwister"
-				or argent:GetClass() == "npc_vj_cofrc_faceless_mummy"
-				or argent:GetClass() == "npc_vj_cofrc_faceless_stone"
-				or argent:GetClass() == "npc_vj_cofrc_slower_mummy"
-				or argent:GetClass() == "npc_vj_cofrc_crazyrunner_mummy"
-				or argent:GetClass() == "npc_vj_cofrc_shaimoon"
-				or argent:GetClass() == "npc_vj_cofrc_mummy"
-				or argent:GetClass() == "npc_vj_zombie"
-				or argent:GetClass() == "npc_vj_zombiescientist"
-				or argent:GetClass() == "npc_vj_zombiehell"
-				or argent:GetClass() == "npc_vj_mechazombie"
-			then
-				self:PlaySoundSystem("Alert", {"vo/npc/male01/zombies01.wav", 
-												"vo/npc/male01/zombies02.wav"})
-		return
-		elseif argent:GetClass() == "npc_headcrab"
-				or argent:GetClass() == "npc_headcrab_fast"
-				or argent:GetClass() == "npc_headcrab_black"
-				or argent:GetClass() == "npc_vj_hlr1_headcrab"
-				or argent:GetClass() == "npc_vj_hlr1_headcrab_baby"
-				or argent:GetClass() == "npc_vj_cofraom_handcrab"
-			then
+	if argent:IsNPC() then
+	if argent:GetClass() == "npc_headcrab"
+			or argent:GetClass() == "npc_headcrab_fast"
+			or argent:GetClass() == "npc_headcrab_black"
+			or argent:GetClass() == "npc_vj_hlr1_headcrab"
+			or argent:GetClass() == "npc_vj_hlr1_headcrab_baby"
+			or argent:GetClass() == "npc_vj_hlrcl_gentlecrab"
+		then
+			if self.Gender == 1 then
+				self:PlaySoundSystem("Alert", {"vo/npc/female01/headcrabs01.wav", 
+				"vo/npc/female01/headcrabs02.wav"})
+			else
 				self:PlaySoundSystem("Alert", {"vo/npc/male01/headcrabs01.wav", 
-												"vo/npc/male01/headcrabs02.wav"})
+				"vo/npc/male01/headcrabs02.wav"})
+			end
 		return
-		elseif argent:GetClass() == "npc_metropolice"
-				or argent:GetClass() == "npc_vj_hlr2_com_civilp"
-				or argent:GetClass() == "npc_vj_hlr2_com_civilp_elite"
-			then
+	elseif argent:GetClass() == "npc_metropolice"
+			or argent:GetClass() == "npc_vj_hlr2_com_civilp"
+			or argent:GetClass() == "npc_vj_hlr2_com_civilp_elite"
+		then
+			if self.Gender == 1 then
+				self:PlaySoundSystem("Alert", {"vo/npc/female01/civilprotection01.wav", 
+				"vo/npc/female01/civilprotection02.wav", 
+				"vo/npc/female01/cps01.wav", 
+				"vo/npc/female01/cps02.wav"})
+			else
 				self:PlaySoundSystem("Alert", {"vo/npc/male01/civilprotection01.wav", 
-												"vo/npc/male01/civilprotection02.wav", 
-												"vo/npc/male01/cps01.wav", 
-												"vo/npc/male01/cps02.wav"})
+				"vo/npc/male01/civilprotection02.wav", 
+				"vo/npc/male01/cps01.wav", 
+				"vo/npc/male01/cps02.wav"})
+			end
 		return
-		elseif argent:GetClass() == "npc_cscanner"
-				or argent:GetClass() == "npc_clawscanner"
-			then
+	elseif argent:GetClass() == "npc_cscanner"
+			or argent:GetClass() == "npc_clawscanner"
+		then
+			if self.Gender == 1 then
+				self:PlaySoundSystem("Alert", {"vo/npc/female01/scanners01.wav", 
+				"vo/npc/female01/scanners02.wav"})
+			else
 				self:PlaySoundSystem("Alert", {"vo/npc/male01/scanners01.wav", 
-												"vo/npc/male01/scanners02.wav"})
+				"vo/npc/male01/scanners02.wav"})
+			end
 		return
-		elseif argent:GetClass() == "npc_combine_s"
-				or argent:GetClass() == "npc_vj_hlr2_com_soldier"
-				or argent:GetClass() == "npc_vj_hlr2b_com_soldier"
-				or argent:GetClass() == "npc_vj_hlr2_com_shotgunner"
-				or argent:GetClass() == "npc_vj_hlr2_com_prospekt"
-				or argent:GetClass() == "npc_vj_hlr2_com_prospekt_sg"
-				or argent:GetClass() == "npc_vj_hlr2_com_sniper"
-				or argent:GetClass() == "npc_vj_hlr2_com_engineer"
-				or argent:GetClass() == "npc_vj_hlr2_com_elite"
-				or argent:GetClass() == "npc_vj_hlr2_com_sentry"
-			then
+	elseif argent:GetClass() == "npc_combine_s"
+			or argent:GetClass() == "npc_vj_hlr2_com_soldier"
+			or argent:GetClass() == "npc_vj_hlr2b_com_soldier"
+			or argent:GetClass() == "npc_vj_hlr2_com_shotgunner"
+			or argent:GetClass() == "npc_vj_hlr2_com_prospekt"
+			or argent:GetClass() == "npc_vj_hlr2_com_prospekt_sg"
+			or argent:GetClass() == "npc_vj_hlr2_com_sniper"
+			or argent:GetClass() == "npc_vj_hlr2_com_engineer"
+			or argent:GetClass() == "npc_vj_hlr2_com_elite"
+			or argent:GetClass() == "npc_vj_hlr2_com_sentry"
+		then
+			if self.Gender == 1 then
+				self:PlaySoundSystem("Alert", {"vo/npc/female01/combine01.wav", 
+				"vo/npc/female01/combine02.wav"})
+			else
 				self:PlaySoundSystem("Alert", {"vo/npc/male01/combine01.wav", 
-												"vo/npc/male01/combine02.wav"})
+				"vo/npc/male01/combine02.wav"})
+			end
 		return		
-		elseif argent:GetClass() == "npc_combinegunship"
-				or argent:GetClass() == "npc_vj_hlr1_apache"
-				or argent:GetClass() == "npc_vj_hlrof_assassin_apache"
-			then
+	elseif argent:GetClass() == "npc_combinegunship"
+			or argent:GetClass() == "npc_vj_hlr1_apache"
+			or argent:GetClass() == "npc_vj_hlrof_assassin_apache"
+		then
+			if self.Gender == 1 then
+				self:PlaySoundSystem("Alert", {"vo/npc/female01/gunship02.wav"})
+			else
 				self:PlaySoundSystem("Alert", {"vo/npc/male01/gunship02.wav"})
+			end
 		return		
-		elseif argent:GetClass() == "npc_strider"
-			then
+	elseif argent:GetClass() == "npc_strider"
+		then
+			if self.Gender == 1 then
+				self:PlaySoundSystem("Alert", {"vo/npc/female01/strider.wav"})
+			else
 				self:PlaySoundSystem("Alert", {"vo/npc/male01/strider.wav"})
+			end
 		return		
-		elseif argent:GetClass() == "npc_manhack"
-			then
+	elseif argent:GetClass() == "npc_manhack"
+		then
+			if self.Gender == 1 then
+				self:PlaySoundSystem("Alert", {"vo/npc/female01/hacks01.wav",
+				"vo/npc/female01/hacks02.wav",
+				"vo/npc/female01/herecomehacks01.wav",
+				"vo/npc/female01/herecomehacks02.wav",
+				"vo/npc/female01/itsamanhack01.wav",
+				"vo/npc/female01/itsamanhack02.wav",
+				"vo/npc/female01/thehacks01.wav",
+				"vo/npc/female01/thehacks02.wav"})
+			else
 				self:PlaySoundSystem("Alert", {"vo/npc/male01/hacks01.wav",
-												"vo/npc/male01/hacks02.wav",
-												"vo/npc/male01/herecomehacks01.wav",
-												"vo/npc/male01/herecomehacks02.wav",
-												"vo/npc/male01/itsamanhack01.wav",
-												"vo/npc/male01/itsamanhack02.wav",
-												"vo/npc/male01/thehacks01.wav",
-												"vo/npc/male01/thehacks02.wav"})
+				"vo/npc/male01/hacks02.wav",
+				"vo/npc/male01/herecomehacks01.wav",
+				"vo/npc/male01/herecomehacks02.wav",
+				"vo/npc/male01/itsamanhack01.wav",
+				"vo/npc/male01/itsamanhack02.wav",
+				"vo/npc/male01/thehacks01.wav",
+				"vo/npc/male01/thehacks02.wav"})
+			end
 		return
-		else
-			for _,v in ipairs(argent.VJ_NPC_Class or {1}) do
-				if v == "CLASS_COMBINE" or argent:Classify() == CLASS_COMBINE then
+	else
+		for _,v in ipairs(argent.VJ_NPC_Class or {1}) do
+			if v == "CLASS_COMBINE" or argent:Classify() == CLASS_COMBINE then
+				if self.Gender == 1 then
+					self:PlaySoundSystem("Alert", {"vo/npc/female01/combine01.wav", 
+					"vo/npc/female01/combine02.wav"})
+				else
 					self:PlaySoundSystem("Alert", {"vo/npc/male01/combine01.wav", 
-												"vo/npc/male01/combine02.wav"})
-					return
-				elseif v == "CLASS_ZOMBIE" or argent:Classify() == CLASS_ZOMBIE then
-					self:PlaySoundSystem("Alert", {"vo/npc/male01/zombies01.wav", 
-												"vo/npc/male01/zombies02.wav"})
-					return
+					"vo/npc/male01/combine02.wav"})
+				end
+				return
+			elseif v == "CLASS_ZOMBIE" or argent:Classify() == CLASS_ZOMBIE then
+			
+			if self.Gender == 1 then
+				self:PlaySoundSystem("Alert", {"vo/npc/female01/zombies01.wav", 
+				"vo/npc/female01/zombies02.wav"})
+			else
+				self:PlaySoundSystem("Alert", {"vo/npc/male01/zombies01.wav", 
+				"vo/npc/male01/zombies02.wav"})
+			end
+				return
 				end
 			end
 		end
-		if  argent.IsVJBaseSNPC_Creature == true then
-			self:PlaySoundSystem("Alert", {"vo/npc/male01/cit_dropper01.wav",
-	"vo/npc/male01/evenodds.wav",
-	"vo/npc/male01/gethellout.wav",
-	"vo/npc/male01/overthere01.wav",
-	"vo/npc/male01/overthere02.wav",
-	"vo/npc/male01/overhere01.wav",
-	"vo/npc/male01/headsup01.wav",
-	"vo/npc/male01/headsup02.wav",
-	"vo/npc/male01/heretheycome01.wav",
-	"vo/npc/male01/incoming02.wav",
-	"vo/npc/male01/overhere01.wav",
-	"vo/npc/male01/overthere01.wav",
-	"vo/npc/male01/overthere02.wav",
-	"vo/npc/male01/squad_away02.wav",
-	"vo/npc/male01/upthere01.wav",
-	"vo/npc/male01/upthere02.wav",
-	"vo/canals/male01/stn6_incoming.wav"})
-			return
-		elseif argent.IsVJBaseSNPC_Human == true then
-			self:PlaySoundSystem("Alert", {"vo/npc/male01/cit_dropper01.wav",
-	"vo/npc/male01/evenodds.wav",
-	"vo/npc/male01/gethellout.wav",
-	"vo/npc/male01/overthere01.wav",
-	"vo/npc/male01/overthere02.wav",
-	"vo/npc/male01/overhere01.wav",
-	"vo/npc/male01/headsup01.wav",
-	"vo/npc/male01/headsup02.wav",
-	"vo/npc/male01/heretheycome01.wav",
-	"vo/npc/male01/incoming02.wav",
-	"vo/npc/male01/overhere01.wav",
-	"vo/npc/male01/overthere01.wav",
-	"vo/npc/male01/overthere02.wav",
-	"vo/npc/male01/squad_away02.wav",
-	"vo/npc/male01/upthere01.wav",
-	"vo/npc/male01/upthere02.wav",
-	"vo/canals/male01/stn6_incoming.wav"})
-			return
+	end
+	if argent:IsPlayer() then
+		if self.Gender == 1 then
+			self:PlaySoundSystem("Alert", {"vo/npc/female01/gordead_ques05.wav", 
+			"vo/npc/female01/gordead_ques12.wav",
+			"vo/npc/female01/gordead_ques13.wav",
+			"vo/npc/female01/gordead_ques17.wav"})
+		else
+			self:PlaySoundSystem("Alert", {"vo/npc/male01/gordead_ques03a.wav", 
+			"vo/npc/male01/gordead_ques03b.wav",
+			"vo/npc/male01/gordead_ques05.wav",
+			"vo/npc/male01/gordead_ques12.wav",
+			"vo/npc/male01/gordead_ques13.wav",
+			"vo/npc/male01/gordead_ques17.wav"})
 		end
 	end
 end
@@ -653,43 +942,59 @@ function ENT:MultipleMeleeAttacks()
 
 	if randattack_stand == 1 then
 		self.AnimTbl_MeleeAttack = {"swing"}
-		self.TimeUntilMeleeAttackDamage = 0.4
-		self.MeleeAttackDamage = math.Rand(2,5)
+		if self.Gender == 1 then
+			self.TimeUntilMeleeAttackDamage = 0.7
+		else
+			self.TimeUntilMeleeAttackDamage = 0.4
+		end
+		self.MeleeAttackDamage = math.Rand(5,10)
 		self.MeleeAttackDamageType = DMG_CLUB
 		self.HasMeleeAttackKnockBack = false
 		
 	elseif randattack_stand == 2 then
 		self.AnimTbl_MeleeAttack = {"swing"}
-		self.TimeUntilMeleeAttackDamage = 0.4
-		self.MeleeAttackDamage = math.Rand(2,5)
+		if self.Gender == 1 then
+			self.TimeUntilMeleeAttackDamage = 0.7
+		else
+			self.TimeUntilMeleeAttackDamage = 0.4
+		end
+		self.MeleeAttackDamage = math.Rand(5,10)
 		self.MeleeAttackDamageType = DMG_CLUB
 		self.HasMeleeAttackKnockBack = false
 		
 	elseif randattack_stand == 3 then
 		self.AnimTbl_MeleeAttack = {"swing"}
-		self.TimeUntilMeleeAttackDamage = 0.4
-		self.MeleeAttackDamage = math.Rand(2,5)
+		if self.Gender == 1 then
+			self.TimeUntilMeleeAttackDamage = 0.7
+		else
+			self.TimeUntilMeleeAttackDamage = 0.4
+		end
+		self.MeleeAttackDamage = math.Rand(5,10)
 		self.MeleeAttackDamageType = DMG_CLUB
 		self.HasMeleeAttackKnockBack = false
 		
 	elseif randattack_stand == 4 then
 		self.AnimTbl_MeleeAttack = {"swing"}
-		self.TimeUntilMeleeAttackDamage = 0.4
-		self.MeleeAttackDamage = math.Rand(2,5)
+		if self.Gender == 1 then
+			self.TimeUntilMeleeAttackDamage = 0.7
+		else
+			self.TimeUntilMeleeAttackDamage = 0.4
+		end
+		self.MeleeAttackDamage = math.Rand(5,10)
 		self.MeleeAttackDamageType = DMG_CLUB
 		self.HasMeleeAttackKnockBack = false
 		
 	elseif randattack_stand == 5 then
 		self.AnimTbl_MeleeAttack = {"throw1"}
-		self.TimeUntilMeleeAttackDamage = 1
-		self.MeleeAttackDamage = math.Rand(5,10)
+		self.TimeUntilMeleeAttackDamage = 0.95
+		self.MeleeAttackDamage = math.Rand(10,15)
 		self.MeleeAttackDamageType = DMG_CLUB
 		self.HasMeleeAttackKnockBack = false
 		
 	elseif randattack_stand == 6 then
 		self.AnimTbl_MeleeAttack = {"ThrowItem"}
 		self.TimeUntilMeleeAttackDamage = 1
-		self.MeleeAttackDamage = math.Rand(2,5)
+		self.MeleeAttackDamage = math.Rand(5,10)
 		self.MeleeAttackDamageType = DMG_CLUB
 		self.HasMeleeAttackKnockBack = true
 		self.MeleeAttackKnockBack_Forward1 = 55
@@ -700,7 +1005,7 @@ function ENT:MultipleMeleeAttacks()
 	elseif randattack_stand == 7 then
 		self.AnimTbl_MeleeAttack = {"MeleeAttack01"}
 		self.TimeUntilMeleeAttackDamage = 0.5
-		self.MeleeAttackDamage = math.Rand(2,5)
+		self.MeleeAttackDamage = math.Rand(5,10)
 		self.MeleeAttackDamageType = DMG_CLUB
 		self.HasMeleeAttackKnockBack = true
 		self.MeleeAttackKnockBack_Forward1 = 55
@@ -708,11 +1013,10 @@ function ENT:MultipleMeleeAttacks()
 		self.MeleeAttackKnockBack_Up1 = 35
 		self.MeleeAttackKnockBack_Up2 = 45
 
-		
 	elseif randattack_stand == 8 then
 		self.AnimTbl_MeleeAttack = {"MeleeAttack01"}
 		self.TimeUntilMeleeAttackDamage = 0.5
-		self.MeleeAttackDamage = math.Rand(2,5)
+		self.MeleeAttackDamage = math.Rand(5,10)
 		self.MeleeAttackDamageType = DMG_CLUB
 		self.HasMeleeAttackKnockBack = true
 		self.MeleeAttackKnockBack_Forward1 = 55
@@ -721,22 +1025,80 @@ function ENT:MultipleMeleeAttacks()
 		self.MeleeAttackKnockBack_Up2 = 45
 		
 	end
-	
-	
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:RangeAttackCode_GetShootPos(projectile)
-	local ene = self:GetEnemy()
-		return self:CalculateProjectile("Curve", projectile:GetPos(), ene:GetPos() + ene:OBBCenter(), 1500)
+	return self:CalculateProjectile("Curve", self:GetAttachment(self:LookupAttachment(self.RangeUseAttachmentForPosID)).Pos, self:GetEnemy():GetPos() + self:GetEnemy():OBBCenter(), 1500)
 end
--------------------------------------------------------------------------------------------------------------------
-function ENT:CustomOnChangeMovementType(movType)	
-	if VJ_AnimationExists(self,ACT_JUMP) == true then self:CapabilitiesRemove(bit.bor(CAP_MOVE_JUMP)) end
-	if VJ_AnimationExists(self,ACT_CLIMB_UP) == true then self:CapabilitiesRemove(bit.bor(CAP_MOVE_CLIMB)) end
+---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:CustomOnTakeDamage_BeforeDamage(dmginfo, hitgroup)
+	if math.random(1,3) == 1 && hitgroup == HITGROUP_STOMACH then
+		if self.Gender == 1 then
+		self:PlaySoundSystem("Pain", {"vo/npc/female01/hitingut01.wav","vo/npc/female01/hitingut02.wav","vo/npc/female01/mygut02.wav"})
+		else
+		self:PlaySoundSystem("Pain", {"vo/npc/male01/hitingut01.wav","vo/npc/male01/hitingut02.wav","vo/npc/male01/mygut02.wav"})
+		end
+	end
+	if math.random(1,3) == 1 then 
+		if hitgroup == HITGROUP_LEFTARM || hitgroup == HITGROUP_RIGHTARM then
+		if self.Gender == 1 then
+		self:PlaySoundSystem("Pain", {"vo/npc/female01/myarm01.wav","vo/npc/female01/myarm02.wav"})
+		else
+		self:PlaySoundSystem("Pain", {"vo/npc/male01/myarm01.wav","vo/npc/male01/myarm02.wav"})
+		end
+		end
+	end
+	if math.random(1,3) == 1 then
+		if hitgroup == HITGROUP_LEFTLEG || hitgroup == HITGROUP_RIGHTLEG then
+		if self.Gender == 1 then
+		self:PlaySoundSystem("Pain", {"vo/npc/female01/myleg01.wav","vo/npc/female01/myleg02.wav"})
+		else
+		self:PlaySoundSystem("Pain", {"vo/npc/male01/myleg01.wav","vo/npc/male01/myleg02.wav"})
+		end
+		end
+	end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnInitialKilled(dmginfo, hitgroup)
     self:AddFlags(FL_NOTARGET)
+	self.CanHealBomb = false
+	VJ_STOPSOUND(self.CurrentBreathSound)
+	self.SoundTbl_Breath = {}
+	self.CannotHealStuff = true
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:SetUpGibesOnDeath(dmginfo, hitgroup)
+	self.HasDeathSounds = false
+	if self.HasGibDeathParticles == true then
+		local effectBlood = EffectData()
+		effectBlood:SetOrigin(self:GetPos() + self:OBBCenter())
+		effectBlood:SetColor(VJ_Color2Byte(Color(75,203,55)))
+		effectBlood:SetScale(120)
+		util.Effect("VJ_Blood1",effectBlood)
+		
+		local bloodspray = EffectData()
+		bloodspray:SetOrigin(self:GetPos())
+		bloodspray:SetScale(8)
+		bloodspray:SetFlags(3)
+		bloodspray:SetColor(0)
+		util.Effect("bloodspray",bloodspray)
+		util.Effect("bloodspray",bloodspray)
+	end
+	self:CreateGibEntity("obj_vj_gib","models/gibs/xenians/sgib_01.mdl",{BloodDecal="VJ_Blood_Green",Pos=self:LocalToWorld(Vector(0,0,15))})
+	self:CreateGibEntity("obj_vj_gib","models/gibs/xenians/sgib_03.mdl",{BloodDecal="VJ_Blood_Green",Pos=self:LocalToWorld(Vector(0,0,15))})
+	self:CreateGibEntity("obj_vj_gib","models/Gibs/HGIBS.mdl",{BloodDecal="VJ_Blood_Oil",Pos=self:LocalToWorld(Vector(0,0,25))})
+	self:CreateGibEntity("obj_vj_gib","models/Gibs/HGIBS_rib.mdl",{BloodDecal="VJ_Blood_Oil",Pos=self:LocalToWorld(Vector(0,0,15))})
+	self:CreateGibEntity("obj_vj_gib","models/Gibs/HGIBS_spine.mdl",{BloodDecal="VJ_Blood_Oil",Pos=self:LocalToWorld(Vector(0,0,15))})
+	self:CreateGibEntity("obj_vj_gib","models/healthvial.mdl",{BloodDecal="VJ_Blood_Green",Pos=self:LocalToWorld(Vector(0,0,15))})
+	self:CreateGibEntity("obj_vj_gib","models/healthvial.mdl",{BloodDecal="VJ_Blood_Green",Pos=self:LocalToWorld(Vector(0,0,20))})
+	self:CreateGibEntity("obj_vj_gib","models/grub_nugget_small.mdl",{BloodDecal="VJ_Blood_Yellow",Pos=self:LocalToWorld(Vector(0,0,20))})
+	self:CreateGibEntity("obj_vj_gib","models/grub_nugget_medium.mdl",{BloodDecal="VJ_Blood_Yellow",Pos=self:LocalToWorld(Vector(0,0,25))})
+	return true
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:CustomGibOnDeathSounds(dmginfo, hitgroup)
+	VJ_EmitSound(self, "vj_gib/default_gib_splat.wav", 100, 100)
+	return false
 end
 /*-----------------------------------------------
 	*** Copyright (c) 2012-2019 by DrVrej, All rights reserved. ***
