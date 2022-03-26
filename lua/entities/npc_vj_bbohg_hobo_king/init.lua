@@ -7,7 +7,27 @@ include('shared.lua')
 -----------------------------------------------*/
 ENT.Model = {"models/monster/subject.mdl"} 
 ENT.StartHealth = 1000
-ENT.HullType = HULL_HUMAN
+ENT.VJC_Data = {
+	CameraMode = 1,
+	ThirdP_Offset = Vector(40, 20, -50),
+	FirstP_Bone = "ValveBiped.Bip01_Spine4",
+	FirstP_Offset = Vector(0, 0, 5),
+}
+---------------------------------------------------------------------------------------------------------------------------------------------
+ENT.VJ_NPC_Class = {"CLASS_HOBO"} 
+---------------------------------------------------------------------------------------------------------------------------------------------
+ENT.BloodColor = "Red"
+---------------------------------------------------------------------------------------------------------------------------------------------
+ENT.HasDeathAnimation = true
+ENT.DeathAnimationTime = false
+ENT.DeathAnimationChance = 1
+ENT.AnimTbl_Death = {"deathpose_back",
+	"deathpose_front",
+	"deathpose_left",
+	"deathpose_right"}
+ENT.HasDeathRagdoll = false
+ENT.AllowedToGib = false
+---------------------------------------------------------------------------------------------------------------------------------------------
 ENT.CanFlinch = 1
 ENT.FlinchChance = 3
 ENT.AnimTbl_Flinch = {} 
@@ -21,379 +41,691 @@ ENT.HitGroupFlinching_Values = {
 {HitGroup = {HITGROUP_LEFTLEG}, Animation = {"flinch_leftleg"}}, 
 {HitGroup = {HITGROUP_RIGHTLEG}, Animation = {"flinch_rightleg"}}
 }
-ENT.VJC_Data = {
-	CameraMode = 1,
-	ThirdP_Offset = Vector(40, 20, -50),
-	FirstP_Bone = "ValveBiped.Bip01_Spine4",
-	FirstP_Offset = Vector(0, 0, 5),
-}
 ---------------------------------------------------------------------------------------------------------------------------------------------
-ENT.VJ_NPC_Class = {"CLASS_HOBO"} 
-ENT.BloodColor = "Red"
----------------------------------------------------------------------------------------------------------------------------------------------
-ENT.HasMeleeAttack = true 
 ENT.MeleeAttackDamage = math.Rand(5,10)
 ENT.MeleeAttackDamageType = DMG_CLUB
 ENT.AnimTbl_MeleeAttack = {"swing"}
-ENT.MeleeAttackDistance = 28
+ENT.TimeUntilMeleeAttackDamage = 0.4
+ENT.MeleeAttackDistance = 40
 ENT.MeleeAttackDamageDistance = 60
 ENT.MeleeAttackAngleRadius = 70
 ENT.MeleeAttackDamageAngleRadius = 70
-ENT.TimeUntilMeleeAttackDamage = 0.6
--- ENT.HasOnKilledEnemySound = false
 ---------------------------------------------------------------------------------------------------------------------------------------------
-ENT.HasGrenadeAttack = true -- Should the SNPC have a grenade attack?
-ENT.GrenadeAttackEntity = "obj_vj_bbohg_boot" -- The entity that the SNPC throws | Half Life 2 Grenade: "npc_grenade_frag"
-ENT.GrenadeAttackModel = {} -- Picks a random model from this table to override the model of the grenade
-ENT.GrenadeAttackAttachment = "anim_attachment_RH" -- The attachment that the grenade will spawn at | false = Custom position
-	-- ====== Animation Variables ====== --
-ENT.AnimTbl_GrenadeAttack = {"throw1"} -- Grenade Attack Animations
-ENT.GrenadeAttackAnimationDelay = 0 -- It will wait certain amount of time before playing the animation
-ENT.GrenadeAttackAnimationFaceEnemy = true -- Should it face the enemy while playing the grenade attack animation?
-	-- ====== Distance & Chance Variables ====== --
-ENT.NextThrowGrenadeTime = VJ_Set(5, 10) -- Time until it can throw a grenade again
-ENT.ThrowGrenadeChance = 1 -- Chance that it will throw the grenade | Set to 1 to throw all the time
-ENT.GrenadeAttackThrowDistance = 1500 -- How far it can throw grenades
-ENT.GrenadeAttackThrowDistanceClose = 1 -- How close until it stops throwing grenades
-	-- ====== Timer Variables ====== --
-ENT.TimeUntilGrenadeIsReleased = 0.85 -- Time until the grenade is released
-ENT.GrenadeAttackAnimationStopAttacks = true -- Should it stop attacks for a certain amount of time?
-	-- To let the base automatically detect the attack duration, set this to false:
-ENT.GrenadeAttackAnimationStopAttacksTime = false -- How long should it stop attacks?
-ENT.GrenadeAttackFussTime = 3 -- Time until the grenade explodes
-	-- ====== Grenade Detection & Throwing Back Variables ====== --
-ENT.CanDetectGrenades = true -- Set to false to disable the SNPC from running away from grenades
-ENT.RunFromGrenadeDistance = 400 -- If the entity is this close to the it, then run!
-	-- NOTE: The ability to throw grenades back only work if the SNPC can detect grenades AND has a grenade attack!
-ENT.CanThrowBackDetectedGrenades = true -- Should it try to pick up the detected grenade and throw it back to the enemy?
-	-- ====== Control Variables ====== --
-ENT.DisableGrenadeAttackAnimation = false -- if true, it will disable the animation code when doing grenade attack
+ENT.HasGrenadeAttack = true
+ENT.GrenadeAttackEntity = "obj_vj_bbohg_boot"
+ENT.AnimTbl_GrenadeAttack = {"ThrowItem"}
+ENT.ThrowGrenadeChance = 2
+ENT.GrenadeAttackThrowDistanceClose = 1
+ENT.TimeUntilGrenadeIsReleased = 1.05
 ---------------------------------------------------------------------------------------------------------------------------------------------
-ENT.HasDeathAnimation = true
-ENT.DeathAnimationTime = false
-ENT.DeathAnimationChance = 1
-ENT.AnimTbl_Death = {"deathpose_back",
-	"deathpose_front",
-	"deathpose_left",
-	"deathpose_right"}
-ENT.HasDeathRagdoll = false
-ENT.FootStepSoundLevel = 70
-ENT.MeleeAttackSoundLevel = 75
-ENT.GeneralSoundPitch1 = 85
-ENT.GeneralSoundPitch2 = 75
-ENT.IdleSoundChance = 5
-ENT.CombatIdleSoundChance = 4
 ENT.FootStepTimeRun = 0.25
 ENT.FootStepTimeWalk = 0.5
+
+ENT.IdleSoundChance = 5
+ENT.CombatIdleSoundChance = 4
+
+ENT.GeneralSoundPitch1 = 105
+ENT.GeneralSoundPitch2 = 90
+
+-- ENT.FootStepSoundLevel = 70
+-- ENT.MeleeAttackSoundLevel = 75
 ENT.IdleDialogueDistance = 175
-	ENT.HasSoundTrack = true
-	ENT.SoundTbl_SoundTrack = {"music/Supermassive_Big_Dick.mp3"}
 
-ENT.Weapon_NoSpawnMenu = true
 ENT.AnimTbl_IdleStand = {ACT_IDLE_ANGRY}
-
-ENT.Crowbar = false
-ENT.move = false
-ENT.move2 = false
-ENT.move3 = false
-ENT.infect = true
-ENT.infect2 = false
-ENT.MoveToCorpose = false
-ENT.HasEnemy = false
-ENT.Suck = false
-ENT.HasWeapon = false
-ENT.HatType = 0
-ENT.NST = 0
-ENT.IsSitting = false
-ENT.AlsoIsSitting = 0
 ---------------------------------------------------------------------------------------------------------------------------------------------
 	-- ====== Sound File Paths ====== --
 -- Leave blank if you don't want any sounds to play
 ENT.SoundTbl_FootStep = {"player/footsteps/concrete1.wav",
 	"player/footsteps/concrete2.wav",
 	"player/footsteps/concrete3.wav",
-	"player/footsteps/concrete4.wav",}
+	"player/footsteps/concrete4.wav"}
+ENT.SoundTbl_Idle = {"ambient/voices/cough1.wav",
+	"ambient/voices/cough2.wav",
+	"ambient/voices/cough3.wav",
+	"ambient/voices/cough4.wav"}
 ENT.SoundTbl_MeleeAttack = {"physics/body/body_medium_impact_hard1.wav",
-"physics/body/body_medium_impact_hard2.wav",
-"physics/body/body_medium_impact_hard3.wav",
-"physics/body/body_medium_impact_hard4.wav",
-"physics/body/body_medium_impact_hard5.wav"}
-ENT.SoundTbl_MeleeAttackExtra = {}
+	"physics/body/body_medium_impact_hard2.wav",
+	"physics/body/body_medium_impact_hard3.wav",
+	"physics/body/body_medium_impact_hard4.wav",
+	"physics/body/body_medium_impact_hard5.wav",
+	"physics/body/body_medium_impact_hard6.wav"}
 ENT.SoundTbl_MeleeAttackMiss = {"npc/zombie/claw_miss2.wav",
 	"npc/zombie/claw_miss1.wav"}
+ENT.HasSoundTrack = true
+ENT.SoundTbl_SoundTrack = {"music/Supermassive_Big_Dick.mp3"}
 -------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnInitialize()
+	if GetConVarNumber("vj_BBOHG_NoGodsNoMasters") == 1 then
+		self.VJ_NPC_Class = {"CLASS_BBOHG"}
+		self.FriendsWithAllPlayerAllies = false
+	end
+	self.SoundTbl_CombatIdle = {"npc/hobo/voice1/cidle_1.mp3",
+		"npc/hobo/voice1/cidle_2.mp3",
+		"npc/hobo/voice1/cidle_3.mp3",
+		"npc/hobo/voice1/cidle_4.mp3",
+		"npc/hobo/voice1/cidle_5.mp3",
+		"npc/hobo/voice1/cidle_6.mp3",
+		"npc/hobo/voice1/alert_1.mp3",
+		"npc/hobo/voice1/alert_2.mp3",
+		"npc/hobo/voice1/cant_reach_10.mp3",
+		"npc/hobo/voice1/cant_reach_11.mp3",
+		"npc/hobo/voice1/cant_reach_13.mp3",
+		"npc/hobo/voice1/cant_reach_7.mp3",
+		"npc/hobo/voice1/cant_reach_8.mp3"}
+	self.SoundTbl_Alert = {"npc/hobo/voice1/alert_1.mp3",	
+		"npc/hobo/voice1/alert_2.mp3",
+		"npc/hobo/voice1/cidle_1.mp3",
+		"npc/hobo/voice1/cidle_2.mp3",
+		"npc/hobo/voice1/cidle_5.mp3",
+		"npc/hobo/voice1/cidle_6.mp3"}
+	self.SoundTbl_OnKilledEnemy = {"npc/hobo/voice1/alert_2.mp3",
+		"npc/hobo/voice1/cant_reach_11.mp3",
+		"npc/hobo/voice1/cant_reach_13.mp3",
+		"npc/hobo/voice1/cidle_4.mp3",
+		"npc/hobo/voice1/cidle_5.mp3",
+		"npc/hobo/voice1/death_3.mp3"}
+	self.SoundTbl_LostEnemy = {"npc/hobo/voice1/lost_1.mp3",
+		"npc/hobo/voice1/cant_reach_11.mp3",
+		"npc/hobo/voice1/cidle_1.mp3",
+		"npc/hobo/voice1/cidle_2.mp3",
+		"npc/hobo/voice1/cidle_3.mp3",
+		"npc/hobo/voice1/cidle_4.mp3",
+		"npc/hobo/voice1/cidle_5.mp3",
+		"npc/hobo/voice1/cidle_6.mp3",
+		"npc/hobo/voice1/death_1.mp3",
+		"npc/hobo/voice1/death_2.mp3",
+		"npc/hobo/voice1/death_3.mp3"}
+	self.SoundTbl_Pain = {"npc/hobo/voice1/pain_1.mp3",
+		"npc/hobo/voice1/pain_2.mp3",
+		"npc/hobo/voice1/pain_3.mp3",
+		"npc/hobo/voice1/pain_4.mp3",
+		"npc/hobo/voice1/death_2.mp3"}
+	self.SoundTbl_Death = {"npc/hobo/voice1/death_1.mp3",
+		"npc/hobo/voice1/death_2.mp3",
+		"npc/hobo/voice1/death_3.mp3",
+		"npc/hobo/voice1/pain_1.mp3",
+		"npc/hobo/voice1/pain_2.mp3",
+		"npc/hobo/voice1/pain_3.mp3",
+		"npc/hobo/voice1/pain_4.mp3"}
+	self.SoundTbl_IdleDialogue = {"npc/hobo/voice1/alert_1.mp3",
+		"npc/hobo/voice1/cant_reach_13.mp3",
+		"npc/hobo/voice1/cidle_2.mp3",
+		"npc/hobo/voice1/cidle_4.mp3"}
+	self.SoundTbl_IdleDialogueAnswer = {"npc/hobo/voice1/cant_reach_10.mp3",
+		"npc/hobo/voice1/cant_reach_7.mp3",
+		"npc/hobo/voice1/cant_reach_8.mp3",
+		"npc/hobo/voice1/cidle_4.mp3",
+		"npc/hobo/voice1/cidle_5.mp3"}
+	self.SoundTbl_Investigate = {"npc/hobo/voice1/cidle_1.mp3",
+		"npc/hobo/voice1/cidle_2.mp3",
+		"npc/hobo/voice1/cidle_3.mp3",
+		"npc/hobo/voice1/cidle_4.mp3",
+		"npc/hobo/voice1/cidle_5.mp3",
+		"npc/hobo/voice1/cidle_6.mp3",
+		"npc/hobo/voice1/alert_1.mp3",
+		"npc/hobo/voice1/alert_2.mp3",
+		"npc/hobo/voice1/cant_reach_10.mp3",
+		"npc/hobo/voice1/cant_reach_11.mp3",
+		"npc/hobo/voice1/cant_reach_13.mp3",
+		"npc/hobo/voice1/cant_reach_7.mp3",
+		"npc/hobo/voice1/cant_reach_8.mp3"}
+	self.SoundTbl_CallForHelp = {"npc/hobo/voice1/cant_reach_1.mp3",
+		"npc/hobo/voice1/cant_reach_11.mp3",
+		"npc/hobo/voice1/cant_reach_13.mp3",
+		"npc/hobo/voice1/cant_reach_12.mp3",
+		"npc/hobo/voice1/cant_reach_2.mp3",
+		"npc/hobo/voice1/cant_reach_3.mp3",
+		"npc/hobo/voice1/cant_reach_4.mp3",
+		"npc/hobo/voice1/cant_reach_5.mp3",
+		"npc/hobo/voice1/cant_reach_6.mp3",
+		"npc/hobo/voice1/cant_reach_7.mp3"}
+	self.SoundTbl_BeforeMeleeAttack = {"npc/hobo/voice1/pain_1.mp3",
+		"npc/hobo/voice1/pain_2.mp3",
+		"npc/hobo/voice1/pain_3.mp3",
+		"npc/hobo/voice1/pain_4.mp3"}
+	self.SoundTbl_GrenadeAttack = {"npc/hobo/voice1/cant_reach_1.mp3",
+		"npc/hobo/voice1/cant_reach_11.mp3",
+		"npc/hobo/voice1/cant_reach_4.mp3",
+		"npc/hobo/voice1/cidle_1.mp3",
+		"npc/hobo/voice1/cidle_5.mp3",
+		"npc/hobo/voice1/pain_1.mp3",
+		"npc/hobo/voice1/pain_4.mp3"}
 
-	self.NST = CurTime() + math.Rand(5, 65)
-	self.SoundTbl_CombatIdle = {"hobo/voice1/cidle_1.mp3",
-		"hobo/voice1/cidle_2.mp3",
-		"hobo/voice1/cidle_3.mp3",
-		"hobo/voice1/cidle_4.mp3",
-		"hobo/voice1/cidle_5.mp3",
-		"hobo/voice1/cidle_6.mp3",
-		"hobo/voice1/alert_1.mp3",
-		"hobo/voice1/alert_2.mp3",
-		"hobo/voice1/cant_reach_10.mp3",
-		"hobo/voice1/cant_reach_11.mp3",
-		"hobo/voice1/cant_reach_13.mp3",
-		"hobo/voice1/cant_reach_7.mp3",
-		"hobo/voice1/cant_reach_8.mp3"}
-	self.SoundTbl_Alert = {"hobo/voice1/alert_1.mp3",	
-		"hobo/voice1/alert_2.mp3",
-		"hobo/voice1/cidle_1.mp3",
-		"hobo/voice1/cidle_2.mp3",
-		"hobo/voice1/cidle_5.mp3",
-		"hobo/voice1/cidle_6.mp3"}
-	self.SoundTbl_OnKilledEnemy = {"hobo/voice1/alert_2.mp3",
-		"hobo/voice1/cant_reach_11.mp3",
-		"hobo/voice1/cant_reach_13.mp3",
-		"hobo/voice1/cidle_4.mp3",
-		"hobo/voice1/cidle_5.mp3",
-		"hobo/voice1/death_3.mp3"}
-	self.SoundTbl_LostEnemy = {"hobo/voice1/lost_1.mp3",
-		"hobo/voice1/cant_reach_11.mp3",
-		"hobo/voice1/cidle_1.mp3",
-		"hobo/voice1/cidle_2.mp3",
-		"hobo/voice1/cidle_3.mp3",
-		"hobo/voice1/cidle_4.mp3",
-		"hobo/voice1/cidle_5.mp3",
-		"hobo/voice1/cidle_6.mp3",
-		"hobo/voice1/death_1.mp3",
-		"hobo/voice1/death_2.mp3",
-		"hobo/voice1/death_3.mp3"}
-	self.SoundTbl_Pain = {"hobo/voice1/pain_1.mp3",
-		"hobo/voice1/pain_2.mp3",
-		"hobo/voice1/pain_3.mp3",
-		"hobo/voice1/pain_4.mp3",
-		"hobo/voice1/cant_reach_10.mp3",
-		"hobo/voice1/cant_reach_7.mp3",
-		"hobo/voice1/cant_reach_8.mp3",
-		"hobo/voice1/death_2.mp3"}
-	self.SoundTbl_Death = {"hobo/voice1/death_1.mp3",
-		"hobo/voice1/death_2.mp3",
-		"hobo/voice1/death_3.mp3",
-		"hobo/voice1/pain_1.mp3",
-		"hobo/voice1/pain_2.mp3",
-		"hobo/voice1/pain_3.mp3",
-		"hobo/voice1/pain_4.mp3"}
-	self.SoundTbl_IdleDialogue = {"hobo/voice1/alert_1.mp3",
-		"hobo/voice1/cant_reach_13.mp3",
-		"hobo/voice1/cidle_2.mp3",
-		"hobo/voice1/cidle_4.mp3"}
-	self.SoundTbl_IdleDialogueAnswer = {"hobo/voice1/cant_reach_10.mp3",
-		"hobo/voice1/cant_reach_7.mp3",
-		"hobo/voice1/cant_reach_8.mp3",
-		"hobo/voice1/cidle_4.mp3",
-		"hobo/voice1/cidle_5.mp3"}
-	self.SoundTbl_Investigate = {"hobo/voice1/cidle_1.mp3",
-		"hobo/voice1/cidle_2.mp3",
-		"hobo/voice1/cidle_3.mp3",
-		"hobo/voice1/cidle_4.mp3",
-		"hobo/voice1/cidle_5.mp3",
-		"hobo/voice1/cidle_6.mp3",
-		"hobo/voice1/alert_1.mp3",
-		"hobo/voice1/alert_2.mp3",
-		"hobo/voice1/cant_reach_10.mp3",
-		"hobo/voice1/cant_reach_11.mp3",
-		"hobo/voice1/cant_reach_13.mp3",
-		"hobo/voice1/cant_reach_7.mp3",
-		"hobo/voice1/cant_reach_8.mp3"}
-	self.SoundTbl_CallForHelp = {"hobo/voice1/cant_reach_1.mp3",
-		"hobo/voice1/cant_reach_11.mp3",
-		"hobo/voice1/cant_reach_13.mp3",
-		"hobo/voice1/cant_reach_12.mp3",
-		"hobo/voice1/cant_reach_2.mp3",
-		"hobo/voice1/cant_reach_3.mp3",
-		"hobo/voice1/cant_reach_4.mp3",
-		"hobo/voice1/cant_reach_5.mp3",
-		"hobo/voice1/cant_reach_6.mp3",
-		"hobo/voice1/cant_reach_7.mp3"}
-	self.SoundTbl_BeforeMeleeAttack = {"hobo/voice1/pain_1.mp3",
-		"hobo/voice1/pain_2.mp3",
-		"hobo/voice1/pain_3.mp3",
-		"hobo/voice1/pain_4.mp3"}
-	self.SoundTbl_GrenadeAttack = {"hobo/voice1/cant_reach_1.mp3",
-		"hobo/voice1/cant_reach_11.mp3",
-		"hobo/voice1/cant_reach_4.mp3",
-		"hobo/voice1/cidle_1.mp3",
-		"hobo/voice1/cidle_5.mp3",
-		"hobo/voice1/pain_1.mp3",
-		"hobo/voice1/pain_4.mp3"}
-	self.SoundTbl_OnGrenadeSight = {"hobo/voice1/cant_reach_11.mp3",
-		"hobo/voice1/cidle_4.mp3",
-		"hobo/voice1/cidle_5.mp3",
-		"hobo/voice1/death_1.mp3",
-		"hobo/voice1/death_2.mp3",
-		"hobo/voice1/death_3.mp3",
-		"hobo/voice1/pain_1.mp3",
-		"hobo/voice1/pain_2.mp3"}
-	self.SoundTbl_RangeAttack = {"npc/zombie/claw_miss2.wav",
-		"npc/zombie/claw_miss1.wav"}
-
--- self.SoundTbl_Idle = {}
--- self.SoundTbl_MeleeAttack = {}
--- self.SoundTbl_MeleeAttackExtra = {}
--- self.SoundTbl_MeleeAttackMiss = {}
--- self.SoundTbl_MeleeAttackSlowPlayer = {"vj_player/heartbeat.wav"}
--- self.SoundTbl_GrenadeAttack = {}
--- self.SoundTbl_RangeAttack = {}
--- self.SoundTbl_BeforeLeapAttack = {}
--- self.SoundTbl_LeapAttackJump = {}
--- self.SoundTbl_LeapAttackDamage = {}
--- self.SoundTbl_LeapAttackDamageMiss = {}
--- self.SoundTbl_OnKilledEnemy = {}
-
-
-	if math.random (1,4) == 1 then
-		-- self.CombatIdleSoundPitch = VJ_Set(62, 62)
-		-- self.AlertSoundPitch = VJ_Set(62, 62)
-		-- self.LostEnemySoundPitch = VJ_Set(62, 62)
-
-	self.SoundTbl_CombatIdle = {"hobo/voice2/cidle_1.mp3",
-		"hobo/voice2/cidle_2.mp3",
-		"hobo/voice2/cidle_3.mp3",
-		"hobo/voice2/cidle_4.mp3",
-		"hobo/voice2/cidle_5.mp3",
-		"hobo/voice2/cidle_6.mp3",
-		"hobo/voice2/cidle_7.mp3"}
-	self.SoundTbl_Idle = {"hobo/voice2/idle_1.mp3",
-		"hobo/voice2/idle_2.mp3"}
-	self.SoundTbl_Alert = {"hobo/voice2/cidle_1.mp3",
-		"hobo/voice2/cidle_2.mp3",
-		"hobo/voice2/cidle_3.mp3",
-		"hobo/voice2/cidle_4.mp3",
-		"hobo/voice2/cidle_5.mp3",
-		"hobo/voice2/cidle_6.mp3",
-		"hobo/voice2/cidle_7.mp3"}
-	self.SoundTbl_OnKilledEnemy = {"hobo/voice2/kill_1.mp3",
-		"hobo/voice2/kill_2.mp3",
-		"hobo/voice2/kill_3.mp3",
-		"hobo/voice2/kill_4.mp3",
-		"hobo/voice2/kill_5.mp3"}
-	self.SoundTbl_LostEnemy = {"hobo/voice2/pain_1.mp3",
-		"hobo/voice2/pain_2.mp3",
-		"hobo/voice2/pain_3.mp3",
-		"hobo/voice2/pain_4.mp3",
-		"hobo/voice2/pain_5.mp3",
-		"hobo/voice2/pain_6.mp3",
-		"hobo/voice2/pain_7.mp3",
-		"hobo/voice2/pain_8.mp3",
-		"hobo/voice2/pain_9.mp3",
-		"hobo/voice2/pain_10.mp3",
-		"hobo/voice2/pain_11.mp3"}
-	self.SoundTbl_Pain = {"hobo/voice2/pain_1.mp3",
-		"hobo/voice2/pain_2.mp3",
-		"hobo/voice2/pain_3.mp3",
-		"hobo/voice2/pain_4.mp3",
-		"hobo/voice2/pain_5.mp3",
-		"hobo/voice2/pain_6.mp3",
-		"hobo/voice2/pain_7.mp3",
-		"hobo/voice2/pain_8.mp3",
-		"hobo/voice2/pain_9.mp3",
-		"hobo/voice2/pain_10.mp3",
-		"hobo/voice2/pain_11.mp3"}
-	self.SoundTbl_Death = {"hobo/voice2/pain_1.mp3",
-		"hobo/voice2/pain_2.mp3",
-		"hobo/voice2/pain_3.mp3",
-		"hobo/voice2/pain_4.mp3",
-		"hobo/voice2/pain_5.mp3",
-		"hobo/voice2/pain_6.mp3",
-		"hobo/voice2/pain_7.mp3",
-		"hobo/voice2/pain_8.mp3",
-		"hobo/voice2/pain_9.mp3",
-		"hobo/voice2/pain_10.mp3",
-		"hobo/voice2/pain_11.mp3"}
-	self.SoundTbl_IdleDialogue = {"hobo/voice2/cidle_1.mp3",
-		"hobo/voice2/cidle_2.mp3",
-		"hobo/voice2/cidle_3.mp3",
-		"hobo/voice2/cidle_4.mp3",
-		"hobo/voice2/cidle_5.mp3",
-		"hobo/voice2/cidle_6.mp3",
-		"hobo/voice2/cidle_7.mp3"}
-	self.SoundTbl_IdleDialogueAnswer = {"hobo/voice2/pain_1.mp3",
-		"hobo/voice2/pain_2.mp3",
-		"hobo/voice2/pain_3.mp3",
-		"hobo/voice2/pain_4.mp3",
-		"hobo/voice2/pain_5.mp3",
-		"hobo/voice2/pain_6.mp3",
-		"hobo/voice2/pain_7.mp3",
-		"hobo/voice2/pain_8.mp3",
-		"hobo/voice2/pain_9.mp3",
-		"hobo/voice2/pain_10.mp3",
-		"hobo/voice2/pain_11.mp3"}
-	self.SoundTbl_Investigate = {"hobo/voice2/cidle_1.mp3",
-		"hobo/voice2/cidle_2.mp3",
-		"hobo/voice2/cidle_3.mp3",
-		"hobo/voice2/cidle_4.mp3",
-		"hobo/voice2/cidle_5.mp3",
-		"hobo/voice2/cidle_6.mp3",
-		"hobo/voice2/cidle_7.mp3"}
-	self.SoundTbl_CallForHelp = {"hobo/voice2/cidle_1.mp3",
-		"hobo/voice2/cidle_2.mp3",
-		"hobo/voice2/cidle_3.mp3",
-		"hobo/voice2/cidle_4.mp3",
-		"hobo/voice2/cidle_5.mp3",
-		"hobo/voice2/cidle_6.mp3",
-		"hobo/voice2/cidle_7.mp3"}
-	self.SoundTbl_BeforeMeleeAttack = {"hobo/voice2/pain_1.mp3",
-		"hobo/voice2/pain_2.mp3",
-		"hobo/voice2/pain_3.mp3",
-		"hobo/voice2/pain_4.mp3",
-		"hobo/voice2/pain_5.mp3",
-		"hobo/voice2/pain_6.mp3",
-		"hobo/voice2/pain_7.mp3",
-		"hobo/voice2/pain_8.mp3",
-		"hobo/voice2/pain_9.mp3",
-		"hobo/voice2/pain_10.mp3",
-		"hobo/voice2/pain_11.mp3"}
-	self.SoundTbl_GrenadeAttack = {"hobo/voice2/pain_1.mp3",
-		"hobo/voice2/pain_2.mp3",
-		"hobo/voice2/pain_3.mp3",
-		"hobo/voice2/pain_4.mp3",
-		"hobo/voice2/pain_5.mp3",
-		"hobo/voice2/pain_6.mp3",
-		"hobo/voice2/pain_7.mp3",
-		"hobo/voice2/pain_8.mp3",
-		"hobo/voice2/pain_9.mp3",
-		"hobo/voice2/pain_10.mp3",
-		"hobo/voice2/pain_11.mp3"}
-	self.SoundTbl_RangeAttack = {"npc/zombie/claw_miss2.wav",
-		"npc/zombie/claw_miss1.wav"}
-	self.Suck = true
-	
-	
-	if math.random(1,4) == 1 then
-		self.SoundTbl_Pain = {"hobo/voice2/kill_1.mp3",
-		"hobo/voice2/kill_2.mp3",
-		"hobo/voice2/kill_3.mp3"}
+	local VoicePack = math.random(1,6)
+	if VoicePack == 1 then
+		self.SoundTbl_CombatIdle = {"npc/hobo/voice2/cidle_1.mp3",
+			"npc/hobo/voice2/cidle_2.mp3",
+			"npc/hobo/voice2/cidle_3.mp3",
+			"npc/hobo/voice2/cidle_4.mp3",
+			"npc/hobo/voice2/cidle_5.mp3",
+			"npc/hobo/voice2/cidle_6.mp3",
+			"npc/hobo/voice2/cidle_7.mp3"}
+		self.SoundTbl_Idle = {"npc/hobo/voice2/idle_1.mp3",
+			"npc/hobo/voice2/idle_2.mp3"}
+		self.SoundTbl_Alert = {"npc/hobo/voice2/cidle_1.mp3",
+			"npc/hobo/voice2/cidle_2.mp3",
+			"npc/hobo/voice2/cidle_3.mp3",
+			"npc/hobo/voice2/cidle_4.mp3",
+			"npc/hobo/voice2/cidle_5.mp3",
+			"npc/hobo/voice2/cidle_6.mp3",
+			"npc/hobo/voice2/cidle_7.mp3"}
+		self.SoundTbl_OnKilledEnemy = {"npc/hobo/voice2/kill_1.mp3",
+			"npc/hobo/voice2/kill_2.mp3",
+			"npc/hobo/voice2/kill_3.mp3",
+			"npc/hobo/voice2/kill_4.mp3",
+			"npc/hobo/voice2/kill_5.mp3"}
+		self.SoundTbl_LostEnemy = {"npc/hobo/voice2/pain_1.mp3",
+			"npc/hobo/voice2/pain_2.mp3",
+			"npc/hobo/voice2/pain_3.mp3",
+			"npc/hobo/voice2/pain_4.mp3",
+			"npc/hobo/voice2/pain_5.mp3",
+			"npc/hobo/voice2/pain_6.mp3",
+			"npc/hobo/voice2/pain_7.mp3",
+			"npc/hobo/voice2/pain_8.mp3",
+			"npc/hobo/voice2/pain_9.mp3",
+			"npc/hobo/voice2/pain_10.mp3"}
+		self.SoundTbl_Pain = {"npc/hobo/voice2/pain_1.mp3",
+			"npc/hobo/voice2/pain_2.mp3",
+			"npc/hobo/voice2/pain_3.mp3",
+			"npc/hobo/voice2/pain_4.mp3",
+			"npc/hobo/voice2/pain_5.mp3",
+			"npc/hobo/voice2/pain_6.mp3",
+			"npc/hobo/voice2/pain_7.mp3",
+			"npc/hobo/voice2/pain_8.mp3",
+			"npc/hobo/voice2/pain_9.mp3",
+			"npc/hobo/voice2/pain_10.mp3",
+			"npc/hobo/voice2/pain_11.mp3"}
+		self.SoundTbl_Death = {"npc/hobo/voice2/pain_1.mp3",
+			"npc/hobo/voice2/pain_2.mp3",
+			"npc/hobo/voice2/pain_3.mp3",
+			"npc/hobo/voice2/pain_4.mp3",
+			"npc/hobo/voice2/pain_5.mp3",
+			"npc/hobo/voice2/pain_6.mp3",
+			"npc/hobo/voice2/pain_7.mp3",
+			"npc/hobo/voice2/pain_8.mp3",
+			"npc/hobo/voice2/pain_9.mp3",
+			"npc/hobo/voice2/pain_10.mp3"}
+		self.SoundTbl_IdleDialogue = {"npc/hobo/voice2/cidle_1.mp3",
+			"npc/hobo/voice2/cidle_2.mp3",
+			"npc/hobo/voice2/cidle_3.mp3",
+			"npc/hobo/voice2/cidle_4.mp3",
+			"npc/hobo/voice2/cidle_5.mp3",
+			"npc/hobo/voice2/cidle_6.mp3",
+			"npc/hobo/voice2/cidle_7.mp3"}
+		self.SoundTbl_IdleDialogueAnswer = {"npc/hobo/voice2/pain_1.mp3",
+			"npc/hobo/voice2/pain_2.mp3",
+			"npc/hobo/voice2/pain_3.mp3",
+			"npc/hobo/voice2/pain_4.mp3",
+			"npc/hobo/voice2/pain_5.mp3",
+			"npc/hobo/voice2/pain_6.mp3",
+			"npc/hobo/voice2/pain_7.mp3",
+			"npc/hobo/voice2/pain_8.mp3",
+			"npc/hobo/voice2/pain_9.mp3",
+			"npc/hobo/voice2/pain_10.mp3",
+			"npc/hobo/voice2/pain_11.mp3"}
+		self.SoundTbl_Investigate = {"npc/hobo/voice2/cidle_1.mp3",
+			"npc/hobo/voice2/cidle_2.mp3",
+			"npc/hobo/voice2/cidle_3.mp3",
+			"npc/hobo/voice2/cidle_4.mp3",
+			"npc/hobo/voice2/cidle_5.mp3",
+			"npc/hobo/voice2/cidle_6.mp3",
+			"npc/hobo/voice2/cidle_7.mp3"}
+		self.SoundTbl_CallForHelp = {"npc/hobo/voice2/cidle_1.mp3",
+			"npc/hobo/voice2/cidle_2.mp3",
+			"npc/hobo/voice2/cidle_3.mp3",
+			"npc/hobo/voice2/cidle_4.mp3",
+			"npc/hobo/voice2/cidle_5.mp3",
+			"npc/hobo/voice2/cidle_6.mp3",
+			"npc/hobo/voice2/cidle_7.mp3"}
+		self.SoundTbl_BeforeMeleeAttack = {"npc/hobo/voice2/pain_1.mp3",
+			"npc/hobo/voice2/pain_2.mp3",
+			"npc/hobo/voice2/pain_3.mp3",
+			"npc/hobo/voice2/pain_4.mp3",
+			"npc/hobo/voice2/pain_5.mp3",
+			"npc/hobo/voice2/pain_6.mp3",
+			"npc/hobo/voice2/pain_7.mp3",
+			"npc/hobo/voice2/pain_8.mp3",
+			"npc/hobo/voice2/pain_9.mp3",
+			"npc/hobo/voice2/pain_10.mp3",
+			"npc/hobo/voice2/pain_11.mp3"}
+		self.SoundTbl_GrenadeAttack = {"npc/hobo/voice2/pain_1.mp3",
+			"npc/hobo/voice2/pain_2.mp3",
+			"npc/hobo/voice2/pain_3.mp3",
+			"npc/hobo/voice2/pain_4.mp3",
+			"npc/hobo/voice2/pain_5.mp3",
+			"npc/hobo/voice2/pain_6.mp3",
+			"npc/hobo/voice2/pain_7.mp3",
+			"npc/hobo/voice2/pain_8.mp3",
+			"npc/hobo/voice2/pain_9.mp3",
+			"npc/hobo/voice2/pain_10.mp3",
+			"npc/hobo/voice2/pain_11.mp3"}
+		if math.random(1,4) == 1 then
+			self.SoundTbl_Pain = {"npc/hobo/voice2/kill_1.mp3",
+			"npc/hobo/voice2/kill_2.mp3",
+			"npc/hobo/voice2/kill_3.mp3"}
 		end
+	elseif VoicePack == 2 || VoicePack == 5 then
+		self.SoundTbl_CombatIdle = {"npc/hobo/voice3/200poundsofbirdsht.mp3",
+			"npc/hobo/voice3/ass.mp3",
+			"npc/hobo/voice3/banana.mp3",
+			"npc/hobo/voice3/bosshark.mp3",
+			"npc/hobo/voice3/btch (1).mp3",
+			"npc/hobo/voice3/consumeshort.mp3",
+			"npc/hobo/voice3/fyoukid.mp3",
+			"npc/hobo/voice3/georgeforeman.mp3",
+			"npc/hobo/voice3/kickass_ (1).mp3",
+			"npc/hobo/voice3/kissmyass.mp3",
+			"npc/hobo/voice3/laugh (1).mp3",
+			"npc/hobo/voice3/laugh (2).mp3",
+			"npc/hobo/voice3/laugh (3).mp3",
+			"npc/hobo/voice3/machoman.mp3",
+			"npc/hobo/voice3/mfs.mp3",
+			"npc/hobo/voice3/myass.mp3",
+			"npc/hobo/voice3/scotchtape.mp3",
+			"npc/hobo/voice3/waste.mp3",
+			}
+		self.SoundTbl_Idle = {"npc/hobo/voice3/btch (2).mp3",
+			"npc/hobo/voice3/f (5).mp3",
+			"npc/hobo/voice3/f (8).mp3",
+			"npc/hobo/voice3/f (9).mp3",
+			"npc/hobo/voice3/georgeforeman.mp3",
+			"npc/hobo/voice3/shut (2).mp3"
+			}
+		self.SoundTbl_Alert = {"npc/hobo/voice3/ass.mp3",
+			"npc/hobo/voice3/bosshark.mp3",
+			"npc/hobo/voice3/btch (1).mp3",
+			"npc/hobo/voice3/foff.mp3",
+			"npc/hobo/voice3/fyoukid.mp3",
+			"npc/hobo/voice3/georgeforeman.mp3",
+			"npc/hobo/voice3/hey.mp3",
+			"npc/hobo/voice3/machoman.mp3",
+			"npc/hobo/voice3/mfs.mp3",
+			"npc/hobo/voice3/peeved.mp3",
+			"npc/hobo/voice3/waste.mp3",
+			}
+		self.SoundTbl_OnKilledEnemy = {"npc/hobo/voice3/200poundsofbirdsht.mp3",
+			"npc/hobo/voice3/alright.mp3",
+			"npc/hobo/voice3/btch (1).mp3",
+			"npc/hobo/voice3/consumeshort.mp3",
+			"npc/hobo/voice3/fa.mp3",
+			"npc/hobo/voice3/fyou (1).mp3",
+			"npc/hobo/voice3/fyou (2).mp3",
+			"npc/hobo/voice3/fyou (3).mp3",
+			"npc/hobo/voice3/fyoukid.mp3",
+			"npc/hobo/voice3/laugh (1).mp3",
+			"npc/hobo/voice3/laugh (2).mp3",
+			"npc/hobo/voice3/laugh (3).mp3",
+			"npc/hobo/voice3/mallsanta.mp3",
+			"npc/hobo/voice3/myass.mp3",
+			"npc/hobo/voice3/pos.mp3",
+			"npc/hobo/voice3/scotchtape.mp3",
+			"npc/hobo/voice3/shut (1).mp3",
+			"npc/hobo/voice3/waste.mp3",
+			}
+		self.SoundTbl_LostEnemy = {"npc/hobo/voice3/btch (1).mp3",
+			"npc/hobo/voice3/f (1).mp3",
+			"npc/hobo/voice3/foff.mp3",
+			"npc/hobo/voice3/fyoukid.mp3",
+			"npc/hobo/voice3/jollypark.mp3",
+			"npc/hobo/voice3/myass.mp3",
+			"npc/hobo/voice3/peeved.mp3",
+			"npc/hobo/voice3/sht (9).mp3",
+			"npc/hobo/voice3/sht (10).mp3",
+			"npc/hobo/voice3/sht (11).mp3",
+			"npc/hobo/voice3/sht (12).mp3",
+			"npc/hobo/voice3/sht (13).mp3",
+			"npc/hobo/voice3/sht (14).mp3",
+			"npc/hobo/voice3/sht (15).mp3",
+			"npc/hobo/voice3/sht (25).mp3",
+			"npc/hobo/voice3/sht (26).mp3",
+			"npc/hobo/voice3/sht (32).mp3",
+			"npc/hobo/voice3/sht (33).mp3",
+			"npc/hobo/voice3/sht (34).mp3",
+			"npc/hobo/voice3/sht (35).mp3",
+			}
+		self.SoundTbl_Pain = {"npc/hobo/voice3/ahole.mp3",
+			"npc/hobo/voice3/ass.mp3",
+			"npc/hobo/voice3/breath.mp3",
+			"npc/hobo/voice3/btch (2).mp3",
+			"npc/hobo/voice3/chestpain.mp3",
+			"npc/hobo/voice3/constipated.mp3",
+			"npc/hobo/voice3/crotchpain.mp3",
+			"npc/hobo/voice3/f (1).mp3",
+			"npc/hobo/voice3/f (2).mp3",
+			"npc/hobo/voice3/f (4).mp3",
+			"npc/hobo/voice3/f (5).mp3",
+			"npc/hobo/voice3/f (6).mp3",
+			"npc/hobo/voice3/f (7).mp3",
+			"npc/hobo/voice3/f (8).mp3",
+			"npc/hobo/voice3/f (9).mp3",
+			"npc/hobo/voice3/fyou (1).mp3",
+			"npc/hobo/voice3/fyou (2).mp3",
+			"npc/hobo/voice3/fyou (3).mp3",
+			"npc/hobo/voice3/georgeforeman.mp3",
+			"npc/hobo/voice3/goatcancer.mp3",
+			"npc/hobo/voice3/hurts.mp3",
+			"npc/hobo/voice3/iactuallydontknow.mp3",
+			"npc/hobo/voice3/kickass_ (1).mp3",
+			"npc/hobo/voice3/kickass_ (2).mp3",
+			"npc/hobo/voice3/kickass_ (3).mp3",
+			"npc/hobo/voice3/kissmyass.mp3",
+			"npc/hobo/voice3/lungcancer (1).mp3",
+			"npc/hobo/voice3/lungcancer (2).mp3",
+			"npc/hobo/voice3/lungcancer (3).mp3",
+			"npc/hobo/voice3/lungcancer (4).mp3",
+			"npc/hobo/voice3/lungcancer (5).mp3",
+			"npc/hobo/voice3/lungcancer (6).mp3",
+			"npc/hobo/voice3/lungcancer (7).mp3",
+			"npc/hobo/voice3/lungcancer (8).mp3",
+			"npc/hobo/voice3/lungcancer (9).mp3",
+			"npc/hobo/voice3/lungcancer (10).mp3",
+			"npc/hobo/voice3/lungcancer (11).mp3",
+			"npc/hobo/voice3/lungcancer (12).mp3",
+			"npc/hobo/voice3/lungcancer (13).mp3",
+			"npc/hobo/voice3/lungcancer (14).mp3",
+			"npc/hobo/voice3/mfs.mp3",
+			"npc/hobo/voice3/ouch.mp3",
+			"npc/hobo/voice3/ow.mp3",
+			"npc/hobo/voice3/sht (1).mp3",
+			"npc/hobo/voice3/sht (3).mp3",
+			"npc/hobo/voice3/sht (4).mp3",
+			"npc/hobo/voice3/sht (5).mp3",
+			"npc/hobo/voice3/sht (6).mp3",
+			"npc/hobo/voice3/sht (7).mp3",
+			"npc/hobo/voice3/sht (8).mp3",
+			"npc/hobo/voice3/sht (12).mp3",
+			"npc/hobo/voice3/sht (20).mp3",
+			"npc/hobo/voice3/sht (21).mp3",
+			"npc/hobo/voice3/sht (22).mp3",
+			"npc/hobo/voice3/sht (23).mp3",
+			"npc/hobo/voice3/sht (24).mp3",
+			"npc/hobo/voice3/sht (27).mp3",
+			"npc/hobo/voice3/sht (28).mp3",
+			"npc/hobo/voice3/sht (29).mp3",
+			"npc/hobo/voice3/suck.mp3",
+			}
+		self.SoundTbl_Death = {"npc/hobo/voice3/btch (1).mp3",
+			"npc/hobo/voice3/earthquake.mp3",
+			"npc/hobo/voice3/f (1).mp3",
+			"npc/hobo/voice3/f (10).mp3",
+			"npc/hobo/voice3/f (2).mp3",
+			"npc/hobo/voice3/f (3).mp3",
+			"npc/hobo/voice3/f (4).mp3",
+			"npc/hobo/voice3/sht (2).mp3",
+			"npc/hobo/voice3/sht (16).mp3",
+			"npc/hobo/voice3/sht (17).mp3",
+			"npc/hobo/voice3/sht (18).mp3",
+			"npc/hobo/voice3/sht (19).mp3",
+			"npc/hobo/voice3/sht (30).mp3",
+			"npc/hobo/voice3/sht (31).mp3",
+			"npc/hobo/voice3/wtf.mp3",
+			}
+		self.SoundTbl_IdleDialogue = {"npc/hobo/voice3/200poundsofbirdsht.mp3",
+			"npc/hobo/voice3/ass.mp3",
+			"npc/hobo/voice3/banana.mp3",
+			"npc/hobo/voice3/bosshark.mp3",
+			"npc/hobo/voice3/clocks.mp3",
+			"npc/hobo/voice3/defecation.mp3",
+			"npc/hobo/voice3/georgeforeman.mp3",
+			"npc/hobo/voice3/giraffe.mp3",
+			"npc/hobo/voice3/god.mp3",
+			"npc/hobo/voice3/jollypark.mp3",
+			"npc/hobo/voice3/lateshoes.mp3",
+			"npc/hobo/voice3/machoman.mp3",
+			"npc/hobo/voice3/tuba.mp3",
+			"npc/hobo/voice3/waste.mp3",
+			"npc/hobo/voice3/women.mp3",
+			}
+		self.SoundTbl_IdleDialogueAnswer = {"npc/hobo/voice3/200poundsofbirdsht.mp3",
+			"npc/hobo/voice3/alright.mp3",
+			"npc/hobo/voice3/ass.mp3",
+			"npc/hobo/voice3/bosshark.mp3",
+			"npc/hobo/voice3/fa.mp3",
+			"npc/hobo/voice3/foff.mp3",
+			"npc/hobo/voice3/fyou (1).mp3",
+			"npc/hobo/voice3/kissmyass.mp3",
+			"npc/hobo/voice3/mallsanta.mp3",
+			"npc/hobo/voice3/myass.mp3",
+			"npc/hobo/voice3/no (1).mp3",
+			"npc/hobo/voice3/no (2).mp3",
+			"npc/hobo/voice3/no (3).mp3",
+			"npc/hobo/voice3/no (4).mp3",
+			"npc/hobo/voice3/no (5).mp3",
+			"npc/hobo/voice3/shut (2).mp3",
+			"npc/hobo/voice3/sry.mp3",
+			"npc/hobo/voice3/stupid.mp3",
+			"npc/hobo/voice3/suck.mp3",
+			"npc/hobo/voice3/yes_ (1).mp3",
+			"npc/hobo/voice3/yes_ (2).mp3",
+			"npc/hobo/voice3/yes_ (3).mp3",
+			"npc/hobo/voice3/yes_ (4).mp3",
+			"npc/hobo/voice3/yes_ (5).mp3",
+			"npc/hobo/voice3/yes_ (6).mp3",
+			}
+		self.SoundTbl_Investigate = {"npc/hobo/voice3/banana.mp3",
+			"npc/hobo/voice3/defecation.mp3",
+			"npc/hobo/voice3/foff.mp3",
+			"npc/hobo/voice3/kickass_ (1).mp3",
+			"npc/hobo/voice3/kickass_ (2).mp3",
+			"npc/hobo/voice3/kickass_ (3).mp3",
+			"npc/hobo/voice3/whatisit.mp3",
+			}
+		self.SoundTbl_CallForHelp = {"npc/hobo/voice3/btch (1).mp3"}
+		self.SoundTbl_BeforeMeleeAttack = {"npc/hobo/voice3/btch (1).mp3",
+			"npc/hobo/voice3/btch (2).mp3",
+			"npc/hobo/voice3/f (5).mp3",
+			"npc/hobo/voice3/f (6).mp3",
+			"npc/hobo/voice3/f (7).mp3",
+			"npc/hobo/voice3/fyou (3).mp3",
+			"npc/hobo/voice3/kissmyass.mp3",
+			"npc/hobo/voice3/sht (1).mp3",
+			"npc/hobo/voice3/sht (20).mp3",
+			"npc/hobo/voice3/sht (21).mp3",
+			"npc/hobo/voice3/sht (22).mp3",
+			"npc/hobo/voice3/sht (23).mp3",
+			"npc/hobo/voice3/sht (24).mp3",
+			"npc/hobo/voice3/shut (1).mp3",
+			}
+		self.SoundTbl_GrenadeAttack = {"npc/hobo/voice3/ass.mp3",
+			"npc/hobo/voice3/btch (1).mp3",
+			"npc/hobo/voice3/consumeshort.mp3",
+			"npc/hobo/voice3/f (7).mp3",
+			"npc/hobo/voice3/foff.mp3",
+			"npc/hobo/voice3/hey.mp3",
+			"npc/hobo/voice3/mfs.mp3",
+			"npc/hobo/voice3/shoes.mp3",
+			"npc/hobo/voice3/shut (1).mp3"}
+	elseif VoicePack == 3 then
+		self.SoundTbl_CombatIdle = {"npc/hobo/voice4/cidle (1).wav",
+			"npc/hobo/voice4/cidle (2).wav",
+			"npc/hobo/voice4/cidle (3).wav"}
+		self.SoundTbl_Idle = {"npc/hobo/voice4/idle (1).wav",
+			"npc/hobo/voice4/idle (2).wav",
+			"npc/hobo/voice4/idle (3).wav",
+			"npc/hobo/voice4/idle (4).wav",
+			"npc/hobo/voice4/idle (5).wav",
+			"npc/hobo/voice4/idle (6).wav",
+			"npc/hobo/voice4/idle (7).wav",
+			"npc/hobo/voice4/idle (8).wav",
+			"npc/hobo/voice4/idle (9).wav",
+			"npc/hobo/voice4/idle (10).wav"}
+		self.SoundTbl_Alert = {"npc/hobo/voice4/alert (1).wav",
+			"npc/hobo/voice4/alert (2).wav",
+			"npc/hobo/voice4/alert (3).wav",
+			"npc/hobo/voice4/alert (4).wav",
+			"npc/hobo/voice4/alert (5).wav",
+			"npc/hobo/voice4/alert (6).wav",
+			"npc/hobo/voice4/alert (7).wav",
+			"npc/hobo/voice4/alert (8).wav",
+			"npc/hobo/voice4/alert (9).wav",
+			"npc/hobo/voice4/alert (10).wav",
+			"npc/hobo/voice4/alert (11).wav",
+			"npc/hobo/voice4/alert (12).wav",
+			"npc/hobo/voice4/alert (13).wav",
+			"npc/hobo/voice4/alert (14).wav",
+			"npc/hobo/voice4/alert (15).wav",
+			"npc/hobo/voice4/alert (16).wav"}
+		self.SoundTbl_OnKilledEnemy = {"npc/hobo/voice4/cidle (1).wav",
+			"npc/hobo/voice4/cidle (2).wav",
+			"npc/hobo/voice4/cidle (3).wav"}
+		self.SoundTbl_LostEnemy = {"npc/hobo/voice4/pain (1).wav",
+			"npc/hobo/voice4/pain (2).wav",
+			"npc/hobo/voice4/pain (3).wav",
+			"npc/hobo/voice4/pain (4).wav",
+			"npc/hobo/voice4/pain (5).wav",
+			"npc/hobo/voice4/pain (6).wav",
+			"npc/hobo/voice4/pain (7).wav",
+			"npc/hobo/voice4/pain (8).wav",
+			"npc/hobo/voice4/pain (9).wav",
+			"npc/hobo/voice4/pain (10).wav",
+			"npc/hobo/voice4/pain (11).wav",
+			"npc/hobo/voice4/pain (12).wav",
+			"npc/hobo/voice4/pain (13).wav",
+			"npc/hobo/voice4/pain (14).wav",
+			"npc/hobo/voice4/pain (15).wav",
+			"npc/hobo/voice4/pain (16).wav"}
+		self.SoundTbl_Pain = {"npc/hobo/voice4/pain (1).wav",
+			"npc/hobo/voice4/pain (2).wav",
+			"npc/hobo/voice4/pain (3).wav",
+			"npc/hobo/voice4/pain (4).wav",
+			"npc/hobo/voice4/pain (5).wav",
+			"npc/hobo/voice4/pain (6).wav",
+			"npc/hobo/voice4/pain (7).wav",
+			"npc/hobo/voice4/pain (8).wav",
+			"npc/hobo/voice4/pain (9).wav",
+			"npc/hobo/voice4/pain (10).wav",
+			"npc/hobo/voice4/pain (11).wav",
+			"npc/hobo/voice4/pain (12).wav",
+			"npc/hobo/voice4/pain (13).wav",
+			"npc/hobo/voice4/pain (14).wav",
+			"npc/hobo/voice4/pain (15).wav",
+			"npc/hobo/voice4/pain (16).wav"}
+		self.SoundTbl_Death = {"npc/hobo/voice4/death (1).wav",
+			"npc/hobo/voice4/death (2).wav",
+			"npc/hobo/voice4/death (3).wav",
+			"npc/hobo/voice4/death (4).wav",
+			"npc/hobo/voice4/death (5).wav",
+			"npc/hobo/voice4/death (6).wav",
+			"npc/hobo/voice4/death (7).wav",
+			"npc/hobo/voice4/death (8).wav"}
+		self.SoundTbl_IdleDialogue = {"npc/hobo/voice4/cidle (1).wav",
+			"npc/hobo/voice4/cidle (2).wav",
+			"npc/hobo/voice4/cidle (3).wav"}
+		self.SoundTbl_IdleDialogueAnswer = {"npc/hobo/voice4/cidle (1).wav",
+			"npc/hobo/voice4/cidle (2).wav",
+			"npc/hobo/voice4/cidle (3).wav"}
+		self.SoundTbl_Investigate = {"npc/hobo/voice4/cidle (1).wav",
+			"npc/hobo/voice4/cidle (2).wav",
+			"npc/hobo/voice4/cidle (3).wav"}
+		self.SoundTbl_CallForHelp = {"npc/hobo/voice4/cidle (1).wav",
+			"npc/hobo/voice4/cidle (2).wav",
+			"npc/hobo/voice4/cidle (3).wav"}
+		self.SoundTbl_BeforeMeleeAttack = {"npc/hobo/voice4/attack (1).wav",
+			"npc/hobo/voice4/attack (2).wav",
+			"npc/hobo/voice4/attack (3).wav",
+			"npc/hobo/voice4/attack (4).wav",
+			"npc/hobo/voice4/attack (5).wav",
+			"npc/hobo/voice4/attack (6).wav",
+			"npc/hobo/voice4/attack (7).wav",
+			"npc/hobo/voice4/attack (8).wav",
+			"npc/hobo/voice4/attack (9).wav",
+			"npc/hobo/voice4/attack (10).wav",
+			"npc/hobo/voice4/attack (11).wav"}
+		self.SoundTbl_GrenadeAttack = {"npc/hobo/voice4/attack (1).wav",
+			"npc/hobo/voice4/attack (2).wav",
+			"npc/hobo/voice4/attack (3).wav",
+			"npc/hobo/voice4/attack (4).wav",
+			"npc/hobo/voice4/attack (5).wav",
+			"npc/hobo/voice4/attack (6).wav",
+			"npc/hobo/voice4/attack (7).wav",
+			"npc/hobo/voice4/attack (8).wav",
+			"npc/hobo/voice4/attack (9).wav",
+			"npc/hobo/voice4/attack (10).wav",
+			"npc/hobo/voice4/attack (11).wav"}
 	end
 	
-
-				self.Hat = ents.Create("prop_physics")
-				self.Hat:SetModel("models/player/items/humans/top_hat.mdl")
-				self.Hat:SetLocalPos(self:GetPos())
-				//self.Hat:SetPos(self:GetPos())
-				self.Hat:SetOwner(self)
-				self.Hat:SetParent(self)
-				self.Hat:SetLocalAngles(Angle(-120,45,90))
-				self.Hat:Fire("SetParentAttachmentMaintainOffset","anim_attachment_head")
-					self.Hat:Fire("SetParentAttachment","anim_attachment_head")
-				self.Hat:SetCollisionGroup(COLLISION_GROUP_IN_VEHICLE)
-				self.Hat:Spawn()
-				self.Hat:Activate()
-				self.Hat:SetSolid(SOLID_NONE)
-				self.Hat:AddEffects(EF_BONEMERGE)
-				self.Hat:SetKeyValue("rendercolor","255 238 0 255")
-				
-	local WeaponToSpawnWith = math.random(1,3)
-		if WeaponToSpawnWith == 1 then
-			self:Give("weapon_vj_357")
-		else self:Give("weapon_vj_9mmpistol")
+	if math.random(1,10) == 1 then
+	self.SoundTbl_CombatIdle = {"npc/shadowwalk/npc/stalker/stalker_scream1.wav",
+		"npc/shadowwalk/npc/stalker/stalker_scream2.wav",
+		"npc/shadowwalk/npc/stalker/stalker_scream3.wav",	
+		"npc/shadowwalk/npc/stalker/stalker_scream4.wav"}
+	self.SoundTbl_Alert = {"npc/shadowwalk/npc/stalker/stalker_alert1b.wav",	
+		"npc/shadowwalk/npc/stalker/stalker_alert2b.wav",
+		"npc/shadowwalk/npc/stalker/stalker_alert3b.wav"}
+	self.SoundTbl_LostEnemy = {"npc/zombie_poison/pz_alert2.wav",
+		"npc/shadowwalk/npc/stalker/stalker_die2.wav",
+		"npc/shadowwalk/npc/stalker/stalker_scream4.wav"}
+	self.SoundTbl_Pain = {"npc/shadowwalk/npc/stalker/stalker_pain1.wav",
+		"npc/shadowwalk/npc/stalker/stalker_pain2.wav",
+		"npc/shadowwalk/npc/stalker/stalker_pain3.wav"}
+	self.SoundTbl_Death = {"ambient/creatures/town_child_scream1.wav"}
+	self.SoundTbl_Idle = {}
+	self.SoundTbl_OnKilledEnemy = {}
+	self.SoundTbl_IdleDialogue = {}
+	self.SoundTbl_IdleDialogueAnswer = {}
+	self.SoundTbl_Investigate = {}
+	self.SoundTbl_CallForHelp = {}
+	self.SoundTbl_BeforeMeleeAttack = {}
+	self.SoundTbl_GrenadeAttack = {}
+		if math.random (1,20) == 1 then
+			self.CombatIdleSoundPitch = VJ_Set(62, 62)
+			self.AlertSoundPitch = VJ_Set(62, 62)
+			self.LostEnemySoundPitch = VJ_Set(62, 62)
+		self.SoundTbl_CombatIdle = {"npc/shadowwalk/vo/episode_1/citadel/al_stalk_pleasestopscreaming01.wav",
+			"npc/shadowwalk/vo/episode_1/citadel/al_stalk_pleasestopscreaming02.wav",
+			"npc/shadowwalk/vo/episode_1/citadel/al_stalk_pleasestopscreaming03.wav",
+			"npc/shadowwalk/vo/episode_1/citadel/al_stalk_pleasestopscreaming04.wav",
+			"npc/shadowwalk/vo/episode_1/citadel/al_stalk_pleasestopscreaming05.wav",
+			"vo/k_lab2/al_optimism.wav",
+			"npc/shadowwalk/vo/episode_1/c17/al_elev_whereselev.wav",
+			"npc/shadowwalk/vo/episode_1/intro/al_wheredoeshethink.wav",
+			"npc/shadowwalk/vo/outland_02/griggs_everywhere.wav",
+			"npc/shadowwalk/vo/outland_11a/silo/kl_silo_wheredata01.wav",
+			"npc/shadowwalk/vo/episode_1/intro/al_cantbelieveit.wav",
+			"npc/shadowwalk/vo/episode_1/npc/alyx/al_deaf_canthearanything.wav",
+			"npc/shadowwalk/vo/episode_1/npc/alyx/al_deaf_canthearyou.wav",
+			"vo/k_lab/ba_cantlook.wav"}
+		self.SoundTbl_Alert = {"vo/citadel/al_bitofit.wav",
+			"npc/shadowwalk/vo/outland_01/intro/al_rbed_notalone.wav"}
+		self.SoundTbl_LostEnemy = {"vo/citadel/al_notagain02.wav",	
+			"npc/shadowwalk/vo/episode_1/npc/alyx/al_light_lost05.wav",
+			"npc/shadowwalk/vo/episode_1/npc/alyx/al_light_lost11.wav",
+			"vo/citadel/al_wonderwhere.wav",	
+			"npc/shadowwalk/vo/outland_12a/launch/al_launch_damnit.wav",	
+			"vo/streetwar/alyx_gate/al_no.wav",	
+			"vo/k_lab/kl_thenwhere.wav"}
 		end
+	end
+
+	self.Hat = ents.Create("prop_physics")
+	self.Hat:SetModel("models/player/items/humans/top_hat.mdl")
+	self.Hat:SetLocalPos(self:GetPos())
+	//self.Hat:SetPos(self:GetPos())
+	self.Hat:SetOwner(self)
+	self.Hat:SetParent(self)
+	self.Hat:SetLocalAngles(Angle(-120,45,90))
+	self.Hat:Fire("SetParentAttachmentMaintainOffset","anim_attachment_head")
+	self.Hat:Fire("SetParentAttachment","anim_attachment_head")
+	self.Hat:SetCollisionGroup(COLLISION_GROUP_IN_VEHICLE)
+	self.Hat:Spawn()
+	self.Hat:Activate()
+	self.Hat:SetSolid(SOLID_NONE)
+	self.Hat:AddEffects(EF_BONEMERGE)
+	self.Hat:SetKeyValue("rendercolor","255 238 0 255")
+				
+				
+	local SpawnWeapon = math.random(1,3)
+	if SpawnWeapon == 1 then
+		self:Give("weapon_vj_357")
+	else
+		self:Give("weapon_vj_9mmpistol")
+	end
 end
--- end
 ---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:GetSightDirection()
+	return self:GetAttachment(self:LookupAttachment("eyes")).Ang:Forward()
+end
+-------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnSetupWeaponHoldTypeAnims(hType)
 	if hType == "pistol" or hType == "revolver" then
 		self.WeaponAnimTranslations[ACT_RANGE_ATTACK1] 					= ACT_RANGE_ATTACK_PISTOL
@@ -421,142 +753,6 @@ function ENT:CustomOnSetupWeaponHoldTypeAnims(hType)
 		return false
 	end
 end
----------------------------------------------------------------------------------------------------------------------------------------------
-function ENT:CustomOnThink_AIEnabled()
-	if !self.Alerted && !IsValid(self:GetEnemy()) && !self:IsMoving() && CurTime() > self.NST && !self.IsSitting && !self:IsBusy() then
-		local sitt = math.Rand(15,65)
-		self.IsSitting = true
-		self.AnimTbl_IdleStand = {ACT_BUSY_SIT_GROUND}
-		self.AlsoIsSitting = 1
-		self:VJ_ACT_PLAYACTIVITY(ACT_BUSY_SIT_GROUND_ENTRY, true, false, false)
-		self:SetState(VJ_STATE_ONLY_ANIMATION, sitt)
-		timer.Simple(sitt, function()
-			if IsValid(self) && self.IsSitting == true then 
-				self.IsSitting = false
-				self:VJ_ACT_PLAYACTIVITY(ACT_BUSY_SIT_GROUND_EXIT, true, false, false)
-				self.AnimTbl_IdleStand = {ACT_IDLE_ANGRY}
-				self.NST = CurTime() + math.Rand(5, 65)
-			end
-		end)
-	end
-end
----------------------------------------------------------------------------------------------------------------------------------------------
-function ENT:GetSightDirection()
-	return self:GetAttachment(self:LookupAttachment("eyes")).Ang:Forward()
-end
----------------------------------------------------------------------------------------------------------------------------------------------
-function ENT:CustomOnAlert(ent)
-	if self.IsSitting == true then
-		if self:GetState() == VJ_STATE_ONLY_ANIMATION then self:SetState() end
-		self.IsSitting = false
-		self:VJ_ACT_PLAYACTIVITY(ACT_BUSY_SIT_GROUND_EXIT, true, false, false)
-		self.AnimTbl_IdleStand = {ACT_IDLE_ANGRY}
-		self.NST = CurTime() + 5
-	end
-end
----------------------------------------------------------------------------------------------------------------------------------------------
-function ENT:MultipleMeleeAttacks()
-	if !self.HasWeapon == true then
-	local randattack_stand = math.random(1,8)
-
-	if randattack_stand == 1 then
-		self.AnimTbl_MeleeAttack = {"swing"}
-		self.TimeUntilMeleeAttackDamage = 0.4
-		self.MeleeAttackDamage = math.Rand(5,10)
-		self.MeleeAttackDamageType = DMG_CLUB
-		self.HasMeleeAttackKnockBack = false
-		
-	elseif randattack_stand == 2 then
-		self.AnimTbl_MeleeAttack = {"swing"}
-		self.TimeUntilMeleeAttackDamage = 0.4
-		self.MeleeAttackDamage = math.Rand(5,10)
-		self.MeleeAttackDamageType = DMG_CLUB
-		self.HasMeleeAttackKnockBack = false
-		
-	elseif randattack_stand == 3 then
-		self.AnimTbl_MeleeAttack = {"swing"}
-		self.TimeUntilMeleeAttackDamage = 0.4
-		self.MeleeAttackDamage = math.Rand(5,10)
-		self.MeleeAttackDamageType = DMG_CLUB
-		self.HasMeleeAttackKnockBack = false
-		
-	elseif randattack_stand == 4 then
-		self.AnimTbl_MeleeAttack = {"swing"}
-		self.TimeUntilMeleeAttackDamage = 0.4
-		self.MeleeAttackDamage = math.Rand(5,10)
-		self.MeleeAttackDamageType = DMG_CLUB
-		self.HasMeleeAttackKnockBack = false
-		
-	elseif randattack_stand == 5 then
-		self.AnimTbl_MeleeAttack = {"throw1"}
-		self.TimeUntilMeleeAttackDamage = 1
-		self.MeleeAttackDamage = math.Rand(10,15)
-		self.MeleeAttackDamageType = DMG_CLUB
-		self.HasMeleeAttackKnockBack = false
-		
-	elseif randattack_stand == 6 then
-		self.AnimTbl_MeleeAttack = {"ThrowItem"}
-		self.TimeUntilMeleeAttackDamage = 1
-		self.MeleeAttackDamage = math.Rand(5,10)
-		self.MeleeAttackDamageType = DMG_CLUB
-		self.HasMeleeAttackKnockBack = true
-		self.MeleeAttackKnockBack_Forward1 = 55
-		self.MeleeAttackKnockBack_Forward2 = 60
-		self.MeleeAttackKnockBack_Up1 = 100
-		self.MeleeAttackKnockBack_Up2 = 100
-		
-	elseif randattack_stand == 7 then
-		self.AnimTbl_MeleeAttack = {"MeleeAttack01"}
-		self.TimeUntilMeleeAttackDamage = 0.5
-		self.MeleeAttackDamage = math.Rand(5,10)
-		self.MeleeAttackDamageType = DMG_CLUB
-		self.HasMeleeAttackKnockBack = true
-		self.MeleeAttackKnockBack_Forward1 = 55
-		self.MeleeAttackKnockBack_Forward2 = 60
-		self.MeleeAttackKnockBack_Up1 = 35
-		self.MeleeAttackKnockBack_Up2 = 45
-
-		
-	elseif randattack_stand == 8 then
-		self.AnimTbl_MeleeAttack = {"MeleeAttack01"}
-		self.TimeUntilMeleeAttackDamage = 0.5
-		self.MeleeAttackDamage = math.Rand(5,10)
-		self.MeleeAttackDamageType = DMG_CLUB
-		self.HasMeleeAttackKnockBack = true
-		self.MeleeAttackKnockBack_Forward1 = 55
-		self.MeleeAttackKnockBack_Forward2 = 60
-		self.MeleeAttackKnockBack_Up1 = 35
-		self.MeleeAttackKnockBack_Up2 = 45
-		
-	end
-end
-end
----------------------------------------------------------------------------------------------------------------------------------------------
-function ENT:CustomOnGrenadeAttack_ThrowVelocity(grEnt, grTargetPos) 
-	local ene = self:GetEnemy()
-		if IsValid(ene) then
-		return self:CalculateProjectile("Curve", grEnt:GetPos(), ene:GetPos() + ene:OBBCenter(), 1500)
-		else return end
-end
--------------------------------------------------------------------------------------------------------------------
-function ENT:CustomOnChangeMovementType(movType)	
-	if VJ_AnimationExists(self,ACT_JUMP) == true then self:CapabilitiesRemove(bit.bor(CAP_MOVE_JUMP)) end
-	if VJ_AnimationExists(self,ACT_CLIMB_UP) == true then self:CapabilitiesRemove(bit.bor(CAP_MOVE_CLIMB)) end
-end
--------------------------------------------------------------------------------------------------------------------
-function ENT:CustomOnResetEnemy()
-	self.NST = CurTime() + math.Rand(5, 65)
-end
--------------------------------------------------------------------------------------------------------------------
-function ENT:CustomOnTakeDamage_AfterDamage(dmginfo, hitgroup)
-	self.NST = CurTime() + math.Rand(5, 35)
-	if self.IsSitting == true then
-		if self:GetState() == VJ_STATE_ONLY_ANIMATION then self:SetState() end
-		self.IsSitting = false
-		self:VJ_ACT_PLAYACTIVITY(ACT_BUSY_SIT_GROUND_EXIT, true, false, false)
-		self.AnimTbl_IdleStand = {ACT_IDLE_ANGRY}
-	end
-end
 -------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnInitialKilled(dmginfo, hitgroup)
 	timer.Simple(0.0001,function()
@@ -564,58 +760,65 @@ function ENT:CustomOnInitialKilled(dmginfo, hitgroup)
     self:AddFlags(FL_NOTARGET)
 	self:SetRenderFX( kRenderFxDistort )
 		if GetConVarNumber("vj_npc_noidleparticle") == 0 then
+			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("origin"))
+			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("chest"))
+			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_RH"))
+			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_LH"))
+			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("eyes"))
 			ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("origin"))
-			ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("chest"))
+			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("chest"))
 			ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_RH"))
 			ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_LH"))
-			ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("eyes"))
-			ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("origin"))
-			ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("chest"))
-			ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_RH"))
-			ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_LH"))
-			ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("eyes"))
+			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("eyes"))
 		end	
 	end end)
 	timer.Simple(0.1,function()
 	if IsValid(self) then
 	local STabb = math.random(1,2)
 		if STabb == 1 then
-			VJ_EmitSound(self,"boner/bigdeath1.mp3",100,100)
+			VJ_EmitSound(self,"fx/boss_death_initial_1.mp3",100,100)
 		else
-			VJ_EmitSound(self,"boner/bigdeath2.mp3",100,100)
+			VJ_EmitSound(self,"fx/boss_death_initial_2.mp3",100,100)
 		end
-		VJ_EmitSound(self,"boner/bigdeathextra.mp3",100,100)
-		VJ_EmitSound(self,"boner/bigdeathextra.mp3",100,100)
+		VJ_EmitSound(self,"fx/boss_death.mp3",100,100)
+		VJ_EmitSound(self,"fx/boss_death.mp3",100,100)
 	
 	
 	-- self:SetKeyValue("rendercolor","255 255 255 250")
 		timer.Simple(0.5,function()
 		self:SetKeyValue("rendercolor","209 209 209 215") end)
+		self.Hat:SetKeyValue("rendercolor","209 209 209 215")
 		timer.Simple(1,function()
 		self:SetKeyValue("rendercolor","177 177 177 175") end)
+		self.Hat:SetKeyValue("rendercolor","177 177 177 175")
 		timer.Simple(1.5,function()
 		self:SetKeyValue("rendercolor","145 145 145 135") end)
+		self.Hat:SetKeyValue("rendercolor","145 145 145 135")
 		timer.Simple(2,function()
 		self:SetKeyValue("rendercolor","96 96 96 95") 
+		self.Hat:SetKeyValue("rendercolor","96 96 96 95") 
 		if GetConVarNumber("vj_npc_noidleparticle") == 0 then
+			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("origin"))
+			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("chest"))
+			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_RH"))
+			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_LH"))
+			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("eyes"))
 			ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("origin"))
-			ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("chest"))
+			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("chest"))
 			ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_RH"))
 			ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_LH"))
-			ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("eyes"))
-			ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("origin"))
-			ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("chest"))
-			ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_RH"))
-			ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_LH"))
-			ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("eyes"))
+			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("eyes"))
 		end	end)
 		timer.Simple(2.5,function()
 		self:SetKeyValue("rendercolor","55 55 55 45") end)
+		self.Hat:SetKeyValue("rendercolor","55 55 55 45")
 		timer.Simple(3,function()
 		self:SetKeyValue("rendercolor","0 0 0 1") end)
+		self.Hat:SetKeyValue("rendercolor","0 0 0 1")
 		timer.Simple(5.9,function()
-		PrintMessage( HUD_PRINTTALK, "Hobo King has been banned permanently." )
-		PrintMessage( HUD_PRINTTALK, "Reason: RDM." ) end)
+		-- PrintMessage( HUD_PRINTTALK, "Hobo King has been banned permanently." )
+		-- PrintMessage( HUD_PRINTTALK, "Reason: RDM." )
+		end)
 		end
 	end)
 		-- self:SetKeyValue("ColorAlpha","255 255 255 88")
