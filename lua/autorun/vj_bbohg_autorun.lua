@@ -43,10 +43,10 @@ if VJExists == true then
 	
 	-- b0ne(r)s
 		VJ.AddNPC("b0ne(r)","npc_vj_bbohg_boner",vCat)
-		-- VJ.AddNPC("b0ne(r) (Standard)","npc_vj_bbohg_boner_standard",vCat)
-		-- VJ.AddNPC("b0ne(r) (Knight)","npc_vj_bbohg_boner_knight",vCat)
-		-- VJ.AddNPC("b0ne(r) (Frenzy)","npc_vj_bbohg_boner_frenzy",vCat)
-		-- VJ.AddNPC("b0ne(r) (Reviver)","npc_vj_bbohg_boner_reviver",vCat)
+		VJ.AddNPC("b0ne(r) (Standard)","npc_vj_bbohg_boner_standard",vCat)
+		VJ.AddNPC("b0ne(r) (Knight)","npc_vj_bbohg_boner_knight",vCat)
+		VJ.AddNPC("b0ne(r) (Frenzy)","npc_vj_bbohg_boner_frenzy",vCat)
+		VJ.AddNPC("b0ne(r) (Reviver)","npc_vj_bbohg_boner_reviver",vCat)
 		VJ.AddNPC("big b0ne(r)","npc_vj_bbohg_boner_big",vCat)
 		-- VJ.AddNPC("Fatman","npc_vj_bbohg_fat",vCat) -- he has an unofficial alliance
 		-- VJ.AddNPC("Fatman's Skeleton",npc_vj_bbohg_fat_skel",vCat)
