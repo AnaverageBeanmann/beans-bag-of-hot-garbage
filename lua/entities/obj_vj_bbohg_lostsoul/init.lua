@@ -42,11 +42,11 @@ ENT.StartupSoundPitch = VJ_Set(85, 90)
 ENT.IdleSoundPitch = VJ_Set(100, 100)
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnPreInitialize()
-	if math.random(1,10) == 1 then
+	if math.random(1,25) == 1 then
 		self.NextSoundTime_Idle = VJ_Set(0.0001,0.0001)
 		self.SoundTbl_Idle = {"fx/rockefeller.mp3"}
 	end
-	if math.random(1,10) == 1 then
+	if math.random(1,25) == 1 then
 		self.SoundTbl_Startup = {"fx/bad_to_the_balls.mp3"}
 	end
 end

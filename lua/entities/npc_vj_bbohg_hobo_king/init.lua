@@ -64,14 +64,19 @@ ENT.FootStepTimeWalk = 0.5
 ENT.IdleSoundChance = 5
 ENT.CombatIdleSoundChance = 4
 
-ENT.GeneralSoundPitch1 = 105
-ENT.GeneralSoundPitch2 = 90
+ENT.GeneralSoundPitch1 = 90
+ENT.GeneralSoundPitch2 = 80
 
+ENT.SoundTrackPlaybackRate = 1
 -- ENT.FootStepSoundLevel = 70
 -- ENT.MeleeAttackSoundLevel = 75
 ENT.IdleDialogueDistance = 175
 
 ENT.AnimTbl_IdleStand = {ACT_IDLE_ANGRY}
+
+ENT.NextZombieSpawnT = 0
+ENT.AlreadySpawned = false
+ENT.CanSummonHelp = true
 ---------------------------------------------------------------------------------------------------------------------------------------------
 	-- ====== Sound File Paths ====== --
 -- Leave blank if you don't want any sounds to play
@@ -91,10 +96,16 @@ ENT.SoundTbl_MeleeAttack = {"physics/body/body_medium_impact_hard1.wav",
 	"physics/body/body_medium_impact_hard6.wav"}
 ENT.SoundTbl_MeleeAttackMiss = {"npc/zombie/claw_miss2.wav",
 	"npc/zombie/claw_miss1.wav"}
-ENT.HasSoundTrack = true
+ENT.HasSoundTrack = false
 ENT.SoundTbl_SoundTrack = {"music/Supermassive_Big_Dick.mp3"}
 -------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnInitialize()
+	if GetConVarNumber("vj_BBOHG_BossNotifications") == 1 then
+		PrintMessage(HUD_PRINTCENTER, "The Hobo King has spawned!")
+	end
+	if GetConVarNumber("vj_BBOHG_BossMusic") == 1 then
+		self.HasSoundTrack = true
+	end
 	if GetConVarNumber("vj_BBOHG_NoGodsNoMasters") == 1 then
 		self.VJ_NPC_Class = {"CLASS_BBOHG"}
 		self.FriendsWithAllPlayerAllies = false
@@ -686,7 +697,7 @@ function ENT:CustomOnInitialize()
 			"npc/shadowwalk/vo/episode_1/npc/alyx/al_deaf_canthearyou.wav",
 			"vo/k_lab/ba_cantlook.wav"}
 		self.SoundTbl_Alert = {"vo/citadel/al_bitofit.wav",
-			"npc/shadowwalk/vo/outland_01/intro/al_rbed_notalone.wav"}
+			"npc/shadowwalk/vo/outlland_01/intro/al_rbed_notalone.wav"}
 		self.SoundTbl_LostEnemy = {"vo/citadel/al_notagain02.wav",	
 			"npc/shadowwalk/vo/episode_1/npc/alyx/al_light_lost05.wav",
 			"npc/shadowwalk/vo/episode_1/npc/alyx/al_light_lost11.wav",
@@ -726,6 +737,93 @@ function ENT:GetSightDirection()
 	return self:GetAttachment(self:LookupAttachment("eyes")).Ang:Forward()
 end
 -------------------------------------------------------------------------------------------------------------------
+function ENT:CustomOnThink_AIEnabled()
+	if GetConVarNumber("vj_BBOHG_BossReinforcements") == 1 && self.CanSummonHelp == true then
+		if IsValid(self:GetEnemy()) && CurTime() > self.NextZombieSpawnT then
+			if self.AlreadySpawned == false && !IsValid(self.Zombie1) or !IsValid(self.Zombie2) or !IsValid(self.Zombie3) or !IsValid(self.Zombie4) then
+				self.CanSummonHelp = false
+				self.AlreadySpawned = true
+				self.MovementType = VJ_MOVETYPE_STATIONARY
+				self:VJ_ACT_PLAYACTIVITY("vjges_GestureButton", true, false, false)
+			timer.Simple(1,function() if IsValid(self) then
+				VJ_EmitSound(self,{"ambient/energy/weld1.wav","ambient/energy/weld2.wav"},100,math.random(100,95))
+				effects.BeamRingPoint(self:GetPos(), 0.3, 2, 400, 16, 0, Color(127, 0, 0, 255), {material="sprites/orangelight1", framerate=20})
+				effects.BeamRingPoint(self:GetPos(), 0.3, 2, 200, 16, 0, Color(127, 0, 0, 255), {material="sprites/orangelight1", framerate=20})
+			
+			if !IsValid(self.Zombie1) then
+				self.Zombie1 = ents.Create("npc_vj_bbohg_hobo")
+				self.Zombie1:SetPos(self:GetPos() +self:GetRight()*45 +self:GetUp()*5)
+				self.Zombie1:SetAngles(self:GetAngles())
+				self.Zombie1:Spawn()
+				-- timer.Simple(0.3,function() if IsValid(self.Zombie1) then self.Zombie1:SetNoDraw(false) end end)
+				local SpawnAnimation = math.random(1,3)
+				if SpawnAnimation == 1 then
+					self.Zombie1:VJ_ACT_PLAYACTIVITY("slumprise_a", true, false, false)
+				elseif SpawnAnimation == 2 then
+					self.Zombie1:VJ_ACT_PLAYACTIVITY("slumprise_a2", true, false, false)
+				elseif SpawnAnimation == 3 then
+					self.Zombie1:VJ_ACT_PLAYACTIVITY("slumprise_b", true, false, false)
+				end
+			end
+
+			if !IsValid(self.Zombie2) then
+				self.Zombie2 = ents.Create("npc_vj_bbohg_hobo")
+				self.Zombie2:SetPos(self:GetPos() +self:GetRight()*-45 +self:GetUp()*5)
+				self.Zombie2:SetAngles(self:GetAngles())
+				self.Zombie2:Spawn()
+				-- timer.Simple(0.3,function() if IsValid(self.Zombie2) then self.Zombie2:SetNoDraw(false) end end)
+				local SpawnAnimation = math.random(1,3)
+				if SpawnAnimation == 1 then
+					self.Zombie2:VJ_ACT_PLAYACTIVITY("slumprise_a", true, false, false)
+				elseif SpawnAnimation == 2 then
+					self.Zombie2:VJ_ACT_PLAYACTIVITY("slumprise_a2", true, false, false)
+				elseif SpawnAnimation == 3 then
+					self.Zombie2:VJ_ACT_PLAYACTIVITY("slumprise_b", true, false, false)
+				end
+			end
+
+			if !IsValid(self.Zombie3) then
+				self.Zombie3 = ents.Create("npc_vj_bbohg_hobo")
+				self.Zombie3:SetPos(self:GetPos() +self:GetForward()*45 +self:GetUp()*5)
+				self.Zombie3:SetAngles(self:GetAngles())
+				self.Zombie3:Spawn()
+				-- timer.Simple(0.3,function() if IsValid(self.Zombie3) then self.Zombie3:SetNoDraw(false) end end)
+				local SpawnAnimation = math.random(1,3)
+				if SpawnAnimation == 1 then
+					self.Zombie3:VJ_ACT_PLAYACTIVITY("slumprise_a", true, false, false)
+				elseif SpawnAnimation == 2 then
+					self.Zombie3:VJ_ACT_PLAYACTIVITY("slumprise_a2", true, false, false)
+				elseif SpawnAnimation == 3 then
+					self.Zombie3:VJ_ACT_PLAYACTIVITY("slumprise_b", true, false, false)
+				end
+			end
+	
+			if !IsValid(self.Zombie4) then
+				self.Zombie4 = ents.Create("npc_vj_bbohg_hobo")
+				self.Zombie4:SetPos(self:GetPos() +self:GetForward()*-45 +self:GetUp()*5)
+				self.Zombie4:SetAngles(self:GetAngles())
+				self.Zombie4:Spawn()
+				-- timer.Simple(0.3,function() if IsValid(self.Zombie4) then self.Zombie4:SetNoDraw(false) end end)
+				local SpawnAnimation = math.random(1,3)
+				if SpawnAnimation == 1 then
+					self.Zombie4:VJ_ACT_PLAYACTIVITY("slumprise_a", true, false, false)
+				elseif SpawnAnimation == 2 then
+					self.Zombie4:VJ_ACT_PLAYACTIVITY("slumprise_a2", true, false, false)
+				elseif SpawnAnimation == 3 then
+					self.Zombie4:VJ_ACT_PLAYACTIVITY("slumprise_b", true, false, false)
+				end
+			end
+
+				self.AlreadySpawned = false
+				self.CanSummonHelp = true
+				self.NextZombieSpawnT = CurTime() + 20
+				self.MovementType = VJ_MOVETYPE_GROUND
+			end end)
+			end
+		end
+	end
+end
+-------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnSetupWeaponHoldTypeAnims(hType)
 	if hType == "pistol" or hType == "revolver" then
 		self.WeaponAnimTranslations[ACT_RANGE_ATTACK1] 					= ACT_RANGE_ATTACK_PISTOL
@@ -754,24 +852,39 @@ function ENT:CustomOnSetupWeaponHoldTypeAnims(hType)
 	end
 end
 -------------------------------------------------------------------------------------------------------------------
+function ENT:CustomOnRemove()
+	if self.Dead == false then
+		if IsValid(self.Zombie1) then self.Zombie1:Remove() end
+		if IsValid(self.Zombie2) then self.Zombie2:Remove() end
+		if IsValid(self.Zombie3) then self.Zombie3:Remove() end
+		if IsValid(self.Zombie4) then self.Zombie4:Remove() end
+	end
+end
+-------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnInitialKilled(dmginfo, hitgroup)
-	timer.Simple(0.0001,function()
+	if GetConVarNumber("vj_BBOHG_BossNotifications") == 1 then
+		PrintMessage(HUD_PRINTCENTER, "The Hobo King has been killed!")
+	end
+	self.CanSummonHelp = false
 	if IsValid(self) then
+	self.SoundTrackVolume = 0
+	-- self:StartSoundTrack()
+	-- self.SoundTbl_SoundTrack = {}
+	-- self:StartSoundTrack()
     self:AddFlags(FL_NOTARGET)
 	self:SetRenderFX( kRenderFxDistort )
-		if GetConVarNumber("vj_npc_noidleparticle") == 0 then
-			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("origin"))
-			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("chest"))
-			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_RH"))
-			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_LH"))
-			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("eyes"))
-			ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("origin"))
-			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("chest"))
-			ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_RH"))
-			ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_LH"))
-			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("eyes"))
-		end	
-	end end)
+	if GetConVarNumber("vj_npc_noidleparticle") == 0 then
+		-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("origin"))
+		-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("chest"))
+		-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_RH"))
+		-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_LH"))
+		-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("eyes"))
+		ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("origin"))
+		-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("chest"))
+		ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_RH"))
+		ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_LH"))
+		-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("eyes"))
+	end
 	timer.Simple(0.1,function()
 	if IsValid(self) then
 	local STabb = math.random(1,2)
@@ -786,14 +899,14 @@ function ENT:CustomOnInitialKilled(dmginfo, hitgroup)
 	
 	-- self:SetKeyValue("rendercolor","255 255 255 250")
 		timer.Simple(0.5,function()
-		self:SetKeyValue("rendercolor","209 209 209 215") end)
-		self.Hat:SetKeyValue("rendercolor","209 209 209 215")
+		self:SetKeyValue("rendercolor","209 209 209 215")
+		self.Hat:SetKeyValue("rendercolor","209 209 209 215") end)
 		timer.Simple(1,function()
-		self:SetKeyValue("rendercolor","177 177 177 175") end)
-		self.Hat:SetKeyValue("rendercolor","177 177 177 175")
+		self:SetKeyValue("rendercolor","177 177 177 175")
+		self.Hat:SetKeyValue("rendercolor","177 177 177 175") end)
 		timer.Simple(1.5,function()
-		self:SetKeyValue("rendercolor","145 145 145 135") end)
-		self.Hat:SetKeyValue("rendercolor","145 145 145 135")
+		self:SetKeyValue("rendercolor","145 145 145 135")
+		self.Hat:SetKeyValue("rendercolor","145 145 145 135") end)
 		timer.Simple(2,function()
 		self:SetKeyValue("rendercolor","96 96 96 95") 
 		self.Hat:SetKeyValue("rendercolor","96 96 96 95") 
@@ -810,11 +923,11 @@ function ENT:CustomOnInitialKilled(dmginfo, hitgroup)
 			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("eyes"))
 		end	end)
 		timer.Simple(2.5,function()
-		self:SetKeyValue("rendercolor","55 55 55 45") end)
-		self.Hat:SetKeyValue("rendercolor","55 55 55 45")
+		self:SetKeyValue("rendercolor","55 55 55 45")
+		self.Hat:SetKeyValue("rendercolor","55 55 55 45") end)
 		timer.Simple(3,function()
-		self:SetKeyValue("rendercolor","0 0 0 1") end)
-		self.Hat:SetKeyValue("rendercolor","0 0 0 1")
+		self:SetKeyValue("rendercolor","0 0 0 1")
+		self.Hat:SetKeyValue("rendercolor","0 0 0 1") end)
 		timer.Simple(5.9,function()
 		-- PrintMessage( HUD_PRINTTALK, "Hobo King has been banned permanently." )
 		-- PrintMessage( HUD_PRINTTALK, "Reason: RDM." )
@@ -822,6 +935,7 @@ function ENT:CustomOnInitialKilled(dmginfo, hitgroup)
 		end
 	end)
 		-- self:SetKeyValue("ColorAlpha","255 255 255 88")
+end
 end
 /*-----------------------------------------------
 	*** Copyright (c) 2012-2019 by DrVrej, All rights reserved. ***

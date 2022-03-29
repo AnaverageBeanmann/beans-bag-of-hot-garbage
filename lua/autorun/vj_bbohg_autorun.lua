@@ -51,6 +51,7 @@ if VJExists == true then
 		-- VJ.AddNPC("Fatman","npc_vj_bbohg_fat",vCat) -- he has an unofficial alliance
 		-- VJ.AddNPC("Fatman's Skeleton",npc_vj_bbohg_fat_skel",vCat)
 		-- VJ.AddNPC("small b0ne(r)",npc_vj_bbohg_boner_small",vCat)
+		-- VJ.AddNPC("Skeleton King","npc_vj_bbohg_skelking",vCat)
 	
 	-- Zombknees
 		-- VJ.AddNPC("Headcrap Xombie","npc_vj_bbohg_zombie",vCat)
@@ -58,17 +59,19 @@ if VJExists == true then
 		-- VJ.AddNPC("Explosive Zombie","npc_vj_bbohg_exploder",vCat)
 		-- VJ.AddNPC("Explosive Fast Zombie","npc_vj_bbohg_exploder_fast",vCat)
 		-- VJ.AddNPC("Explosive Poison Zombie","npc_vj_bbohg_exploder_poison",vCat)
+		-- Zombine -- zombine but is actually combine zombie (works like normal combine)
 		-- VJ.AddNPC("le bebe","npc_vj_bbohg_lebebe",vCat)
 		-- VJ.AddNPC("Giga Gore Child","npc_vj_bbohg_gorechild_giga",vCat)
 	
 	-- Faction Unaffiliated
 		VJ.AddNPC("Flemming","npc_vj_bbohg_flemming",vCat)
-		VJ.AddNPC("Shadow Walker","npc_vj_bbohg_shadowwalker",vCat)
+		-- VJ.AddNPC("Shadow Walker","npc_vj_bbohg_shadowwalker",vCat)
 		VJ.AddNPC("Mark","npc_vj_bbohg_mark",vCat)
 		-- VJ.AddNPC("ERR","npc_vj_bbohg_error",vCat)
 		-- VJ.AddNPC("The_","npc_vj_bbohg_the",vCat)
 		-- VJ.AddNPC("Grampa","npc_vj_bbohg_grampa",vCat)
 		VJ.AddNPC("The Rock","npc_vj_bbohg_therock",vCat)
+		VJ.AddNPC("Rockling","npc_vj_bbohg_therock_minion",vCat)
 		-- VJ.AddNPC("Dr. Hax","npc_vj_bbohg_hax",vCat)
 		VJ.AddNPC("Griefer Grigori","npc_vj_bbohg_griggs",vCat)
 
@@ -79,22 +82,34 @@ if VJExists == true then
 	VJ.AddNPC("Tosser Spawner","sent_vj_bbohg_spawner_tosser",vCat2)
 	-- VJ.AddNPC("Pizza Gang Spawner","sent_vj_bbohg_spawner_pizza",vCat2)
 	VJ.AddNPC("Hobo Spawner","sent_vj_bbohg_spawner_hobo",vCat2)
+	VJ.AddNPC("Hobo Spawner (Kingless)","sent_vj_bbohg_spawner_hobo_noking",vCat2)
 	VJ.AddNPC("b0ne(r) spawner","sent_vj_bbohg_spawner_b0ner",vCat2)
 	VJ.AddNPC("b0ne(r) spawner (big boneless)","sent_vj_bbohg_spawner_b0ner_bigboneless",vCat2)
 	-- VJ.AddNPC("Zombknee Spawner","sent_vj_bbohg_spawner_zombknee",vCat2)
 	VJ.AddNPC("Flemming Spawner","sent_vj_bbohg_spawner_flemming",vCat2)
+	VJ.AddNPC("Rockling Spawner","sent_vj_bbohg_spawner_rockling",vCat2)
+	VJ.AddNPC("Rockling Spawner (With The Rock)","sent_vj_bbohg_spawner_rockling_rock",vCat2)
 	VJ.AddNPC("Mark Spawner","sent_vj_bbohg_spawner_mark",vCat2)
 	VJ.AddNPC("Fully Loaded Spawner","sent_vj_bbohg_spawner_fl",vCat2)
+	VJ.AddNPC("Fully Loaded Spawner (big b0ne(r)less)","sent_vj_bbohg_spawner_fl_nobig",vCat2)
+	VJ.AddNPC("Fully Loaded Spawner (Bossless)","sent_vj_bbohg_spawner_fl_bossless",vCat2)
+	VJ.AddNPC("Boss Spawner","sent_vj_bbohg_spawner_boss",vCat2)
+	VJ.AddNPC("Boss Spawner (big b0ne(r)less)","sent_vj_bbohg_spawner_boss_nobig",vCat2)
 	
 	VJ.AddNPC("Tosser Spawner (Single)","sent_vj_bbohg_spawner_tosser_single",vCat2)
 	-- VJ.AddNPC("Pizza Gang Spawner (Single)","sent_vj_bbohg_spawner_pizza_single",vCat2)
 	VJ.AddNPC("Hobo Spawner (Single)","sent_vj_bbohg_spawner_hobo_single",vCat2)
+	VJ.AddNPC("Hobo Spawner (Single, Kingless)","sent_vj_bbohg_spawner_hobo_single_noking",vCat2)
 	VJ.AddNPC("b0ne(r) spawner (single)","sent_vj_bbohg_spawner_b0ner_single",vCat2)
-	VJ.AddNPC("b0ne(r) spawner (big boneless, single)","sent_vj_bbohg_spawner_b0ner_bigboneless_single",vCat2)
+	VJ.AddNPC("b0ne(r) spawner (single, big boneless)","sent_vj_bbohg_spawner_b0ner_bigboneless_single",vCat2)
 	-- VJ.AddNPC("Zombknee Spawner (Single)","sent_vj_bbohg_spawner_zombknee_single",vCat2)
 	VJ.AddNPC("Flemming Spawner (Single)","sent_vj_bbohg_spawner_flemming_single",vCat2)
+	VJ.AddNPC("Rockling Spawner (Single)","sent_vj_bbohg_spawner_rockling_single",vCat2)
+	VJ.AddNPC("Rockling Spawner (Single, With The Rock)","sent_vj_bbohg_spawner_rockling_single_rock",vCat2)
 	VJ.AddNPC("Mark Spawner (Single)","sent_vj_bbohg_spawner_mark_single",vCat2)
 	VJ.AddNPC("Fully Loaded Spawner (Single)","sent_vj_bbohg_spawner_fl_single",vCat2)
+	VJ.AddNPC("Fully Loaded Spawner (Single, big b0ne(r)less)","sent_vj_bbohg_spawner_fl_single_nobig",vCat2)
+	VJ.AddNPC("Fully Loaded Spawner (Single, Bossless)","sent_vj_bbohg_spawner_fl_single_bossless",vCat2)
 	
 	VJ.AddNPC("Random Tosser","sent_vj_bbohg_random_tosser",vCat2)
 	-- VJ.AddNPC("Random Pizza Gang Member","sent_vj_bbohg_random_pizza",vCat2)
@@ -123,7 +138,9 @@ if VJExists == true then
 		-- VJ.AddNPC("Clown Strongman","npc_vj_bbohg_clown_str",vCat)
 		-- VJ.AddNPC("Clown Magician","npc_vj_bbohg_clown_mag",vCat)
 	
-	-- Glarphids
+	-- Deep Rock Demakes
+		-- Lootgrub
+		-- Glarphid Grunt
 
 	-- Faction Unaffiliated
 		-- VJ.AddNPC("Aperture Science Sentry Turret","npc_vj_bbohg_portalturret",vCat)
@@ -181,7 +198,9 @@ if VJExists == true then
 	-- VJ.AddNPC("","sent_vj_bbohg_",vCat2)
 	
 	--Weapons
-	VJ.AddNPCWeapon("VJ_BBOHG_Griefer_Grigori's_Gun","weapon_vj_bbohg_ggg")
+	-- VJ.AddNPCWeapon("VJ_BBOHG_Griefer_Grigori's_Gun","weapon_vj_bbohg_ggg")
+	
+	util.PrecacheModel("models/jessev92/characters/highvis/mark/npccit.mdl")
 	
 	local AddConvars = {}
 	-- AddConvars["vj_BBOHG_KillableGriggs"] = 0
@@ -201,7 +220,7 @@ if VJExists == true then
 	-- AddConvars["vj_BBOHG_GnomeModel"] = 0
 	-- AddConvars["vj_BBOHG_ReasonableRock"] = 0
 	-- AddConvars["vj_BBOHG_FearlessTossers"] = 0
-	-- AddConvars["vj_BBOHG_BossMusic"] = 1
+	AddConvars["vj_BBOHG_BossMusic"] = 1
 	AddConvars["vj_BBOHG_NoGodsNoMasters"] = 0
 	-- AddConvars["vj_BBOHG_FriendlyBoners"] = 1
 	-- AddConvars["vj_BBOHG_TosserNocollide"] = 1
@@ -210,6 +229,8 @@ if VJExists == true then
 	-- AddConvars["vj_BBOHG_BossDrops"] = 0
 	AddConvars["vj_BBOHG_Gibs"] = 1
 	AddConvars["vj_BBOHG_FriendlyTossers"] = 1
+	AddConvars["vj_BBOHG_BossNotifications"] = 1
+	AddConvars["vj_BBOHG_BossReinforcements"] = 1
 	
 	
 	for k, v in pairs(AddConvars) do
@@ -245,7 +266,7 @@ if VJExists == true then
 			-- vj_BBOHG_GnomeModel = "0",
 			-- vj_BBOHG_ReasonableRock = "0",
 			-- vj_BBOHG_FearlessTossers = "0",
-			-- vj_BBOHG_BossMusic = "1",
+			vj_BBOHG_BossMusic = "1",
 			vj_BBOHG_NoGodsNoMasters = "0",
 			-- vj_BBOHG_FriendlyBoners = "0",
 			-- vj_BBOHG_TosserNocollide = "0",
@@ -254,17 +275,25 @@ if VJExists == true then
 			-- vj_BBOHG_BossDrops = "0",
 			vj_BBOHG_Gibs = "1",
 			vj_BBOHG_FriendlyTossers = "1",
+			vj_BBOHG_BossNotifications = "1",
+			vj_BBOHG_BossReinforcements = "1",
 }
 
 	Panel:AddControl("ComboBox", vj_resetbutton)
 	
 	
+	Panel:AddControl("Checkbox", {Label ="Eveyone is allied and against you?", Command ="vj_BBOHG_NoGodsNoMasters"})
+	Panel:ControlHelp("Warning: This will override any and all {*NPC* is friendly?} convars!")
+	Panel:AddControl("Checkbox", {Label ="Tossers are friendly?", Command ="vj_BBOHG_FriendlyTossers"})
+	Panel:AddControl("Checkbox", {Label ="Bosses can spawn reinforcements?", Command ="vj_BBOHG_BossReinforcements"})
 	
 	Panel:AddControl("Checkbox", {Label ="Enable Gibbing?", Command ="vj_BBOHG_Gibs"})
 	Panel:ControlHelp("If you're crashing from something in BBoHG Gibbing, try disabling this.")
-	Panel:AddControl("Checkbox", {Label ="Tossers are friendly?", Command ="vj_BBOHG_FriendlyTossers"})
-	Panel:AddControl("Checkbox", {Label ="Eveyone is allied and against you?", Command ="vj_BBOHG_NoGodsNoMasters"})
-	Panel:ControlHelp("Warning: This will override any and all {*NPC* is friendly?} convars!")
+	
+	Panel:AddControl("Checkbox", {Label ="Enable Boss Notifications?", Command ="vj_BBOHG_BossNotifications"})
+	Panel:ControlHelp("Messages for bosses spawning and dying.")
+	
+	Panel:AddControl("Checkbox", {Label ="Boss Music?", Command ="vj_BBOHG_BossMusic"})
 	
 	
 	

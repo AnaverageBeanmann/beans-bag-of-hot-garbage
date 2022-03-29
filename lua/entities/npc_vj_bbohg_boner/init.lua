@@ -43,7 +43,7 @@ ENT.MeleeAttackDamageAngleRadius = 70
 ENT.HasRangeAttack = false
 ENT.RangeAttackEntityToSpawn = "obj_vj_bbohg_lostsoul"
 ENT.AnimTbl_RangeAttack = {"cheer2"}
-ENT.RangeToMeleeDistance = 200
+ENT.RangeToMeleeDistance = 1
 ENT.TimeUntilRangeAttackProjectileRelease = 2
 ENT.NextRangeAttackTime = 5
 ENT.NextRangeAttackTime_DoRand = 15
@@ -1423,9 +1423,24 @@ function ENT:MultipleMeleeAttacks()
 	end
 end
 -------------------------------------------------------------------------------------------------------------------
+function ENT:CustomOnRangeAttack_BeforeStartTimer(seed)
+	if self.SkelllyType == 0 || self.SkelllyType == 1 || self.SkelllyType == 2 then return end
+	VJ_EmitSound(self,{"ambient/fire/mtov_flame2.wav"},100,math.random(100,90))
+	ParticleEffectAttach("fire_small_02",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_LH"))
+	ParticleEffectAttach("fire_small_02",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_RH"))
+	timer.Simple(2,function() if IsValid(self) then
+		ParticleEffectAttach("fire_small_01",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("chest"))
+	VJ_EmitSound(self,{"ambient/fire/ignite.wav"},100,math.random(100,90))
+	end end)
+	timer.Simple(3,function() if IsValid(self) then
+		self:StopParticles()
+	end end)
+	-- fire_medium_02
+end
+-------------------------------------------------------------------------------------------------------------------
 function ENT:RangeAttackCode_GetShootPos(projectile)
 	if self.SkelllyType == 3 then
-	return self:CalculateProjectile("Line", self:GetAttachment(self:LookupAttachment(self.RangeUseAttachmentForPosID)).Pos, self:GetEnemy():GetPos() + self:GetEnemy():OBBCenter(), 500)
+	return self:CalculateProjectile("Line", self:GetAttachment(self:LookupAttachment(self.RangeUseAttachmentForPosID)).Pos, self:GetEnemy():GetPos() + self:GetEnemy():OBBCenter(), 1000)
 	end
 	if self.SkelllyType == 1 then
 	return self:CalculateProjectile("Curve", self:GetAttachment(self:LookupAttachment(self.RangeUseAttachmentForPosID)).Pos, self:GetEnemy():GetPos() + self:GetEnemy():OBBCenter(), 1500)

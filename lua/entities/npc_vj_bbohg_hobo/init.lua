@@ -693,7 +693,7 @@ function ENT:CustomOnInitialize()
 			"npc/shadowwalk/vo/episode_1/npc/alyx/al_deaf_canthearyou.wav",
 			"vo/k_lab/ba_cantlook.wav"}
 		self.SoundTbl_Alert = {"vo/citadel/al_bitofit.wav",
-			"npc/shadowwalk/vo/outland_01/intro/al_rbed_notalone.wav"}
+			"npc/shadowwalk/vo/outlland_01/intro/al_rbed_notalone.wav"}
 		self.SoundTbl_LostEnemy = {"vo/citadel/al_notagain02.wav",	
 			"npc/shadowwalk/vo/episode_1/npc/alyx/al_light_lost05.wav",
 			"npc/shadowwalk/vo/episode_1/npc/alyx/al_light_lost11.wav",
