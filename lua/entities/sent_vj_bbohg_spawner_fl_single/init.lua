@@ -8,16 +8,19 @@ include('shared.lua')
 ENT.Model = {}
 ENT.EntitiesToSpawn = {
 	{SpawnPosition = {vForward=0, vRight=0, vUp=10}, Entities = {"npc_vj_bbohg_flemming:1",
-	"npc_vj_bbohg_hobo:1",
-	"npc_vj_bbohg_boner:2",
-	"npc_vj_bbohg_ammo:2",
-	"npc_vj_bbohg_medkit:3",
-	"npc_vj_bbohg_cheese:5",
-	"npc_vj_bbohg_barnyot:4",
-	"npc_vj_bbohg_medvial:9",
-	"npc_vj_bbohg_alyx:10",
-	"npc_vj_bbohg_mark:15",
-	"npc_vj_bbohg_hobo_king:40"}},
+	"npc_vj_bbohg_hobo:2",
+	"npc_vj_bbohg_boner:3",
+	"npc_vj_bbohg_ammo:5",
+	"npc_vj_bbohg_medkit:10",
+	"npc_vj_bbohg_barnyot:10",
+	"npc_vj_bbohg_cheese:15",
+	"npc_vj_bbohg_medvial:20",
+	"npc_vj_bbohg_alyx:20",
+	"npc_vj_bbohg_mark:25",
+	"npc_vj_bbohg_therock_minion:25",
+	"npc_vj_bbohg_hobo_king:50",
+	"npc_vj_bbohg_boner_big:60",
+	"npc_vj_bbohg_therock:75"}},
 }
 /*-----------------------------------------------
 	*** Copyright (c) 2012-2019 by DrVrej, All rights reserved. ***
