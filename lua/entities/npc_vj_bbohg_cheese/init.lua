@@ -11,10 +11,10 @@ ENT.HasHealthRegeneration = true
 ENT.HealthRegenerationAmount = math.Rand(1,2)
 ENT.HealthRegenerationDelay = VJ_Set(0.5,1)
 ENT.VJC_Data = {
-	CameraMode = 1,
-	ThirdP_Offset = Vector(40, 20, -50),
-	FirstP_Bone = "ValveBiped.Bip01_Spine4",
-	FirstP_Offset = Vector(0, 0, 5),
+	CameraMode = 1, 
+	ThirdP_Offset = Vector(45, 15, -50), -- The offset for the controller when the camera is in third person
+	FirstP_Bone = "ValveBiped.Bip01_Head1", -- If left empty, the base will attempt to calculate a position for first person
+	FirstP_Offset = Vector(0, 0, 5), -- The offset for the controller when the camera is in first person
 }
 ---------------------------------------------------------------------------------------------------------------------------------------------
 ENT.VJ_NPC_Class = {"CLASS_TOSSER"}
@@ -168,7 +168,7 @@ function ENT:GetSightDirection()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnThink_AIEnabled()
-	if self.CanExplode == true && self:Health() <= (self:GetMaxHealth() / 1.5) then
+	if self.CanExplode == true && self:Health() <= (self:GetMaxHealth() / 1.5) && self.VJ_IsBeingControlled == false or self.VJ_IsBeingControlled == true && self.VJ_TheController:KeyDown(IN_DUCK) && self.Explosive == false then
 		self.HasHealthRegeneration = false
 		self.AnimTbl_Walk = {ACT_RUN}
 		self.AnimTbl_Run = {ACT_RUN}
@@ -301,6 +301,10 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:RangeAttackCode_GetShootPos(projectile)
 	return self:CalculateProjectile("Curve", self:GetAttachment(self:LookupAttachment(self.RangeUseAttachmentForPosID)).Pos, self:GetEnemy():GetPos() + self:GetEnemy():OBBCenter(), 1500)
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:Controller_IntMsg(ply, controlEnt)
+	ply:ChatPrint("CROUCH - Enter Kamikaze Mode")
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:SetUpGibesOnDeath(dmginfo, hitgroup)

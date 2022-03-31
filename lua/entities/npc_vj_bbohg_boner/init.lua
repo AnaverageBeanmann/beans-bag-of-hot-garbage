@@ -9,10 +9,10 @@ ENT.Model = {"models/skeleton/skeleton_bleached.mdl"}
 ENT.StartHealth = 50
 ENT.HullType = HULL_HUMAN
 ENT.VJC_Data = {
-	CameraMode = 1,
-	ThirdP_Offset = Vector(40, 20, -50),
-	FirstP_Bone = "ValveBiped.Bip01_Spine4",
-	FirstP_Offset = Vector(0, 0, 5),
+	CameraMode = 1, 
+	ThirdP_Offset = Vector(45, 15, -50), -- The offset for the controller when the camera is in third person
+	FirstP_Bone = "ValveBiped.Bip01_Head1", -- If left empty, the base will attempt to calculate a position for first person
+	FirstP_Offset = Vector(0, 0, 5), -- The offset for the controller when the camera is in first person
 }
 ---------------------------------------------------------------------------------------------------------------------------------------------
 ENT.VJ_NPC_Class = {"CLASS_b0ne(r)"} 
@@ -121,6 +121,7 @@ ENT.CanReviveStuff = true
 ENT.infect = true
 ENT.infect2 = false
 ENT.MoveToCorpose = false
+ENT.PlayerCanReviveThings = true
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnPreInitialize()
 	local SkelType = math.random(1,10)
@@ -1206,15 +1207,17 @@ function ENT:CustomOnThink_AIEnabled()
 			self.infect2 = true
 			self.MoveToCorpose = true
 			self:SetTarget(v)
+			if self.VJ_IsBeingControlled == false then
 			self:VJ_TASK_GOTO_TARGET("TASK_RUN_PATH")
+			end
 			timer.Simple(math.random(1.2,2.5),function() if IsValid(self) then
 				self.MoveToCorpose = false
 			end end)
 			end
 		end
 	end
-	if self.infect2 == true && self.MeleeAttacking == false && self.RangeAttacking == false  then 
-		for _,v in ipairs(ents.FindInSphere(self:GetPos(),20)) do
+	if self.VJ_IsBeingControlled == false && self.infect2 == true && self.MeleeAttacking == false && self.RangeAttacking == false or self.VJ_IsBeingControlled == true && self.VJ_TheController:KeyDown(IN_DUCK) && self.PlayerCanReviveThings == true then 
+		for _,v in ipairs(ents.FindInSphere(self:GetPos(),50)) do
 			if IsValid(v) &&
 			v:GetClass() == "prop_ragdoll" &&
 			v:GetClass() != "prop_physics" &&
@@ -1245,6 +1248,7 @@ function ENT:CustomOnThink_AIEnabled()
 			v:GetModel() != "models/dog.mdl" then
 			
 			self:VJ_ACT_PLAYACTIVITY("cheer2", true, false, false)
+			self.PlayerCanReviveThings = false
 			
 			ParticleEffectAttach("generic_smoke", PATTACH_POINT_FOLLOW, v, 0)
 			for i = 0,v:GetBoneCount() -1 do
@@ -1335,6 +1339,7 @@ function ENT:CustomOnThink_AIEnabled()
 				self.infect = true
 				self.DisableChasingEnemy = false
 				self.DisableFindEnemy = false
+				self.PlayerCanReviveThings = true
 			end end)
 				timer.Simple(3,function() if IsValid(self) then 
 					self.MovementType = VJ_MOVETYPE_GROUND
@@ -1445,6 +1450,10 @@ function ENT:RangeAttackCode_GetShootPos(projectile)
 	if self.SkelllyType == 1 then
 	return self:CalculateProjectile("Curve", self:GetAttachment(self:LookupAttachment(self.RangeUseAttachmentForPosID)).Pos, self:GetEnemy():GetPos() + self:GetEnemy():OBBCenter(), 1500)
 	end
+end
+-------------------------------------------------------------------------------------------------------------------
+function ENT:Controller_IntMsg(ply, controlEnt)
+	ply:ChatPrint("CROUCH - Revive nearby corpses (if Reviver)")
 end
 -------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnMedic_OnHeal(ent)

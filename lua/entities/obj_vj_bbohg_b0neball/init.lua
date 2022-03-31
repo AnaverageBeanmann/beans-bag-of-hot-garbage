@@ -127,17 +127,19 @@ function ENT:CustomOnRemove()
 	"physics/body/body_medium_break4.wav"},100,math.random(100,100))
 	VJ_EmitSound(self, "vj_gib/default_gib_splat.wav", 100, 100)
 
-	self.Zombie1 = ents.Create("npc_vj_bbohg_boner")
-	self.Zombie1:SetPos(self:GetPos() +self:GetRight()*45 +self:GetUp()*10)
-	-- self.Zombie1:SetAngles(self:GetAngles())
-	self.Zombie1:Spawn()
-	-- timer.Simple(0.3,function() if IsValid(self.Zombie1) then self.Zombie1:SetNoDraw(false) end end)
-	local SpawnAnimation = math.random(1,3)
-	if SpawnAnimation == 1 then
-		self.Zombie1:VJ_ACT_PLAYACTIVITY("zombie_slump_rise_02_slow", true, false, false)
-	elseif SpawnAnimation == 2 then
-		self.Zombie1:VJ_ACT_PLAYACTIVITY("zombie_slump_rise_02_fast", true, false, false)
-	elseif SpawnAnimation == 3 then
-		self.Zombie1:VJ_ACT_PLAYACTIVITY("zombie_slump_rise_01", true, false, false)
+	if GetConVarNumber("vj_BBOHG_BossReinforcements") == 1 then
+		self.Zombie1 = ents.Create("npc_vj_bbohg_boner")
+		self.Zombie1:SetPos(self:GetPos() +self:GetRight()*45 +self:GetUp()*10)
+		-- self.Zombie1:SetAngles(self:GetAngles())
+		self.Zombie1:Spawn()
+		-- timer.Simple(0.3,function() if IsValid(self.Zombie1) then self.Zombie1:SetNoDraw(false) end end)
+		local SpawnAnimation = math.random(1,3)
+		if SpawnAnimation == 1 then
+			self.Zombie1:VJ_ACT_PLAYACTIVITY("zombie_slump_rise_02_slow", true, false, false)
+		elseif SpawnAnimation == 2 then
+			self.Zombie1:VJ_ACT_PLAYACTIVITY("zombie_slump_rise_02_fast", true, false, false)
+		elseif SpawnAnimation == 3 then
+			self.Zombie1:VJ_ACT_PLAYACTIVITY("zombie_slump_rise_01", true, false, false)
+		end
 	end
 end

@@ -10,10 +10,10 @@ ENT.VJ_IsHugeMonster = true
 ENT.StartHealth = 2500
 ENT.HullType = HULL_HUMAN
 ENT.VJC_Data = {
-	CameraMode = 1,
-	ThirdP_Offset = Vector(40, 20, -50),
-	FirstP_Bone = "ValveBiped.Bip01_Spine4",
-	FirstP_Offset = Vector(0, 0, 5),
+	CameraMode = 1, 
+	ThirdP_Offset = Vector(25, 30, -150), -- The offset for the controller when the camera is in third person
+	FirstP_Bone = "ValveBiped.Bip01_Head1", -- If left empty, the base will attempt to calculate a position for first person
+	FirstP_Offset = Vector(0, 0, 5), -- The offset for the controller when the camera is in first person
 }
 ---------------------------------------------------------------------------------------------------------------------------------------------
 ENT.VJ_NPC_Class = {"CLASS_b0ne(r)"} 
@@ -71,6 +71,7 @@ ENT.GeneralSoundPitch2 = 60
 ENT.FootStepSoundLevel = 100
 
 ENT.PainSoundChance = 3
+ENT.CanChangeRangedProjectile = true
 ---------------------------------------------------------------------------------------------------------------------------------------------
 	-- ====== Sound File Paths ====== --
 -- Leave blank if you don't want any sounds to play
@@ -123,6 +124,24 @@ function ENT:GetSightDirection()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnThink_AIEnabled()
+	if self.VJ_IsBeingControlled == true && self.VJ_TheController:KeyDown(IN_DUCK) && self.CanChangeRangedProjectile == true then
+		self.CanChangeRangedProjectile = false
+		if self.RangeAttackEntityToSpawn == "obj_vj_bbohg_b0neball" then
+		self.RangeAttackEntityToSpawn = "obj_vj_bbohg_lostsoul"
+		self.RangeAttackExtraTimers = {2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3}
+			self.VJ_TheController:PrintMessage(HUD_PRINTCENTER,"Prefered Projectile changed to Lost Soul Volley")
+		elseif self.RangeAttackEntityToSpawn == "obj_vj_bbohg_lostsoul" then
+		self.RangeAttackEntityToSpawn = "obj_vj_bbohg_b0neball"
+		self.RangeAttackExtraTimers = nil
+			self.VJ_TheController:PrintMessage(HUD_PRINTCENTER,"Prefered Projectile changed to b0ne ball")
+		end
+		timer.Simple(1,function() if IsValid(self) then
+			self.CanChangeRangedProjectile = true
+		end end)
+	end
+	
+	
+	
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnMedic_BeforeHeal()
@@ -204,6 +223,7 @@ function ENT:MultipleMeleeAttacks()
 end
 -------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnRangeAttack_BeforeStartTimer(seed)
+	if !self.VJ_IsBeingControlled == true then
 	local WhichToThrow = math.random(1,2)
 	if WhichToThrow == 1 then
 		self.RangeAttackEntityToSpawn = "obj_vj_bbohg_b0neball"
@@ -211,6 +231,7 @@ function ENT:CustomOnRangeAttack_BeforeStartTimer(seed)
 	else
 		self.RangeAttackEntityToSpawn = "obj_vj_bbohg_lostsoul"
 		self.RangeAttackExtraTimers = {2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3}
+	end
 	end
 
 	VJ_EmitSound(self,{"ambient/fire/mtov_flame2.wav"},100,math.random(100,90))
@@ -230,6 +251,10 @@ function ENT:RangeAttackCode_GetShootPos(projectile)
 	return self:CalculateProjectile("Line", self:GetAttachment(self:LookupAttachment(self.RangeUseAttachmentForPosID)).Pos, self:GetEnemy():GetPos() +self:GetUp()*math.random(-50,50) +self:GetRight()*math.random(-50,50) + self:GetEnemy():OBBCenter(), 1000)
 end
 -------------------------------------------------------------------------------------------------------------------
+function ENT:Controller_IntMsg(ply, controlEnt)
+	ply:ChatPrint("CROUCH - Swap prefered projectile")
+end
+-------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnPriorToKilled(dmginfo,hitgroup)
 	self.AnimationPlaybackRate = 0.75
 	timer.Simple(2.35,function() if IsValid(self) then
@@ -240,6 +265,7 @@ function ENT:CustomOnPriorToKilled(dmginfo,hitgroup)
 	"physics/body/body_medium_impact_hard5.wav",
 	"physics/body/body_medium_impact_hard6.wav"},100,math.random(90,85))
 	VJ_EmitSound(self,{"ambient/machines/thumper_dust.wav"},100,math.random(100,90))
+	VJ_EmitSound(self,{"npc/boner/frenzy/death.mp3"},100,math.random(100,90))
 	util.ScreenShake(self:GetPos(), 100, 200, 3, 500)
 	local effectData = EffectData()
 	effectData:SetOrigin(self:GetPos())
@@ -255,6 +281,7 @@ function ENT:CustomOnPriorToKilled(dmginfo,hitgroup)
 	"physics/body/body_medium_impact_hard5.wav",
 	"physics/body/body_medium_impact_hard6.wav"},100,math.random(90,85))
 	VJ_EmitSound(self,{"ambient/machines/thumper_dust.wav"},100,math.random(100,90))
+	VJ_EmitSound(self,{"npc/boner/frenzy/death.mp3"},100,math.random(45,40))
 	util.ScreenShake(self:GetPos(), 100, 200, 3, 500)
 	local effectData = EffectData()
 	effectData:SetOrigin(self:GetPos())

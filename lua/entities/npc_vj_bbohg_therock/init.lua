@@ -9,10 +9,10 @@ ENT.Model = {"models/Humans/Group02/male_08.mdl"}
 ENT.VJ_IsHugeMonster = true
 ENT.StartHealth = 3000
 ENT.VJC_Data = {
-	CameraMode = 1,
-	ThirdP_Offset = Vector(40, 20, -50),
-	FirstP_Bone = "ValveBiped.Bip01_Spine4",
-	FirstP_Offset = Vector(0, 0, 5),
+	CameraMode = 1, 
+	ThirdP_Offset = Vector(45, 15, -50), -- The offset for the controller when the camera is in third person
+	FirstP_Bone = "ValveBiped.Bip01_Head1", -- If left empty, the base will attempt to calculate a position for first person
+	FirstP_Offset = Vector(0, 0, 5), -- The offset for the controller when the camera is in first person
 }
 ---------------------------------------------------------------------------------------------------------------------------------------------
 ENT.VJ_NPC_Class = {"CLASS_ROCK"}
@@ -92,6 +92,7 @@ ENT.IdleDialogueDistance = 175
 ENT.NextZombieSpawnT = 0
 ENT.AlreadySpawned = false
 ENT.CanSummonHelp = true
+ENT.CanAnnounceSpawnage = true
 ---------------------------------------------------------------------------------------------------------------------------------------------
 	-- ====== Sound File Paths ====== --
 -- Leave blank if you don't want any sounds to play
@@ -164,9 +165,17 @@ function ENT:GetSightDirection()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnThink_AIEnabled()
+	if self.VJ_IsBeingControlled == true && self.CanAnnounceSpawnage == true && CurTime() > self.NextZombieSpawnT then
+		self.VJ_TheController:PrintMessage(HUD_PRINTCENTER,"Backup Rocklings can be summoned!")
+		self.CanAnnounceSpawnage = false
+	end
 	if GetConVarNumber("vj_BBOHG_BossReinforcements") == 1 && self.CanSummonHelp == true then
 		if IsValid(self:GetEnemy()) && CurTime() > self.NextZombieSpawnT then
-			if self.AlreadySpawned == false && !IsValid(self.Zombie1) or !IsValid(self.Zombie2) or !IsValid(self.Zombie3) or !IsValid(self.Zombie4) then
+		if self.AlreadySpawned == false && self.VJ_IsBeingControlled == false or self.VJ_IsBeingControlled == true && self.VJ_TheController:KeyDown(IN_DUCK) then
+			if !IsValid(self.Zombie1) or !IsValid(self.Zombie2) or !IsValid(self.Zombie3) or !IsValid(self.Zombie4) then
+			if self.VJ_IsBeingControlled == true then
+				self.VJ_TheController:PrintMessage(HUD_PRINTCENTER,"Summoning Rocklings...")
+			end
 				self.CanSummonHelp = false
 				self.AlreadySpawned = true
 				self.MovementType = VJ_MOVETYPE_STATIONARY
@@ -242,8 +251,10 @@ function ENT:CustomOnThink_AIEnabled()
 				self.HasMeleeAttack = true
 				self.HasRangeAttack = true
 				self.HasLeapAttack = true
+		self.CanAnnounceSpawnage = true
 			end end)
 			end
+		end
 		end
 	end
 end
@@ -330,6 +341,10 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:RangeAttackCode_GetShootPos(projectile)
 	return self:CalculateProjectile("Curve", self:GetAttachment(self:LookupAttachment(self.RangeUseAttachmentForPosID)).Pos, self:GetEnemy():GetPos() + self:GetEnemy():OBBCenter(), 1500)
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:Controller_IntMsg(ply, controlEnt)
+	ply:ChatPrint("CROUCH - Summon Rocklings (if possible)")
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnRemove()

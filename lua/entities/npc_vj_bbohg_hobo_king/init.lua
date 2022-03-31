@@ -5,13 +5,13 @@ include('shared.lua')
 	No parts of this code or any of its contents may be reproduced, copied, modified or adapted,
 	without the prior written consent of the author, unless otherwise indicated for stand-alone materials.
 -----------------------------------------------*/
-ENT.Model = {"models/monster/subject.mdl"} 
+ENT.Model = {"models/monster/subjec2.mdl"} 
 ENT.StartHealth = 1000
 ENT.VJC_Data = {
-	CameraMode = 1,
-	ThirdP_Offset = Vector(40, 20, -50),
-	FirstP_Bone = "ValveBiped.Bip01_Spine4",
-	FirstP_Offset = Vector(0, 0, 5),
+	CameraMode = 1, 
+	ThirdP_Offset = Vector(45, 15, -50), -- The offset for the controller when the camera is in third person
+	FirstP_Bone = "ValveBiped.Bip01_Head1", -- If left empty, the base will attempt to calculate a position for first person
+	FirstP_Offset = Vector(0, 0, 5), -- The offset for the controller when the camera is in first person
 }
 ---------------------------------------------------------------------------------------------------------------------------------------------
 ENT.VJ_NPC_Class = {"CLASS_HOBO"} 
@@ -77,6 +77,7 @@ ENT.AnimTbl_IdleStand = {ACT_IDLE_ANGRY}
 ENT.NextZombieSpawnT = 0
 ENT.AlreadySpawned = false
 ENT.CanSummonHelp = true
+ENT.CanAnnounceSpawnage = true
 ---------------------------------------------------------------------------------------------------------------------------------------------
 	-- ====== Sound File Paths ====== --
 -- Leave blank if you don't want any sounds to play
@@ -677,6 +678,11 @@ function ENT:CustomOnInitialize()
 	self.SoundTbl_Investigate = {}
 	self.SoundTbl_CallForHelp = {}
 	self.SoundTbl_BeforeMeleeAttack = {}
+	self.CombatIdleSoundPitch = VJ_Set(80, 90)
+	self.PainSoundPitch = VJ_Set(65, 70)
+	self.AlertSoundPitch = VJ_Set(80, 90)
+	self.LostEnemySoundPitch = VJ_Set(80, 90)
+	self.DeathSoundPitch = VJ_Set(60, 65)
 	self.SoundTbl_GrenadeAttack = {}
 		if math.random (1,20) == 1 then
 			self.CombatIdleSoundPitch = VJ_Set(62, 62)
@@ -738,9 +744,17 @@ function ENT:GetSightDirection()
 end
 -------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnThink_AIEnabled()
+	if self.VJ_IsBeingControlled == true && self.CanAnnounceSpawnage == true && CurTime() > self.NextZombieSpawnT then
+		self.VJ_TheController:PrintMessage(HUD_PRINTCENTER,"Backup Hobos can be summoned!")
+		self.CanAnnounceSpawnage = false
+	end
 	if GetConVarNumber("vj_BBOHG_BossReinforcements") == 1 && self.CanSummonHelp == true then
 		if IsValid(self:GetEnemy()) && CurTime() > self.NextZombieSpawnT then
-			if self.AlreadySpawned == false && !IsValid(self.Zombie1) or !IsValid(self.Zombie2) or !IsValid(self.Zombie3) or !IsValid(self.Zombie4) then
+		if self.AlreadySpawned == false && self.VJ_IsBeingControlled == false or self.VJ_IsBeingControlled == true && self.VJ_TheController:KeyDown(IN_DUCK) then
+			if !IsValid(self.Zombie1) or !IsValid(self.Zombie2) or !IsValid(self.Zombie3) or !IsValid(self.Zombie4) then
+			if self.VJ_IsBeingControlled == true then
+				self.VJ_TheController:PrintMessage(HUD_PRINTCENTER,"Summoning Hobos...")
+			end
 				self.CanSummonHelp = false
 				self.AlreadySpawned = true
 				self.MovementType = VJ_MOVETYPE_STATIONARY
@@ -818,7 +832,9 @@ function ENT:CustomOnThink_AIEnabled()
 				self.CanSummonHelp = true
 				self.NextZombieSpawnT = CurTime() + 20
 				self.MovementType = VJ_MOVETYPE_GROUND
+		self.CanAnnounceSpawnage = true
 			end end)
+			end
 			end
 		end
 	end
@@ -850,6 +866,10 @@ function ENT:CustomOnSetupWeaponHoldTypeAnims(hType)
 		self.CanCrouchOnWeaponAttack = true
 		return false
 	end
+end
+-------------------------------------------------------------------------------------------------------------------
+function ENT:Controller_IntMsg(ply, controlEnt)
+	ply:ChatPrint("CROUCH - Summon Hobos (if possible)")
 end
 -------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnRemove()

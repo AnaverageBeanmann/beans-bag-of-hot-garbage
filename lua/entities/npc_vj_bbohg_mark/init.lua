@@ -134,7 +134,11 @@ ENT.SoundTbl_GrenadeAttack = {"npc/mark/gren (1).wav",
 	"npc/mark/gren (3).wav",
 	"npc/mark/gren (4).wav",
 	"npc/mark/gren (5).wav"}
-ENT.SoundTbl_OnGrenadeSight = {}
+ENT.SoundTbl_OnGrenadeSight = {"npc/mark/seegren1.wav",
+	"npc/mark/seegren2.wav",
+	"npc/mark/seegren3.wav",
+	"npc/mark/seegren4.wav",
+	"npc/mark/seegren5.wav"}
 ENT.SoundTbl_OnKilledEnemy = {"npc/mark/kill (1).wav",
 	"npc/mark/kill (2).wav",
 	"npc/mark/kill (3).wav",
@@ -154,7 +158,10 @@ ENT.SoundTbl_Death = {"npc/mark/death (1).wav",
 	"npc/mark/death (3).wav",
 	"npc/mark/death (4).wav",
 	"npc/mark/death (5).wav",
-	"npc/mark/death (6).wav"}
+	"npc/mark/death (6).wav",
+	"npc/mark/death (7).wav",
+	"npc/mark/death (8).wav",
+	"npc/mark/death (9).wav"}
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnInitialize()
 	if GetConVarNumber("vj_BBOHG_Gibs") == 0 then
