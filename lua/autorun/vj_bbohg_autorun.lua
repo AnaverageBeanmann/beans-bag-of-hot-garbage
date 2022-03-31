@@ -26,7 +26,7 @@ if VJExists == true then
 		VJ.AddNPC("Barnyot","npc_vj_bbohg_barnyot",vCat)
 		VJ.AddNPC("Cheese","npc_vj_bbohg_cheese",vCat)
 		VJ.AddNPC("THE ALYX","npc_vj_bbohg_alyx",vCat)
-		VJ.AddNPC("THE Medkit Man","npc_vj_bbohg_themedkitman",vCat)
+		-- VJ.AddNPC("THE Medkit Man","npc_vj_bbohg_themedkitman",vCat)
 		
 	-- The Pizza Gang:tm:
 		-- VJ.AddNPC("Pizza Bear","npc_vj_bbohg_pizza_bear",vCat)
@@ -51,7 +51,6 @@ if VJExists == true then
 		-- VJ.AddNPC("Fatman","npc_vj_bbohg_fat",vCat) -- he has an unofficial alliance
 		-- VJ.AddNPC("Fatman's Skeleton",npc_vj_bbohg_fat_skel",vCat)
 		-- VJ.AddNPC("small b0ne(r)",npc_vj_bbohg_boner_small",vCat)
-		-- VJ.AddNPC("Skeleton King","npc_vj_bbohg_skelking",vCat)
 	
 	-- Zombknees
 		-- VJ.AddNPC("Headcrap Xombie","npc_vj_bbohg_zombie",vCat)
@@ -63,6 +62,10 @@ if VJExists == true then
 		-- VJ.AddNPC("le bebe","npc_vj_bbohg_lebebe",vCat)
 		-- VJ.AddNPC("Giga Gore Child","npc_vj_bbohg_gorechild_giga",vCat)
 	
+	-- Rock and Stones
+		VJ.AddNPC("The Rock","npc_vj_bbohg_therock",vCat)
+		VJ.AddNPC("Rockling","npc_vj_bbohg_therock_minion",vCat)
+	
 	-- Faction Unaffiliated
 		VJ.AddNPC("Flemming","npc_vj_bbohg_flemming",vCat)
 		-- VJ.AddNPC("Shadow Walker","npc_vj_bbohg_shadowwalker",vCat)
@@ -70,10 +73,8 @@ if VJExists == true then
 		-- VJ.AddNPC("ERR","npc_vj_bbohg_error",vCat)
 		-- VJ.AddNPC("The_","npc_vj_bbohg_the",vCat)
 		-- VJ.AddNPC("Grampa","npc_vj_bbohg_grampa",vCat)
-		VJ.AddNPC("The Rock","npc_vj_bbohg_therock",vCat)
-		VJ.AddNPC("Rockling","npc_vj_bbohg_therock_minion",vCat)
 		-- VJ.AddNPC("Dr. Hax","npc_vj_bbohg_hax",vCat)
-		VJ.AddNPC("Griefer Grigori","npc_vj_bbohg_griggs",vCat)
+		-- VJ.AddNPC("Griefer Grigori","npc_vj_bbohg_griggs",vCat)
 
 		-- 34 NPCs!!
 		-- 38 if you count seperate versions of the b0ne(r)
@@ -131,6 +132,7 @@ if VJExists == true then
 	
 	-- b0ne(r)s
 		-- VJ.AddNPC("Sandpaper","npc_vj_bbohg_sandpaper",vCat)
+		-- VJ.AddNPC("Skeleton King","npc_vj_bbohg_skelking",vCat)
 	
 	-- Clowns
 		-- VJ.AddNPC_HUMAN("Clown Gunner","npc_vj_bbohg_clown_gun",{"weapon_vj_bbohg_ggg"},vCat)
@@ -142,8 +144,23 @@ if VJExists == true then
 		-- Lootgrub
 		-- Glarphid Grunt
 
-	-- Faction Unaffiliated
+	-- Rock and Stones
+		-- Stoner (ranged guy)
+	
+	-- Hotlads (fire)
+		-- Hotboy
+	
+	-- Moistboys (water)
+		-- Moistboy
+	
+	-- Swirlycones (wind)
+		-- Windston
+	
+	-- Aperture Science
 		-- VJ.AddNPC("Aperture Science Sentry Turret","npc_vj_bbohg_portalturret",vCat)
+		-- Cave Johnson (but is actually a robot)
+
+	-- Faction Unaffiliated
 		-- VJ.AddNPC("Fake Julio","npc_vj_bbohg_fakejulio",vCat)
 		-- VJ.AddNPC("Generic Enemy","npc_vj_bbohg_badguy",vCat)
 		-- VJ.AddNPC("Gnome","npc_vj_bbohg_gnome",vCat)
@@ -164,6 +181,7 @@ if VJExists == true then
 		-- VJ.AddNPC("Tree, The God of Locomotives","npc_vj_bbohg_tree",vCat)
 		-- VJ.AddNPC("Wario","npc_vj_bbohg_wario",vCat)
 		-- VJ.AddNPC("You Need Me","npc_vj_bbohg_youneedme",vCat)
+		-- Do you know who ate all the donuts?
 
 		-- 28 NPCs
 	
