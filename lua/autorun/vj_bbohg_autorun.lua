@@ -53,26 +53,37 @@ if VJExists == true then
 		-- VJ.AddNPC("small b0ne(r)",npc_vj_bbohg_boner_small",vCat)
 	
 	-- Zombknees
-		-- VJ.AddNPC("Headcrap Xombie","npc_vj_bbohg_zombie",vCat)
-		-- VJ.AddNPC("Crab","npc_vj_bbohg_crab",vCat)
+		VJ.AddNPC("Headcrap Xombie","npc_vj_bbohg_zombie",vCat)
+		VJ.AddNPC("Crab","npc_vj_bbohg_crab",vCat)
+		VJ.AddNPC("Crabomb","npc_vj_bbohg_crabomb",vCat)
+		-- VJ.AddNPC("Poizamikaze","npc_vj_bbohg_poizamikaze",vCat)
 		-- VJ.AddNPC("Explosive Zombie","npc_vj_bbohg_exploder",vCat)
 		-- VJ.AddNPC("Explosive Fast Zombie","npc_vj_bbohg_exploder_fast",vCat)
 		-- VJ.AddNPC("Explosive Poison Zombie","npc_vj_bbohg_exploder_poison",vCat)
-		-- Zombine -- zombine but is actually combine zombie (works like normal combine)
-		-- VJ.AddNPC("le bebe","npc_vj_bbohg_lebebe",vCat)
-		-- VJ.AddNPC("Giga Gore Child","npc_vj_bbohg_gorechild_giga",vCat)
+		VJ.AddNPC("Zombine","npc_vj_bbohg_zombine",vCat) -- zombine but is actually combine zombie (works like normal combine)
+		VJ.AddNPC("le bebe","npc_vj_bbohg_lebebe",vCat)
+		VJ.AddNPC("Giga Gore Child","npc_vj_bbohg_gorechild_giga",vCat)
 	
 	-- Rock and Stones
 		VJ.AddNPC("The Rock","npc_vj_bbohg_therock",vCat)
 		VJ.AddNPC("Rockling","npc_vj_bbohg_therock_minion",vCat)
 	
+	-- Generic Enemies
+		-- VJ.AddNPC("Generic Enemy","npc_vj_bbohg_genemy",vCat)
+		-- VJ.AddNPC("Generic Enemy (Grunt)","npc_vj_bbohg_genemy_grunt",vCat)
+		-- VJ.AddNPC("Generic Enemy (Bruiser)","npc_vj_bbohg_genemy_bruiser",vCat)
+		-- VJ.AddNPC("Generic Enemy (Sniper)","npc_vj_bbohg_genemy_sniper",vCat)
+		-- VJ.AddNPC("Generic Enemy (Demoman)","npc_vj_bbohg_genemy_demoman",vCat)
+		
+	
 	-- Faction Unaffiliated
 		VJ.AddNPC("Flemming","npc_vj_bbohg_flemming",vCat)
 		-- VJ.AddNPC("Shadow Walker","npc_vj_bbohg_shadowwalker",vCat)
 		VJ.AddNPC("Mark","npc_vj_bbohg_mark",vCat)
+		VJ.AddNPC("Chell","npc_vj_bbohg_chell",vCat)
 		-- VJ.AddNPC("ERR","npc_vj_bbohg_error",vCat)
 		-- VJ.AddNPC("The_","npc_vj_bbohg_the",vCat)
-		-- VJ.AddNPC("Grampa","npc_vj_bbohg_grampa",vCat)
+		VJ.AddNPC("Grampa","npc_vj_bbohg_grampa",vCat)
 		-- VJ.AddNPC("Dr. Hax","npc_vj_bbohg_hax",vCat)
 		-- VJ.AddNPC("Griefer Grigori","npc_vj_bbohg_griggs",vCat)
 
@@ -86,11 +97,12 @@ if VJExists == true then
 	VJ.AddNPC("Hobo Spawner (Kingless)","sent_vj_bbohg_spawner_hobo_noking",vCat2)
 	VJ.AddNPC("b0ne(r) spawner","sent_vj_bbohg_spawner_b0ner",vCat2)
 	VJ.AddNPC("b0ne(r) spawner (big boneless)","sent_vj_bbohg_spawner_b0ner_bigboneless",vCat2)
-	-- VJ.AddNPC("Zombknee Spawner","sent_vj_bbohg_spawner_zombknee",vCat2)
+	VJ.AddNPC("Zombknee Spawner","sent_vj_bbohg_spawner_zombknee",vCat2)
 	VJ.AddNPC("Flemming Spawner","sent_vj_bbohg_spawner_flemming",vCat2)
 	VJ.AddNPC("Rockling Spawner","sent_vj_bbohg_spawner_rockling",vCat2)
 	VJ.AddNPC("Rockling Spawner (With The Rock)","sent_vj_bbohg_spawner_rockling_rock",vCat2)
 	VJ.AddNPC("Mark Spawner","sent_vj_bbohg_spawner_mark",vCat2)
+    VJ.AddNPC("Chell Spawner","sent_vj_bbohg_spawner_chell",vCat2)
 	VJ.AddNPC("Fully Loaded Spawner","sent_vj_bbohg_spawner_fl",vCat2)
 	VJ.AddNPC("Fully Loaded Spawner (big b0ne(r)less)","sent_vj_bbohg_spawner_fl_nobig",vCat2)
 	VJ.AddNPC("Fully Loaded Spawner (Bossless)","sent_vj_bbohg_spawner_fl_bossless",vCat2)
@@ -103,11 +115,12 @@ if VJExists == true then
 	VJ.AddNPC("Hobo Spawner (Single, Kingless)","sent_vj_bbohg_spawner_hobo_single_noking",vCat2)
 	VJ.AddNPC("b0ne(r) spawner (single)","sent_vj_bbohg_spawner_b0ner_single",vCat2)
 	VJ.AddNPC("b0ne(r) spawner (single, big boneless)","sent_vj_bbohg_spawner_b0ner_bigboneless_single",vCat2)
-	-- VJ.AddNPC("Zombknee Spawner (Single)","sent_vj_bbohg_spawner_zombknee_single",vCat2)
+	VJ.AddNPC("Zombknee Spawner (Single)","sent_vj_bbohg_spawner_zombknee_single",vCat2)
 	VJ.AddNPC("Flemming Spawner (Single)","sent_vj_bbohg_spawner_flemming_single",vCat2)
 	VJ.AddNPC("Rockling Spawner (Single)","sent_vj_bbohg_spawner_rockling_single",vCat2)
 	VJ.AddNPC("Rockling Spawner (Single, With The Rock)","sent_vj_bbohg_spawner_rockling_single_rock",vCat2)
 	VJ.AddNPC("Mark Spawner (Single)","sent_vj_bbohg_spawner_mark_single",vCat2)
+    VJ.AddNPC("Chell Spawner (Single)","sent_vj_bbohg_spawner_chell_single",vCat2)
 	VJ.AddNPC("Fully Loaded Spawner (Single)","sent_vj_bbohg_spawner_fl_single",vCat2)
 	VJ.AddNPC("Fully Loaded Spawner (Single, big b0ne(r)less)","sent_vj_bbohg_spawner_fl_single_nobig",vCat2)
 	VJ.AddNPC("Fully Loaded Spawner (Single, Bossless)","sent_vj_bbohg_spawner_fl_single_bossless",vCat2)
@@ -133,6 +146,11 @@ if VJExists == true then
 	-- b0ne(r)s
 		-- VJ.AddNPC("Sandpaper","npc_vj_bbohg_sandpaper",vCat)
 		-- VJ.AddNPC("Skeleton King","npc_vj_bbohg_skelking",vCat)
+		-- Death
+		-- Famine
+		-- War
+		-- Pestilance
+		-- Bonalgam
 	
 	-- Clowns
 		-- VJ.AddNPC_HUMAN("Clown Gunner","npc_vj_bbohg_clown_gun",{"weapon_vj_bbohg_ggg"},vCat)
@@ -182,6 +200,7 @@ if VJExists == true then
 		-- VJ.AddNPC("Wario","npc_vj_bbohg_wario",vCat)
 		-- VJ.AddNPC("You Need Me","npc_vj_bbohg_youneedme",vCat)
 		-- Do you know who ate all the donuts?
+		-- Shrek
 
 		-- 28 NPCs
 	
