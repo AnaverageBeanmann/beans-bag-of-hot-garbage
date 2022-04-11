@@ -72,6 +72,11 @@ ENT.DoGrenDropVel = 0
 -- 0 = Over-Hand Throw
 -- 1 = Under-Hand Throw
 -- 2 = Dropping on Ground
+ENT.ExtraCrispy = false
+ENT.WhatDoCrab = 0
+-- 0 = Nothing
+-- 1 = Crab Ragdoll
+-- 2 = Live Crab
 ---------------------------------------------------------------------------------------------------------------------------------------------
 	-- ====== Sound File Paths ====== --
 -- Leave blank if you don't want any sounds to play
@@ -152,13 +157,37 @@ function ENT:CustomOnInitialize()
 		self.VJ_NPC_Class = {"CLASS_BBOHG"}
 		self.FriendsWithAllPlayerAllies = false
 	end
+	-- self.HasItemDropsOnDeath = true
+	-- self.ItemDropsOnDeathChance = 3
 	if math.random(1,3) == 1 then
 		self:Give("weapon_vj_ar2")
+		-- self.ItemDropsOnDeath_EntityList = {}
 	else
 		self:Give("weapon_vj_smg1")
 	end
 	if self.HasCrab == true then
 		self:SetBodygroup(1,1)
+		self.SoundTbl_Idle = {"npc/zombknees/xom/idle.mp3",
+			"npc/zombknees/xom/idle2.mp3"}
+		self.SoundTbl_Investigate = {"npc/zombknees/xom/inves.mp3"}
+		self.SoundTbl_LostEnemy = {"npc/zombknees/xom/lost1.mp3",
+			"npc/zombknees/xom/lost2.mp3"}
+		self.SoundTbl_Alert = {"npc/zombknees/xom/alert1.mp3",
+			"npc/zombknees/xom/alert2.mp3",
+			"npc/zombknees/xom/alert3.mp3",
+			"npc/zombknees/xom/alert4.mp3"}
+		self.SoundTbl_BeforeMeleeAttack = {"npc/zombknees/xom/melee1.mp3",
+			"npc/zombknees/xom/melee2.mp3"}
+		self.SoundTbl_OnGrenadeSight = {"npc/zombknees/xom/seegren.mp3"}
+		self.SoundTbl_OnKilledEnemy = {"npc/zombknees/xom/kill.mp3",
+			"npc/zombknees/xom/kill2.mp3"}
+		self.SoundTbl_Pain = {"npc/zombknees/xom/pain1.mp3",
+			"npc/zombknees/xom/pain2.mp3",
+			"npc/zombknees/xom/pain3.mp3",
+			"npc/zombknees/xom/pain4.mp3"}
+		self.SoundTbl_Death = {"npc/zombknees/xom/death1.mp3",
+			"npc/zombknees/xom/death2.mp3",
+			"npc/zombknees/xom/death3.mp3"}
 	end
 	if self.ZombType == 1 then
 		self:Give("weapon_vj_spas12")
@@ -219,13 +248,26 @@ function ENT:CustomOnTakeDamage_BeforeDamage(dmginfo, hitgroup)
 	end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:CustomOnPriorToKilled(dmginfo, hitgroup)
+	if dmginfo:IsDamageType(DMG_BURN) or dmginfo:IsDamageType(DMG_SLOWBURN) then
+	self.ExtraCrispy = true
+	end
+	local DeathCrabThing = math.random(1,3)
+	if DeathCrabThing == 2 then
+		self.WhatDoCrab = 1
+	elseif DeathCrabThing == 3 then
+		self.WhatDoCrab = 2
+		self.SoundTbl_Death = {"npc/zombknees/zombine/zombine_die1.wav",
+		"npc/zombknees/zombine/zombine_die2.wav"}
+	end
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnDeath_AfterCorpseSpawned(dmginfo,hitgroup,GetCorpse)
 	if self.HasCrab == true then
-		local WhatToDoAboutCrab = math.random(1,3)
-		if WhatToDoAboutCrab == 1 then
+		if self.WhatDoCrab == 1 && self.ExtraCrispy == false then
 			GetCorpse:SetBodygroup(1,0)
 			self:CreateGibEntity("prop_ragdoll","models/headcrabclassic.mdl",{Pos=self:GetAttachment(self:LookupAttachment("headcrab")).Pos or self:EyePos()})
-		elseif WhatToDoAboutCrab == 2 then
+		elseif self.WhatDoCrab == 2 then
 			GetCorpse:SetBodygroup(1,0)
 			self.crab = ents.Create("npc_vj_bbohg_crab")
 			self.crab:SetPos(self:GetAttachment(self:LookupAttachment("headcrab")).Pos or self:EyePos())
@@ -233,6 +275,9 @@ function ENT:CustomOnDeath_AfterCorpseSpawned(dmginfo,hitgroup,GetCorpse)
 			self.crab:Spawn()
 			self.crab:SetGroundEntity(NULL)
 			self.crab:Activate()
+			if self.ExtraCrispy == true then
+				self.crab:Ignite(10)
+			end
 		end
 	end
 end

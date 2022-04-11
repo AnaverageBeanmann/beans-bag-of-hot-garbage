@@ -17,17 +17,17 @@ SWEP.NPC_TimeUntilFireExtraTimers = {0.08, 0.16, 0.24, 0.32, 0.4}
 SWEP.NPC_CanBePickedUp = false
 SWEP.NPC_ReloadSound = {}
 SWEP.NPC_ReloadSoundLevel = 60
-
-	-- ====== Secondary Fire Variables ====== --
--- SWEP.NPC_HasSecondaryFire = false -- Can the weapon have a secondary fire?
--- SWEP.NPC_SecondaryFireEnt = "obj_vj_grenade_rifle" -- The entity to fire, this only applies if self:NPC_SecondaryFire() has NOT been overridden!
--- SWEP.NPC_SecondaryFireChance = 3 -- Chance that the secondary fire is used | 1 = always
--- SWEP.NPC_SecondaryFireNext = VJ_Set(12, 15) -- How much time until the secondary fire can be used again?
--- SWEP.NPC_SecondaryFireDistance = 1000 -- How close does the owner's enemy have to be for it to fire?
--- SWEP.NPC_HasSecondaryFireSound = true -- Can the secondary fire sound be played?
--- SWEP.NPC_SecondaryFireSound = {} -- The sound it plays when the secondary fire is used
--- SWEP.NPC_SecondaryFireSoundLevel = 90 -- The sound level to use for the secondary firing sound
-
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SWEP.NPC_HasSecondaryFire = true
+SWEP.NPC_SecondaryFireEnt = "obj_vj_bbohg_alyx_funky" -- The entity to fire, this only applies if self:NPC_SecondaryFire() has NOT been overridden!
+SWEP.NPC_SecondaryFireChance = 3
+SWEP.NPC_SecondaryFireNext = VJ_Set(1, 10)
+SWEP.NPC_SecondaryFireDistance = 10000
+SWEP.NPC_SecondaryFireSound = {"weapons/physcannon/superphys_launch1.wav",
+	"weapons/physcannon/superphys_launch2.wav",
+	"weapons/physcannon/superphys_launch3.wav",
+	"weapons/physcannon/superphys_launch4.wav"}
+SWEP.NPC_SecondaryFireSoundLevel = 75
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 SWEP.Primary.DisableBulletCode = true
 SWEP.Primary.AllowFireInWater = true
@@ -37,7 +37,7 @@ SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "Pistol"
 
 	-- ====== Sound Variables ====== --
-SWEP.Primary.Sound = {"weapons/crossbow/fire1.wav"}
+-- SWEP.Primary.Sound = {"weapons/crossbow/fire1.wav"}
 -- SWEP.Primary.DistantSound = {}
 -- SWEP.Primary.HasDistantSound = true -- Does it have a distant sound when the gun is shot?
 -- SWEP.Primary.DistantSoundLevel = 140 -- Distant sound level
@@ -64,3 +64,22 @@ function SWEP:CustomOnPrimaryAttack_BeforeShoot()
 	end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
+function SWEP:NPC_SecondaryFire_BeforeTimer(eneEnt, fireTime)
+	VJ_EmitSound(self, "weapons/physgun_off.wav", 70)
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
+function SWEP:NPC_SecondaryFire()
+	local owner = self:GetOwner()
+	local pos = self:GetNW2Vector("VJ_CurBulletPos")
+	local proj = ents.Create(self.NPC_SecondaryFireEnt)
+	proj:SetPos(pos)
+	proj:SetAngles(owner:GetAngles())
+	proj:SetOwner(owner)
+	proj:Spawn()
+	proj:Activate()
+	local phys = proj:GetPhysicsObject()
+	if IsValid(phys) then
+		phys:Wake()
+		phys:SetVelocity(owner:CalculateProjectile("Line", pos, owner.LatestVisibleEnemyPosition, 200))
+	end
+end

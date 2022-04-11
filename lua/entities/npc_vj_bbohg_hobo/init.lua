@@ -76,6 +76,13 @@ ENT.HoboWeapon = 0
 -- 1 = Crowbar
 -- 2 = Pipe
 -- 3 = Stunstick
+ENT.VoicePackk = 0
+-- 0 = That Guy Who Yells at Cats
+-- 1 = Cocksuck Guy
+-- 2 = Tourettes Guy
+-- 3 = HowToBasic
+-- 4 = Shadow Walker
+ENT.CanChangeVoice = true
 ---------------------------------------------------------------------------------------------------------------------------------------------
 	-- ====== Sound File Paths ====== --
 -- Leave blank if you don't want any sounds to play
@@ -200,6 +207,7 @@ function ENT:CustomOnInitialize()
 
 	local VoicePack = math.random(1,6)
 	if VoicePack == 1 then
+		self.VoicePackk = 1
 		self.SoundTbl_CombatIdle = {"npc/hobo/voice2/cidle_1.mp3",
 			"npc/hobo/voice2/cidle_2.mp3",
 			"npc/hobo/voice2/cidle_3.mp3",
@@ -312,6 +320,7 @@ function ENT:CustomOnInitialize()
 			"npc/hobo/voice2/kill_3.mp3"}
 		end
 	elseif VoicePack == 2 || VoicePack == 5 then
+		self.VoicePackk = 2
 		self.SoundTbl_CombatIdle = {"npc/hobo/voice3/200poundsofbirdsht.mp3",
 			"npc/hobo/voice3/ass.mp3",
 			"npc/hobo/voice3/banana.mp3",
@@ -543,6 +552,7 @@ function ENT:CustomOnInitialize()
 			"npc/hobo/voice3/shoes.mp3",
 			"npc/hobo/voice3/shut (1).mp3"}
 	elseif VoicePack == 3 then
+		self.VoicePackk = 3
 		self.SoundTbl_CombatIdle = {"npc/hobo/voice4/cidle (1).wav",
 			"npc/hobo/voice4/cidle (2).wav",
 			"npc/hobo/voice4/cidle (3).wav"}
@@ -652,6 +662,7 @@ function ENT:CustomOnInitialize()
 	end
 	
 	if math.random(1,10) == 1 then
+	self.VoicePackk = 4
 	self.SoundTbl_CombatIdle = {"npc/shadowwalk/npc/stalker/stalker_scream1.wav",
 		"npc/shadowwalk/npc/stalker/stalker_scream2.wav",
 		"npc/shadowwalk/npc/stalker/stalker_scream3.wav",	
@@ -846,6 +857,594 @@ function ENT:GetSightDirection()
 	return self:GetAttachment(self:LookupAttachment("eyes")).Ang:Forward()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:CustomOnThink_AIEnabled()
+	if self.VJ_IsBeingControlled == true && self.CanChangeVoice == true && self.VJ_TheController:KeyDown(IN_ATTACK) && self.VJ_TheController:KeyDown(IN_SCORE) then
+		if self.VoicePackk == 4 then
+			self.VoicePackk = 0
+			self.VJ_TheController:PrintMessage(HUD_PRINTCENTER,"Current Voicepack: That Guy That Yells at Cats.")
+			VJ_EmitSound(self.VJ_TheController,{"friends/friend_join.wav"},50,100)
+			self.CanChangeVoice = false
+			self.CombatIdleSoundPitch = VJ_Set(false, false)
+			self.PainSoundPitch = VJ_Set(false, false)
+			self.AlertSoundPitch = VJ_Set(false, false)
+			self.LostEnemySoundPitch = VJ_Set(false, false)
+			self.DeathSoundPitch = VJ_Set(false, false)
+			self.SoundTbl_CombatIdle = {"npc/hobo/voice1/cidle_1.mp3",
+				"npc/hobo/voice1/cidle_2.mp3",
+				"npc/hobo/voice1/cidle_3.mp3",
+				"npc/hobo/voice1/cidle_4.mp3",
+				"npc/hobo/voice1/cidle_5.mp3",
+				"npc/hobo/voice1/cidle_6.mp3",
+				"npc/hobo/voice1/alert_1.mp3",
+				"npc/hobo/voice1/alert_2.mp3",
+				"npc/hobo/voice1/cant_reach_10.mp3",
+				"npc/hobo/voice1/cant_reach_11.mp3",
+				"npc/hobo/voice1/cant_reach_13.mp3",
+				"npc/hobo/voice1/cant_reach_7.mp3",
+				"npc/hobo/voice1/cant_reach_8.mp3"}
+			self.SoundTbl_Alert = {"npc/hobo/voice1/alert_1.mp3",	
+				"npc/hobo/voice1/alert_2.mp3",
+				"npc/hobo/voice1/cidle_1.mp3",
+				"npc/hobo/voice1/cidle_2.mp3",
+				"npc/hobo/voice1/cidle_5.mp3",
+				"npc/hobo/voice1/cidle_6.mp3"}
+			self.SoundTbl_OnKilledEnemy = {"npc/hobo/voice1/alert_2.mp3",
+				"npc/hobo/voice1/cant_reach_11.mp3",
+				"npc/hobo/voice1/cant_reach_13.mp3",
+				"npc/hobo/voice1/cidle_4.mp3",
+				"npc/hobo/voice1/cidle_5.mp3",
+				"npc/hobo/voice1/death_3.mp3"}
+			self.SoundTbl_LostEnemy = {"npc/hobo/voice1/lost_1.mp3",
+				"npc/hobo/voice1/cant_reach_11.mp3",
+				"npc/hobo/voice1/cidle_1.mp3",
+				"npc/hobo/voice1/cidle_2.mp3",
+				"npc/hobo/voice1/cidle_3.mp3",
+				"npc/hobo/voice1/cidle_4.mp3",
+				"npc/hobo/voice1/cidle_5.mp3",
+				"npc/hobo/voice1/cidle_6.mp3",
+				"npc/hobo/voice1/death_1.mp3",
+				"npc/hobo/voice1/death_2.mp3",
+				"npc/hobo/voice1/death_3.mp3"}
+			self.SoundTbl_Pain = {"npc/hobo/voice1/pain_1.mp3",
+				"npc/hobo/voice1/pain_2.mp3",
+				"npc/hobo/voice1/pain_3.mp3",
+				"npc/hobo/voice1/pain_4.mp3",
+				"npc/hobo/voice1/death_2.mp3"}
+			self.SoundTbl_Death = {"npc/hobo/voice1/death_1.mp3",
+				"npc/hobo/voice1/death_2.mp3",
+				"npc/hobo/voice1/death_3.mp3",
+				"npc/hobo/voice1/pain_1.mp3",
+				"npc/hobo/voice1/pain_2.mp3",
+				"npc/hobo/voice1/pain_3.mp3",
+				"npc/hobo/voice1/pain_4.mp3"}
+			self.SoundTbl_IdleDialogue = {"npc/hobo/voice1/alert_1.mp3",
+				"npc/hobo/voice1/cant_reach_13.mp3",
+				"npc/hobo/voice1/cidle_2.mp3",
+				"npc/hobo/voice1/cidle_4.mp3"}
+			self.SoundTbl_IdleDialogueAnswer = {"npc/hobo/voice1/cant_reach_10.mp3",
+				"npc/hobo/voice1/cant_reach_7.mp3",
+				"npc/hobo/voice1/cant_reach_8.mp3",
+				"npc/hobo/voice1/cidle_4.mp3",
+				"npc/hobo/voice1/cidle_5.mp3"}
+			self.SoundTbl_Investigate = {"npc/hobo/voice1/cidle_1.mp3",
+				"npc/hobo/voice1/cidle_2.mp3",
+				"npc/hobo/voice1/cidle_3.mp3",
+				"npc/hobo/voice1/cidle_4.mp3",
+				"npc/hobo/voice1/cidle_5.mp3",
+				"npc/hobo/voice1/cidle_6.mp3",
+				"npc/hobo/voice1/alert_1.mp3",
+				"npc/hobo/voice1/alert_2.mp3",
+				"npc/hobo/voice1/cant_reach_10.mp3",
+				"npc/hobo/voice1/cant_reach_11.mp3",
+				"npc/hobo/voice1/cant_reach_13.mp3",
+				"npc/hobo/voice1/cant_reach_7.mp3",
+				"npc/hobo/voice1/cant_reach_8.mp3"}
+			self.SoundTbl_CallForHelp = {"npc/hobo/voice1/cant_reach_1.mp3",
+				"npc/hobo/voice1/cant_reach_11.mp3",
+				"npc/hobo/voice1/cant_reach_13.mp3",
+				"npc/hobo/voice1/cant_reach_12.mp3",
+				"npc/hobo/voice1/cant_reach_2.mp3",
+				"npc/hobo/voice1/cant_reach_3.mp3",
+				"npc/hobo/voice1/cant_reach_4.mp3",
+				"npc/hobo/voice1/cant_reach_5.mp3",
+				"npc/hobo/voice1/cant_reach_6.mp3",
+				"npc/hobo/voice1/cant_reach_7.mp3"}
+			self.SoundTbl_BeforeMeleeAttack = {"npc/hobo/voice1/pain_1.mp3",
+				"npc/hobo/voice1/pain_2.mp3",
+				"npc/hobo/voice1/pain_3.mp3",
+				"npc/hobo/voice1/pain_4.mp3"}
+			self.SoundTbl_GrenadeAttack = {"npc/hobo/voice1/cant_reach_1.mp3",
+				"npc/hobo/voice1/cant_reach_11.mp3",
+				"npc/hobo/voice1/cant_reach_4.mp3",
+				"npc/hobo/voice1/cidle_1.mp3",
+				"npc/hobo/voice1/cidle_5.mp3",
+				"npc/hobo/voice1/pain_1.mp3",
+				"npc/hobo/voice1/pain_4.mp3"}
+		elseif self.VoicePackk == 0 then
+			self.VoicePackk = 1
+			self.VJ_TheController:PrintMessage(HUD_PRINTCENTER,"Current Voicepack: Cocksuck.")
+			VJ_EmitSound(self.VJ_TheController,{"friends/friend_join.wav"},50,100)
+			self.CanChangeVoice = false
+			self.SoundTbl_CombatIdle = {"npc/hobo/voice2/cidle_1.mp3",
+				"npc/hobo/voice2/cidle_2.mp3",
+				"npc/hobo/voice2/cidle_3.mp3",
+				"npc/hobo/voice2/cidle_4.mp3",
+				"npc/hobo/voice2/cidle_5.mp3",
+				"npc/hobo/voice2/cidle_6.mp3",
+				"npc/hobo/voice2/cidle_7.mp3"}
+			self.SoundTbl_Idle = {"npc/hobo/voice2/idle_1.mp3",
+				"npc/hobo/voice2/idle_2.mp3"}
+			self.SoundTbl_Alert = {"npc/hobo/voice2/cidle_1.mp3",
+				"npc/hobo/voice2/cidle_2.mp3",
+				"npc/hobo/voice2/cidle_3.mp3",
+				"npc/hobo/voice2/cidle_4.mp3",
+				"npc/hobo/voice2/cidle_5.mp3",
+				"npc/hobo/voice2/cidle_6.mp3",
+				"npc/hobo/voice2/cidle_7.mp3"}
+			self.SoundTbl_OnKilledEnemy = {"npc/hobo/voice2/kill_1.mp3",
+				"npc/hobo/voice2/kill_2.mp3",
+				"npc/hobo/voice2/kill_3.mp3",
+				"npc/hobo/voice2/kill_4.mp3",
+				"npc/hobo/voice2/kill_5.mp3"}
+			self.SoundTbl_LostEnemy = {"npc/hobo/voice2/pain_1.mp3",
+				"npc/hobo/voice2/pain_2.mp3",
+				"npc/hobo/voice2/pain_3.mp3",
+				"npc/hobo/voice2/pain_4.mp3",
+				"npc/hobo/voice2/pain_5.mp3",
+				"npc/hobo/voice2/pain_6.mp3",
+				"npc/hobo/voice2/pain_7.mp3",
+				"npc/hobo/voice2/pain_8.mp3",
+				"npc/hobo/voice2/pain_9.mp3",
+				"npc/hobo/voice2/pain_10.mp3"}
+			self.SoundTbl_Pain = {"npc/hobo/voice2/pain_1.mp3",
+				"npc/hobo/voice2/pain_2.mp3",
+				"npc/hobo/voice2/pain_3.mp3",
+				"npc/hobo/voice2/pain_4.mp3",
+				"npc/hobo/voice2/pain_5.mp3",
+				"npc/hobo/voice2/pain_6.mp3",
+				"npc/hobo/voice2/pain_7.mp3",
+				"npc/hobo/voice2/pain_8.mp3",
+				"npc/hobo/voice2/pain_9.mp3",
+				"npc/hobo/voice2/pain_10.mp3",
+				"npc/hobo/voice2/pain_11.mp3"}
+			self.SoundTbl_Death = {"npc/hobo/voice2/pain_1.mp3",
+				"npc/hobo/voice2/pain_2.mp3",
+				"npc/hobo/voice2/pain_3.mp3",
+				"npc/hobo/voice2/pain_4.mp3",
+				"npc/hobo/voice2/pain_5.mp3",
+				"npc/hobo/voice2/pain_6.mp3",
+				"npc/hobo/voice2/pain_7.mp3",
+				"npc/hobo/voice2/pain_8.mp3",
+				"npc/hobo/voice2/pain_9.mp3",
+				"npc/hobo/voice2/pain_10.mp3"}
+			self.SoundTbl_IdleDialogue = {"npc/hobo/voice2/cidle_1.mp3",
+				"npc/hobo/voice2/cidle_2.mp3",
+				"npc/hobo/voice2/cidle_3.mp3",
+				"npc/hobo/voice2/cidle_4.mp3",
+				"npc/hobo/voice2/cidle_5.mp3",
+				"npc/hobo/voice2/cidle_6.mp3",
+				"npc/hobo/voice2/cidle_7.mp3"}
+			self.SoundTbl_IdleDialogueAnswer = {"npc/hobo/voice2/pain_1.mp3",
+				"npc/hobo/voice2/pain_2.mp3",
+				"npc/hobo/voice2/pain_3.mp3",
+				"npc/hobo/voice2/pain_4.mp3",
+				"npc/hobo/voice2/pain_5.mp3",
+				"npc/hobo/voice2/pain_6.mp3",
+				"npc/hobo/voice2/pain_7.mp3",
+				"npc/hobo/voice2/pain_8.mp3",
+				"npc/hobo/voice2/pain_9.mp3",
+				"npc/hobo/voice2/pain_10.mp3",
+				"npc/hobo/voice2/pain_11.mp3"}
+			self.SoundTbl_Investigate = {"npc/hobo/voice2/cidle_1.mp3",
+				"npc/hobo/voice2/cidle_2.mp3",
+				"npc/hobo/voice2/cidle_3.mp3",
+				"npc/hobo/voice2/cidle_4.mp3",
+				"npc/hobo/voice2/cidle_5.mp3",
+				"npc/hobo/voice2/cidle_6.mp3",
+				"npc/hobo/voice2/cidle_7.mp3"}
+			self.SoundTbl_CallForHelp = {"npc/hobo/voice2/cidle_1.mp3",
+				"npc/hobo/voice2/cidle_2.mp3",
+				"npc/hobo/voice2/cidle_3.mp3",
+				"npc/hobo/voice2/cidle_4.mp3",
+				"npc/hobo/voice2/cidle_5.mp3",
+				"npc/hobo/voice2/cidle_6.mp3",
+				"npc/hobo/voice2/cidle_7.mp3"}
+			self.SoundTbl_BeforeMeleeAttack = {"npc/hobo/voice2/pain_1.mp3",
+				"npc/hobo/voice2/pain_2.mp3",
+				"npc/hobo/voice2/pain_3.mp3",
+				"npc/hobo/voice2/pain_4.mp3",
+				"npc/hobo/voice2/pain_5.mp3",
+				"npc/hobo/voice2/pain_6.mp3",
+				"npc/hobo/voice2/pain_7.mp3",
+				"npc/hobo/voice2/pain_8.mp3",
+				"npc/hobo/voice2/pain_9.mp3",
+				"npc/hobo/voice2/pain_10.mp3",
+				"npc/hobo/voice2/pain_11.mp3"}
+			self.SoundTbl_GrenadeAttack = {"npc/hobo/voice2/pain_1.mp3",
+				"npc/hobo/voice2/pain_2.mp3",
+				"npc/hobo/voice2/pain_3.mp3",
+				"npc/hobo/voice2/pain_4.mp3",
+				"npc/hobo/voice2/pain_5.mp3",
+				"npc/hobo/voice2/pain_6.mp3",
+				"npc/hobo/voice2/pain_7.mp3",
+				"npc/hobo/voice2/pain_8.mp3",
+				"npc/hobo/voice2/pain_9.mp3",
+				"npc/hobo/voice2/pain_10.mp3",
+				"npc/hobo/voice2/pain_11.mp3"}
+		elseif self.VoicePackk == 1 then
+			self.VoicePackk = 2
+			self.VJ_TheController:PrintMessage(HUD_PRINTCENTER,"Current Voicepack: Tourettes Guy.")
+			VJ_EmitSound(self.VJ_TheController,{"friends/friend_join.wav"},50,100)
+			self.CanChangeVoice = false
+			self.SoundTbl_CombatIdle = {"npc/hobo/voice3/200poundsofbirdsht.mp3",
+				"npc/hobo/voice3/ass.mp3",
+				"npc/hobo/voice3/banana.mp3",
+				"npc/hobo/voice3/bosshark.mp3",
+				"npc/hobo/voice3/btch (1).mp3",
+				"npc/hobo/voice3/consumeshort.mp3",
+				"npc/hobo/voice3/fyoukid.mp3",
+				"npc/hobo/voice3/georgeforeman.mp3",
+				"npc/hobo/voice3/kickass_ (1).mp3",
+				"npc/hobo/voice3/kissmyass.mp3",
+				"npc/hobo/voice3/laugh (1).mp3",
+				"npc/hobo/voice3/laugh (2).mp3",
+				"npc/hobo/voice3/laugh (3).mp3",
+				"npc/hobo/voice3/machoman.mp3",
+				"npc/hobo/voice3/mfs.mp3",
+				"npc/hobo/voice3/myass.mp3",
+				"npc/hobo/voice3/scotchtape.mp3",
+				"npc/hobo/voice3/waste.mp3"}
+			self.SoundTbl_Idle = {"npc/hobo/voice3/btch (2).mp3",
+				"npc/hobo/voice3/f (5).mp3",
+				"npc/hobo/voice3/f (8).mp3",
+				"npc/hobo/voice3/f (9).mp3",
+				"npc/hobo/voice3/georgeforeman.mp3",
+				"npc/hobo/voice3/shut (2).mp3"}
+			self.SoundTbl_Alert = {"npc/hobo/voice3/ass.mp3",
+				"npc/hobo/voice3/bosshark.mp3",
+				"npc/hobo/voice3/btch (1).mp3",
+				"npc/hobo/voice3/foff.mp3",
+				"npc/hobo/voice3/fyoukid.mp3",
+				"npc/hobo/voice3/georgeforeman.mp3",
+				"npc/hobo/voice3/hey.mp3",
+				"npc/hobo/voice3/machoman.mp3",
+				"npc/hobo/voice3/mfs.mp3",
+				"npc/hobo/voice3/peeved.mp3",
+				"npc/hobo/voice3/waste.mp3"}
+			self.SoundTbl_OnKilledEnemy = {"npc/hobo/voice3/200poundsofbirdsht.mp3",
+				"npc/hobo/voice3/alright.mp3",
+				"npc/hobo/voice3/btch (1).mp3",
+				"npc/hobo/voice3/consumeshort.mp3",
+				"npc/hobo/voice3/fa.mp3",
+				"npc/hobo/voice3/fyou (1).mp3",
+				"npc/hobo/voice3/fyou (2).mp3",
+				"npc/hobo/voice3/fyou (3).mp3",
+				"npc/hobo/voice3/fyoukid.mp3",
+				"npc/hobo/voice3/laugh (1).mp3",
+				"npc/hobo/voice3/laugh (2).mp3",
+				"npc/hobo/voice3/laugh (3).mp3",
+				"npc/hobo/voice3/mallsanta.mp3",
+				"npc/hobo/voice3/myass.mp3",
+				"npc/hobo/voice3/pos.mp3",
+				"npc/hobo/voice3/scotchtape.mp3",
+				"npc/hobo/voice3/shut (1).mp3",
+				"npc/hobo/voice3/waste.mp3"}
+			self.SoundTbl_LostEnemy = {"npc/hobo/voice3/btch (1).mp3",
+				"npc/hobo/voice3/f (1).mp3",
+				"npc/hobo/voice3/foff.mp3",
+				"npc/hobo/voice3/fyoukid.mp3",
+				"npc/hobo/voice3/jollypark.mp3",
+				"npc/hobo/voice3/myass.mp3",
+				"npc/hobo/voice3/peeved.mp3",
+				"npc/hobo/voice3/sht (9).mp3",
+				"npc/hobo/voice3/sht (10).mp3",
+				"npc/hobo/voice3/sht (11).mp3",
+				"npc/hobo/voice3/sht (12).mp3",
+				"npc/hobo/voice3/sht (13).mp3",
+				"npc/hobo/voice3/sht (14).mp3",
+				"npc/hobo/voice3/sht (15).mp3",
+				"npc/hobo/voice3/sht (25).mp3",
+				"npc/hobo/voice3/sht (26).mp3",
+				"npc/hobo/voice3/sht (32).mp3",
+				"npc/hobo/voice3/sht (33).mp3",
+				"npc/hobo/voice3/sht (34).mp3",
+				"npc/hobo/voice3/sht (35).mp3"}
+			self.SoundTbl_Pain = {"npc/hobo/voice3/ahole.mp3",
+				"npc/hobo/voice3/ass.mp3",
+				"npc/hobo/voice3/breath.mp3",
+				"npc/hobo/voice3/btch (2).mp3",
+				"npc/hobo/voice3/chestpain.mp3",
+				"npc/hobo/voice3/constipated.mp3",
+				"npc/hobo/voice3/crotchpain.mp3",
+				"npc/hobo/voice3/f (1).mp3",
+				"npc/hobo/voice3/f (2).mp3",
+				"npc/hobo/voice3/f (4).mp3",
+				"npc/hobo/voice3/f (5).mp3",
+				"npc/hobo/voice3/f (6).mp3",
+				"npc/hobo/voice3/f (7).mp3",
+				"npc/hobo/voice3/f (8).mp3",
+				"npc/hobo/voice3/f (9).mp3",
+				"npc/hobo/voice3/fyou (1).mp3",
+				"npc/hobo/voice3/fyou (2).mp3",
+				"npc/hobo/voice3/fyou (3).mp3",
+				"npc/hobo/voice3/georgeforeman.mp3",
+				"npc/hobo/voice3/goatcancer.mp3",
+				"npc/hobo/voice3/hurts.mp3",
+				"npc/hobo/voice3/iactuallydontknow.mp3",
+				"npc/hobo/voice3/kickass_ (1).mp3",
+				"npc/hobo/voice3/kickass_ (2).mp3",
+				"npc/hobo/voice3/kickass_ (3).mp3",
+				"npc/hobo/voice3/kissmyass.mp3",
+				"npc/hobo/voice3/lungcancer (1).mp3",
+				"npc/hobo/voice3/lungcancer (2).mp3",
+				"npc/hobo/voice3/lungcancer (3).mp3",
+				"npc/hobo/voice3/lungcancer (4).mp3",
+				"npc/hobo/voice3/lungcancer (5).mp3",
+				"npc/hobo/voice3/lungcancer (6).mp3",
+				"npc/hobo/voice3/lungcancer (7).mp3",
+				"npc/hobo/voice3/lungcancer (8).mp3",
+				"npc/hobo/voice3/lungcancer (9).mp3",
+				"npc/hobo/voice3/lungcancer (10).mp3",
+				"npc/hobo/voice3/lungcancer (11).mp3",
+				"npc/hobo/voice3/lungcancer (12).mp3",
+				"npc/hobo/voice3/lungcancer (13).mp3",
+				"npc/hobo/voice3/lungcancer (14).mp3",
+				"npc/hobo/voice3/mfs.mp3",
+				"npc/hobo/voice3/ouch.mp3",
+				"npc/hobo/voice3/ow.mp3",
+				"npc/hobo/voice3/sht (1).mp3",
+				"npc/hobo/voice3/sht (3).mp3",
+				"npc/hobo/voice3/sht (4).mp3",
+				"npc/hobo/voice3/sht (5).mp3",
+				"npc/hobo/voice3/sht (6).mp3",
+				"npc/hobo/voice3/sht (7).mp3",
+				"npc/hobo/voice3/sht (8).mp3",
+				"npc/hobo/voice3/sht (12).mp3",
+				"npc/hobo/voice3/sht (20).mp3",
+				"npc/hobo/voice3/sht (21).mp3",
+				"npc/hobo/voice3/sht (22).mp3",
+				"npc/hobo/voice3/sht (23).mp3",
+				"npc/hobo/voice3/sht (24).mp3",
+				"npc/hobo/voice3/sht (27).mp3",
+				"npc/hobo/voice3/sht (28).mp3",
+				"npc/hobo/voice3/sht (29).mp3",
+				"npc/hobo/voice3/suck.mp3"}
+			self.SoundTbl_Death = {"npc/hobo/voice3/btch (1).mp3",
+				"npc/hobo/voice3/earthquake.mp3",
+				"npc/hobo/voice3/f (1).mp3",
+				"npc/hobo/voice3/f (10).mp3",
+				"npc/hobo/voice3/f (2).mp3",
+				"npc/hobo/voice3/f (3).mp3",
+				"npc/hobo/voice3/f (4).mp3",
+				"npc/hobo/voice3/sht (2).mp3",
+				"npc/hobo/voice3/sht (16).mp3",
+				"npc/hobo/voice3/sht (17).mp3",
+				"npc/hobo/voice3/sht (18).mp3",
+				"npc/hobo/voice3/sht (19).mp3",
+				"npc/hobo/voice3/sht (30).mp3",
+				"npc/hobo/voice3/sht (31).mp3",
+				"npc/hobo/voice3/wtf.mp3"}
+			self.SoundTbl_IdleDialogue = {"npc/hobo/voice3/200poundsofbirdsht.mp3",
+				"npc/hobo/voice3/ass.mp3",
+				"npc/hobo/voice3/banana.mp3",
+				"npc/hobo/voice3/bosshark.mp3",
+				"npc/hobo/voice3/clocks.mp3",
+				"npc/hobo/voice3/defecation.mp3",
+				"npc/hobo/voice3/georgeforeman.mp3",
+				"npc/hobo/voice3/giraffe.mp3",
+				"npc/hobo/voice3/god.mp3",
+				"npc/hobo/voice3/jollypark.mp3",
+				"npc/hobo/voice3/lateshoes.mp3",
+				"npc/hobo/voice3/machoman.mp3",
+				"npc/hobo/voice3/tuba.mp3",
+				"npc/hobo/voice3/waste.mp3",
+				"npc/hobo/voice3/women.mp3"}
+			self.SoundTbl_IdleDialogueAnswer = {"npc/hobo/voice3/200poundsofbirdsht.mp3",
+				"npc/hobo/voice3/alright.mp3",
+				"npc/hobo/voice3/ass.mp3",
+				"npc/hobo/voice3/bosshark.mp3",
+				"npc/hobo/voice3/fa.mp3",
+				"npc/hobo/voice3/foff.mp3",
+				"npc/hobo/voice3/fyou (1).mp3",
+				"npc/hobo/voice3/kissmyass.mp3",
+				"npc/hobo/voice3/mallsanta.mp3",
+				"npc/hobo/voice3/myass.mp3",
+				"npc/hobo/voice3/no (1).mp3",
+				"npc/hobo/voice3/no (2).mp3",
+				"npc/hobo/voice3/no (3).mp3",
+				"npc/hobo/voice3/no (4).mp3",
+				"npc/hobo/voice3/no (5).mp3",
+				"npc/hobo/voice3/shut (2).mp3",
+				"npc/hobo/voice3/sry.mp3",
+				"npc/hobo/voice3/stupid.mp3",
+				"npc/hobo/voice3/suck.mp3",
+				"npc/hobo/voice3/yes_ (1).mp3",
+				"npc/hobo/voice3/yes_ (2).mp3",
+				"npc/hobo/voice3/yes_ (3).mp3",
+				"npc/hobo/voice3/yes_ (4).mp3",
+				"npc/hobo/voice3/yes_ (5).mp3",
+				"npc/hobo/voice3/yes_ (6).mp3"}
+			self.SoundTbl_Investigate = {"npc/hobo/voice3/banana.mp3",
+				"npc/hobo/voice3/defecation.mp3",
+				"npc/hobo/voice3/foff.mp3",
+				"npc/hobo/voice3/kickass_ (1).mp3",
+				"npc/hobo/voice3/kickass_ (2).mp3",
+				"npc/hobo/voice3/kickass_ (3).mp3",
+				"npc/hobo/voice3/whatisit.mp3"}
+			self.SoundTbl_CallForHelp = {"npc/hobo/voice3/btch (1).mp3"}
+			self.SoundTbl_BeforeMeleeAttack = {"npc/hobo/voice3/btch (1).mp3",
+				"npc/hobo/voice3/btch (2).mp3",
+				"npc/hobo/voice3/f (5).mp3",
+				"npc/hobo/voice3/f (6).mp3",
+				"npc/hobo/voice3/f (7).mp3",
+				"npc/hobo/voice3/fyou (3).mp3",
+				"npc/hobo/voice3/kissmyass.mp3",
+				"npc/hobo/voice3/sht (1).mp3",
+				"npc/hobo/voice3/sht (20).mp3",
+				"npc/hobo/voice3/sht (21).mp3",
+				"npc/hobo/voice3/sht (22).mp3",
+				"npc/hobo/voice3/sht (23).mp3",
+				"npc/hobo/voice3/sht (24).mp3",
+				"npc/hobo/voice3/shut (1).mp3"}
+			self.SoundTbl_GrenadeAttack = {"npc/hobo/voice3/ass.mp3",
+				"npc/hobo/voice3/btch (1).mp3",
+				"npc/hobo/voice3/consumeshort.mp3",
+				"npc/hobo/voice3/f (7).mp3",
+				"npc/hobo/voice3/foff.mp3",
+				"npc/hobo/voice3/hey.mp3",
+				"npc/hobo/voice3/mfs.mp3",
+				"npc/hobo/voice3/shoes.mp3",
+				"npc/hobo/voice3/shut (1).mp3"}
+		elseif self.VoicePackk == 2 then
+			self.VoicePackk = 3
+			self.VJ_TheController:PrintMessage(HUD_PRINTCENTER,"Current Voicepack: HowToBasic.")
+			VJ_EmitSound(self.VJ_TheController,{"friends/friend_join.wav"},50,100)
+			self.CanChangeVoice = false
+			self.SoundTbl_CombatIdle = {"npc/hobo/voice4/cidle (1).wav",
+				"npc/hobo/voice4/cidle (2).wav",
+				"npc/hobo/voice4/cidle (3).wav"}
+			self.SoundTbl_Idle = {"npc/hobo/voice4/idle (1).wav",
+				"npc/hobo/voice4/idle (2).wav",
+				"npc/hobo/voice4/idle (3).wav",
+				"npc/hobo/voice4/idle (4).wav",
+				"npc/hobo/voice4/idle (5).wav",
+				"npc/hobo/voice4/idle (6).wav",
+				"npc/hobo/voice4/idle (7).wav",
+				"npc/hobo/voice4/idle (8).wav",
+				"npc/hobo/voice4/idle (9).wav",
+				"npc/hobo/voice4/idle (10).wav"}
+			self.SoundTbl_Alert = {"npc/hobo/voice4/alert (1).wav",
+				"npc/hobo/voice4/alert (2).wav",
+				"npc/hobo/voice4/alert (3).wav",
+				"npc/hobo/voice4/alert (4).wav",
+				"npc/hobo/voice4/alert (5).wav",
+				"npc/hobo/voice4/alert (6).wav",
+				"npc/hobo/voice4/alert (7).wav",
+				"npc/hobo/voice4/alert (8).wav",
+				"npc/hobo/voice4/alert (9).wav",
+				"npc/hobo/voice4/alert (10).wav",
+				"npc/hobo/voice4/alert (11).wav",
+				"npc/hobo/voice4/alert (12).wav",
+				"npc/hobo/voice4/alert (13).wav",
+				"npc/hobo/voice4/alert (14).wav",
+				"npc/hobo/voice4/alert (15).wav",
+				"npc/hobo/voice4/alert (16).wav"}
+			self.SoundTbl_OnKilledEnemy = {"npc/hobo/voice4/cidle (1).wav",
+				"npc/hobo/voice4/cidle (2).wav",
+				"npc/hobo/voice4/cidle (3).wav"}
+			self.SoundTbl_LostEnemy = {"npc/hobo/voice4/pain (1).wav",
+				"npc/hobo/voice4/pain (2).wav",
+				"npc/hobo/voice4/pain (3).wav",
+				"npc/hobo/voice4/pain (4).wav",
+				"npc/hobo/voice4/pain (5).wav",
+				"npc/hobo/voice4/pain (6).wav",
+				"npc/hobo/voice4/pain (7).wav",
+				"npc/hobo/voice4/pain (8).wav",
+				"npc/hobo/voice4/pain (9).wav",
+				"npc/hobo/voice4/pain (10).wav",
+				"npc/hobo/voice4/pain (11).wav",
+				"npc/hobo/voice4/pain (12).wav",
+				"npc/hobo/voice4/pain (13).wav",
+				"npc/hobo/voice4/pain (14).wav",
+				"npc/hobo/voice4/pain (15).wav",
+				"npc/hobo/voice4/pain (16).wav"}
+			self.SoundTbl_Pain = {"npc/hobo/voice4/pain (1).wav",
+				"npc/hobo/voice4/pain (2).wav",
+				"npc/hobo/voice4/pain (3).wav",
+				"npc/hobo/voice4/pain (4).wav",
+				"npc/hobo/voice4/pain (5).wav",
+				"npc/hobo/voice4/pain (6).wav",
+				"npc/hobo/voice4/pain (7).wav",
+				"npc/hobo/voice4/pain (8).wav",
+				"npc/hobo/voice4/pain (9).wav",
+				"npc/hobo/voice4/pain (10).wav",
+				"npc/hobo/voice4/pain (11).wav",
+				"npc/hobo/voice4/pain (12).wav",
+				"npc/hobo/voice4/pain (13).wav",
+				"npc/hobo/voice4/pain (14).wav",
+				"npc/hobo/voice4/pain (15).wav",
+				"npc/hobo/voice4/pain (16).wav"}
+			self.SoundTbl_Death = {"npc/hobo/voice4/death (1).wav",
+				"npc/hobo/voice4/death (2).wav",
+				"npc/hobo/voice4/death (3).wav",
+				"npc/hobo/voice4/death (4).wav",
+				"npc/hobo/voice4/death (5).wav",
+				"npc/hobo/voice4/death (6).wav",
+				"npc/hobo/voice4/death (7).wav",
+				"npc/hobo/voice4/death (8).wav"}
+			self.SoundTbl_IdleDialogue = {"npc/hobo/voice4/cidle (1).wav",
+				"npc/hobo/voice4/cidle (2).wav",
+				"npc/hobo/voice4/cidle (3).wav"}
+			self.SoundTbl_IdleDialogueAnswer = {"npc/hobo/voice4/cidle (1).wav",
+				"npc/hobo/voice4/cidle (2).wav",
+				"npc/hobo/voice4/cidle (3).wav"}
+			self.SoundTbl_Investigate = {"npc/hobo/voice4/cidle (1).wav",
+				"npc/hobo/voice4/cidle (2).wav",
+				"npc/hobo/voice4/cidle (3).wav"}
+			self.SoundTbl_CallForHelp = {"npc/hobo/voice4/cidle (1).wav",
+				"npc/hobo/voice4/cidle (2).wav",
+				"npc/hobo/voice4/cidle (3).wav"}
+			self.SoundTbl_BeforeMeleeAttack = {"npc/hobo/voice4/attack (1).wav",
+				"npc/hobo/voice4/attack (2).wav",
+				"npc/hobo/voice4/attack (3).wav",
+				"npc/hobo/voice4/attack (4).wav",
+				"npc/hobo/voice4/attack (5).wav",
+				"npc/hobo/voice4/attack (6).wav",
+				"npc/hobo/voice4/attack (7).wav",
+				"npc/hobo/voice4/attack (8).wav",
+				"npc/hobo/voice4/attack (9).wav",
+				"npc/hobo/voice4/attack (10).wav",
+				"npc/hobo/voice4/attack (11).wav"}
+			self.SoundTbl_GrenadeAttack = {"npc/hobo/voice4/attack (1).wav",
+				"npc/hobo/voice4/attack (2).wav",
+				"npc/hobo/voice4/attack (3).wav",
+				"npc/hobo/voice4/attack (4).wav",
+				"npc/hobo/voice4/attack (5).wav",
+				"npc/hobo/voice4/attack (6).wav",
+				"npc/hobo/voice4/attack (7).wav",
+				"npc/hobo/voice4/attack (8).wav",
+				"npc/hobo/voice4/attack (9).wav",
+				"npc/hobo/voice4/attack (10).wav",
+				"npc/hobo/voice4/attack (11).wav"}
+		elseif self.VoicePackk == 3 then
+			self.VoicePackk = 4
+			self.VJ_TheController:PrintMessage(HUD_PRINTCENTER,"Current Voicepack: Shadow Walker.")
+			VJ_EmitSound(self.VJ_TheController,{"friends/friend_join.wav"},50,100)
+			self.CanChangeVoice = false
+			self.SoundTbl_CombatIdle = {"npc/shadowwalk/npc/stalker/stalker_scream1.wav",
+				"npc/shadowwalk/npc/stalker/stalker_scream2.wav",
+				"npc/shadowwalk/npc/stalker/stalker_scream3.wav",	
+				"npc/shadowwalk/npc/stalker/stalker_scream4.wav"}
+			self.SoundTbl_Alert = {"npc/shadowwalk/npc/stalker/stalker_alert1b.wav",	
+				"npc/shadowwalk/npc/stalker/stalker_alert2b.wav",
+				"npc/shadowwalk/npc/stalker/stalker_alert3b.wav"}
+			self.SoundTbl_LostEnemy = {"npc/zombie_poison/pz_alert2.wav",
+				"npc/shadowwalk/npc/stalker/stalker_die2.wav",
+				"npc/shadowwalk/npc/stalker/stalker_scream4.wav"}
+			self.SoundTbl_Pain = {"npc/shadowwalk/npc/stalker/stalker_pain1.wav",
+				"npc/shadowwalk/npc/stalker/stalker_pain2.wav",
+				"npc/shadowwalk/npc/stalker/stalker_pain3.wav"}
+			self.SoundTbl_Death = {"ambient/creatures/town_child_scream1.wav"}
+			self.SoundTbl_Idle = {}
+			self.SoundTbl_OnKilledEnemy = {}
+			self.SoundTbl_IdleDialogue = {}
+			self.SoundTbl_IdleDialogueAnswer = {}
+			self.SoundTbl_Investigate = {}
+			self.SoundTbl_CallForHelp = {}
+			self.SoundTbl_BeforeMeleeAttack = {}
+			self.CombatIdleSoundPitch = VJ_Set(80, 90)
+			self.PainSoundPitch = VJ_Set(65, 70)
+			self.AlertSoundPitch = VJ_Set(80, 90)
+			self.LostEnemySoundPitch = VJ_Set(80, 90)
+			self.DeathSoundPitch = VJ_Set(60, 65)
+			self.SoundTbl_GrenadeAttack = {}
+		end
+		timer.Simple(1,function() if IsValid(self) then
+			self.CanChangeVoice = true
+		end end)
+	end
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:MultipleMeleeAttacks()
 	if self.HasWeapon == true then return end
 	local randattack_stand = math.random(1,8)
@@ -941,6 +1540,10 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:RangeAttackCode_GetShootPos(projectile)
 	return self:CalculateProjectile("Curve", self:GetAttachment(self:LookupAttachment(self.RangeUseAttachmentForPosID)).Pos, self:GetEnemy():GetPos() + self:GetEnemy():OBBCenter(), 1500)
+end
+-------------------------------------------------------------------------------------------------------------------
+function ENT:Controller_IntMsg(ply, controlEnt)
+	ply:ChatPrint("Melee + Tab - Change voicepack")
 end
 -------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnDeath_AfterCorpseSpawned(dmginfo,hitgroup,GetCorpse)

@@ -54,19 +54,34 @@ if VJExists == true then
 	
 	-- Zombknees
 		VJ.AddNPC("Headcrap Xombie","npc_vj_bbohg_zombie",vCat)
+		VJ.AddNPC("Headcrap Xombie Torso","npc_vj_bbohg_zombie_torso",vCat)
+		VJ.AddNPC("Headcrap Xombie Legs","npc_vj_bbohg_zombie_legs",vCat)
 		VJ.AddNPC("Crab","npc_vj_bbohg_crab",vCat)
+		-- Mr. Krabs -- voiced by mr krabs (boss?)
+		-- Krab -- voiced by mr krabs (boss?)
+		-- Krabomb -- make it play this https://gamebanana.com/sounds/27238
 		VJ.AddNPC("Crabomb","npc_vj_bbohg_crabomb",vCat)
+		-- Fat
+		-- Explosive Poison Zombie
 		-- VJ.AddNPC("Poizamikaze","npc_vj_bbohg_poizamikaze",vCat)
 		-- VJ.AddNPC("Explosive Zombie","npc_vj_bbohg_exploder",vCat)
 		-- VJ.AddNPC("Explosive Fast Zombie","npc_vj_bbohg_exploder_fast",vCat)
 		-- VJ.AddNPC("Explosive Poison Zombie","npc_vj_bbohg_exploder_poison",vCat)
+		-- Rake
 		VJ.AddNPC("Zombine","npc_vj_bbohg_zombine",vCat) -- zombine but is actually combine zombie (works like normal combine)
 		VJ.AddNPC("le bebe","npc_vj_bbohg_lebebe",vCat)
 		VJ.AddNPC("Giga Gore Child","npc_vj_bbohg_gorechild_giga",vCat)
+		-- Garmstrong
+		-- Garmstrong's Mech
+		-- Gekkome -- gekko but gonome
+		-- G'nome
+		-- Zamkhin
 	
 	-- Rock and Stones
 		VJ.AddNPC("The Rock","npc_vj_bbohg_therock",vCat)
 		VJ.AddNPC("Rockling","npc_vj_bbohg_therock_minion",vCat)
+		-- Stoner
+		-- Rich
 	
 	-- Generic Enemies
 		-- VJ.AddNPC("Generic Enemy","npc_vj_bbohg_genemy",vCat)
@@ -74,6 +89,8 @@ if VJExists == true then
 		-- VJ.AddNPC("Generic Enemy (Bruiser)","npc_vj_bbohg_genemy_bruiser",vCat)
 		-- VJ.AddNPC("Generic Enemy (Sniper)","npc_vj_bbohg_genemy_sniper",vCat)
 		-- VJ.AddNPC("Generic Enemy (Demoman)","npc_vj_bbohg_genemy_demoman",vCat)
+	
+	-- Generic Allies
 		
 	
 	-- Faction Unaffiliated
@@ -161,9 +178,6 @@ if VJExists == true then
 	-- Deep Rock Demakes
 		-- Lootgrub
 		-- Glarphid Grunt
-
-	-- Rock and Stones
-		-- Stoner (ranged guy)
 	
 	-- Hotlads (fire)
 		-- Hotboy
@@ -177,6 +191,13 @@ if VJExists == true then
 	-- Aperture Science
 		-- VJ.AddNPC("Aperture Science Sentry Turret","npc_vj_bbohg_portalturret",vCat)
 		-- Cave Johnson (but is actually a robot)
+	
+	-- Pill Pack Peckers
+		-- Dingus
+		-- Dragon Agent
+		-- Skeeter
+		-- Melon
+		-- Facepunch
 
 	-- Faction Unaffiliated
 		-- VJ.AddNPC("Fake Julio","npc_vj_bbohg_fakejulio",vCat)
@@ -201,6 +222,7 @@ if VJExists == true then
 		-- VJ.AddNPC("You Need Me","npc_vj_bbohg_youneedme",vCat)
 		-- Do you know who ate all the donuts?
 		-- Shrek
+		-- Canyon Crown
 
 		-- 28 NPCs
 	
@@ -268,6 +290,17 @@ if VJExists == true then
 	AddConvars["vj_BBOHG_FriendlyTossers"] = 1
 	AddConvars["vj_BBOHG_BossNotifications"] = 1
 	AddConvars["vj_BBOHG_BossReinforcements"] = 1
+	AddConvars["vj_BBOHG_BossCleanup"] = 1
+	AddConvars["vj_BBOHG_Difficulty"] = 2
+	AddConvars["vj_BBOHG_AmmoDrops"] = 0
+	AddConvars["vj_BBOHG_HealthDrops"] = 0
+	AddConvars["vj_BBOHG_ZombineHeadshots"] = 0
+	AddConvars["vj_BBOHG_ZombieSplits"] = 1
+	AddConvars["vj_BBOHG_ZombieCrabs"] = 1
+	AddConvars["vj_BBOHG_ZombineCrabs"] = 1
+	AddConvars["vj_BBOHG_BonemergePipe"] = 0
+	AddConvars["vj_BBOHG_MusicVolume"] = 5
+	-- AddConvars["vj_BBOHG_Instrumentals"] = 0
 	
 	
 	for k, v in pairs(AddConvars) do
@@ -314,24 +347,94 @@ if VJExists == true then
 			vj_BBOHG_FriendlyTossers = "1",
 			vj_BBOHG_BossNotifications = "1",
 			vj_BBOHG_BossReinforcements = "1",
+			vj_BBOHG_BossCleanup = "1",
+			vj_BBOHG_Difficulty = "2",
+			vj_BBOHG_AmmoDrops = "0",
+			vj_BBOHG_HealthDrops = "0",
+			vj_BBOHG_ZombineHeadshots = "0",
+			vj_BBOHG_ZombieSplits = "1",
+			vj_BBOHG_ZombieCrabs = "1",
+			vj_BBOHG_ZombineCrabs = "1",
+			vj_BBOHG_BonemergePipe = "0",
+			vj_BBOHG_MusicVolume = "5",
+			-- vj_BBOHG_Instrumentals = "0",
 }
 
 	Panel:AddControl("ComboBox", vj_resetbutton)
+	Panel:ControlHelp("Note: Only future spawned npcs will be affected!")
 	
 	
 	Panel:AddControl("Checkbox", {Label ="Eveyone is allied and against you?", Command ="vj_BBOHG_NoGodsNoMasters"})
 	Panel:ControlHelp("Warning: This will override any and all {*NPC* is friendly?} convars!")
+	
 	Panel:AddControl("Checkbox", {Label ="Tossers are friendly?", Command ="vj_BBOHG_FriendlyTossers"})
+	
 	Panel:AddControl("Checkbox", {Label ="Bosses can spawn reinforcements?", Command ="vj_BBOHG_BossReinforcements"})
+	
+	Panel:AddControl("Checkbox", {Label ="Crabless Zombines can be headshot?", Command ="vj_BBOHG_ZombineHeadshots"})
+	Panel:AddControl("Checkbox", {Label ="Headcrap Xombies can split?", Command ="vj_BBOHG_ZombieSplits"})
+	Panel:AddControl("Checkbox", {Label ="Headcrap Xombies can drop live Crabs?", Command ="vj_BBOHG_ZombieCrabs"})
+	Panel:AddControl("Checkbox", {Label ="Zombines can drop live Crabs?", Command ="vj_BBOHG_ZombineCrabs"})
 	
 	Panel:AddControl("Checkbox", {Label ="Enable Gibbing?", Command ="vj_BBOHG_Gibs"})
 	Panel:ControlHelp("If you're crashing from something in BBoHG Gibbing, try disabling this.")
 	
+	Panel:AddControl("Checkbox", {Label ="Tweaked Headcrap Xombie pipe visuals?", Command ="vj_BBOHG_BonemergePipe"})
+	Panel:ControlHelp("For some reason, the pipe messes with or completely disables shadows on the Headcrap Xombie.")
+	Panel:ControlHelp("If this is off, the shadow issue won't be present, but the pipe will look a bit off.")
+	
 	Panel:AddControl("Checkbox", {Label ="Enable Boss Notifications?", Command ="vj_BBOHG_BossNotifications"})
 	Panel:ControlHelp("Messages for bosses spawning and dying.")
 	
-	Panel:AddControl("Checkbox", {Label ="Boss Music?", Command ="vj_BBOHG_BossMusic"})
+	Panel:AddControl("Checkbox", {Label ="Bosses remove all living minions apon death?", Command ="vj_BBOHG_BossCleanup"})
+	Panel:ControlHelp("Note: Due to how they summon minions, when a Giga Gore Child or big b0ne(r) dies, they will kill all existing le bebe's or b0ne(r)s respectively.")
 	
+	Panel:AddControl("Checkbox", {Label ="Boss Music?", Command ="vj_BBOHG_BossMusic"})
+	-- Panel:AddControl("Checkbox", {Label ="Use instrumental boss tracks?", Command ="vj_BBOHG_Instrumentals"})
+	-- Panel:ControlHelp("If no instrumental version is available, this will not affect the boss's track.")
+	Panel:AddControl("Slider", {Label ="Boss Music volume.",Command ="vj_BBOHG_MusicVolume",Min = "0",Max = "9"})
+	Panel:ControlHelp("All music in BBoHG has been normalized to 0 dB in Audacity.")
+	Panel:ControlHelp("0 - 0.1")
+	Panel:ControlHelp("1 - 0.2")
+	Panel:ControlHelp("2 - 0.3")
+	Panel:ControlHelp("3 - 0.4")
+	Panel:ControlHelp("4 - 0.5")
+	Panel:ControlHelp("5 - 0.6")
+	Panel:ControlHelp("6 - 0.7")
+	Panel:ControlHelp("7 - 0.8")
+	Panel:ControlHelp("8 - 0.9")
+	Panel:ControlHelp("9 - 1")
+	
+	Panel:AddControl("Slider", {Label ="Ammo drop type preference.",Command ="vj_BBOHG_AmmoDrops",Min = "0",Max = "11"})
+	Panel:ControlHelp("You will need the respective addon for their ammo to work!")
+	Panel:ControlHelp("0 - Default / Half-Life 2")
+	Panel:ControlHelp("1 - ARCCW Base")
+	Panel:ControlHelp("2 - TFA Base")
+	Panel:ControlHelp("3 - C.W. 2.0")
+	Panel:ControlHelp("4 - FA:S")
+	Panel:ControlHelp("5 - M9K")
+	Panel:ControlHelp("6 - Underhell")
+	Panel:ControlHelp("7 - Darken217's SciFi Weapons")
+	Panel:ControlHelp("8 - Crunchy's Ultimate Item Pickups")
+	Panel:ControlHelp("9 - Half-Life Source")
+	Panel:ControlHelp("10 - Upset's Half-Life 1 SWEPs")
+	Panel:ControlHelp("11 - RAGE SWEP Pack")
+	
+	Panel:AddControl("Slider", {Label ="Health / Armor drop type preference.",Command ="vj_BBOHG_HealthDrops",Min = "0",Max = "5"})
+	Panel:ControlHelp("You will need the respective addon for their drops to work!")
+	Panel:ControlHelp("0 - Default / Half-Life 2")
+	Panel:ControlHelp("1 - Arctic's Combat Stims")
+	Panel:ControlHelp("2 - Underhell")
+	Panel:ControlHelp("3 - Darken217's SciFi Weapons")
+	Panel:ControlHelp("4 - Crunchy's Ultimate Item Pickups")
+	Panel:ControlHelp("5 - VIVO")
+	
+	Panel:AddControl("Slider", {Label ="BBoHG NPC overall difficulty.",Command ="vj_BBOHG_Difficulty",Min = "0",Max = "4"})
+	Panel:ControlHelp("0 - I'm Too Young To Die\n")
+	Panel:ControlHelp("1 - Hey, Not Too Rough\nBalanced for Half-Life 2 weapons.\n")
+	Panel:ControlHelp("2 - Hurt Me Plenty\nBalanced for more powerfull weaponry, like TFA and ARCCW.\n")
+	Panel:ControlHelp("3 - Ultra Violence\n")
+	Panel:ControlHelp("4 - NIGHTMARE!\nAre you sure? This skill level isn't even remotely fair.")
 	
 	
 	

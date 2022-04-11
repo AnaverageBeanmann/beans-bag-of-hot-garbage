@@ -36,6 +36,10 @@ ENT.MeleeAttackAngleRadius = 70
 ENT.MeleeAttackDamageAngleRadius = 70
 ENT.TimeUntilMeleeAttackDamage = 0.7
 ---------------------------------------------------------------------------------------------------------------------------------------------
+ENT.CanUseSecondaryOnWeaponAttack = true -- Can the NPC use a secondary fire if it's available?
+ENT.AnimTbl_WeaponAttackSecondary = {"swing"} -- Animations played when the SNPC fires a secondary weapon attack
+ENT.WeaponAttackSecondaryTimeUntilFire = 0.6-- The weapon uses this integer to set the time until the firing code is ran
+---------------------------------------------------------------------------------------------------------------------------------------------
 ENT.HasGrenadeAttack = true
 ENT.GrenadeAttackEntity = "obj_vj_bbohg_thealyx_emp"
 ENT.AnimTbl_GrenadeAttack = {"ThrowItem"}

@@ -152,6 +152,28 @@ function ENT:CustomOnInitialize()
 		self.VJ_NPC_Class = {"CLASS_BBOHG"}
 		self.FriendsWithAllPlayerAllies = false
 	end
+	if GetConVarNumber("vj_BBOHG_MusicVolume") == 0 then
+		self.SoundTrackVolume = 0.1
+	elseif GetConVarNumber("vj_BBOHG_MusicVolume") == 1 then
+		self.SoundTrackVolume = 0.2
+	elseif GetConVarNumber("vj_BBOHG_MusicVolume") == 2 then
+		self.SoundTrackVolume = 0.3
+	elseif GetConVarNumber("vj_BBOHG_MusicVolume") == 3 then
+		self.SoundTrackVolume = 0.4
+	elseif GetConVarNumber("vj_BBOHG_MusicVolume") == 4 then
+		self.SoundTrackVolume = 0.5
+	elseif GetConVarNumber("vj_BBOHG_MusicVolume") == 5 then
+		self.SoundTrackVolume = 0.6
+	elseif GetConVarNumber("vj_BBOHG_MusicVolume") == 6 then
+		self.SoundTrackVolume = 0.7
+	elseif GetConVarNumber("vj_BBOHG_MusicVolume") == 7 then
+		self.SoundTrackVolume = 0.8
+	elseif GetConVarNumber("vj_BBOHG_MusicVolume") == 8 then
+		self.SoundTrackVolume = 0.9
+	elseif GetConVarNumber("vj_BBOHG_MusicVolume") == 9 then
+		self.SoundTrackVolume = 1
+	end
+-- ENT.SoundTrackVolume = 1
 	-- if math.random(1,4) == 1 then
 		-- self.AnimTbl_Run = {ACT_RUN_CROUCH}
 	-- end
@@ -361,28 +383,48 @@ function ENT:CustomOnInitialKilled(dmginfo, hitgroup)
 		PrintMessage(HUD_PRINTCENTER, "The Rock has been stopped!")
 	end
 	self.CanSummonHelp = false
+	if IsValid(self) && GetConVarNumber("vj_BBOHG_BossCleanup") == 1 then
+		if IsValid(self.Zombie1) then
+			local d = DamageInfo()
+			d:SetDamage(self:GetMaxHealth())
+			d:SetAttacker(self.Zombie1)
+			d:SetDamageType(DMG_GENERIC) 
+			self.Zombie1:TakeDamageInfo(d)
+		end
+		if IsValid(self.Zombie2) then
+			local d = DamageInfo()
+			d:SetDamage(self:GetMaxHealth())
+			d:SetAttacker(self.Zombie2)
+			d:SetDamageType(DMG_GENERIC) 
+			self.Zombie2:TakeDamageInfo(d)
+		end
+		if IsValid(self.Zombie3) then
+			local d = DamageInfo()
+			d:SetDamage(self:GetMaxHealth())
+			d:SetAttacker(self.Zombie3)
+			d:SetDamageType(DMG_GENERIC) 
+			self.Zombie3:TakeDamageInfo(d)
+		end
+		if IsValid(self.Zombie4) then
+			local d = DamageInfo()
+			d:SetDamage(self:GetMaxHealth())
+			d:SetAttacker(self.Zombie4)
+			d:SetDamageType(DMG_GENERIC) 
+			self.Zombie4:TakeDamageInfo(d)
+		end
+	end
 	if IsValid(self) then
 	self.SoundTrackVolume = 0
-	-- self:StartSoundTrack()
-	-- self.SoundTbl_SoundTrack = {}
-	-- self:StartSoundTrack()
     self:AddFlags(FL_NOTARGET)
 	self:SetRenderFX( kRenderFxPulseSlowWide )
 	if GetConVarNumber("vj_npc_noidleparticle") == 0 then
-		-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("origin"))
-		-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("chest"))
-		-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_RH"))
-		-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_LH"))
-		-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("eyes"))
 		ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("origin"))
-		-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("chest"))
 		ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_RH"))
 		ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_LH"))
-		-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("eyes"))
 	end
 	timer.Simple(0.1,function()
 	if IsValid(self) then
-	local STabb = math.random(1,2)
+		local STabb = math.random(1,2)
 		if STabb == 1 then
 			VJ_EmitSound(self,"fx/boss_death_initial_1.mp3",100,100)
 		else
@@ -390,40 +432,43 @@ function ENT:CustomOnInitialKilled(dmginfo, hitgroup)
 		end
 		VJ_EmitSound(self,"fx/boss_death.mp3",100,100)
 		VJ_EmitSound(self,"fx/boss_death.mp3",100,100)
-	
-	
-	-- self:SetKeyValue("rendercolor","255 255 255 250")
 		timer.Simple(0.5,function()
-		self:SetKeyValue("rendercolor","209 209 209 215") end)
+			if IsValid(self) then
+				self:SetKeyValue("rendercolor","209 209 209 215")
+			end
+		end)
 		timer.Simple(1,function()
-		self:SetKeyValue("rendercolor","177 177 177 175") end)
+			if IsValid(self) then
+				self:SetKeyValue("rendercolor","177 177 177 175")
+			end
+		end)
 		timer.Simple(1.5,function()
-		self:SetKeyValue("rendercolor","145 145 145 135") end)
+			if IsValid(self) then
+				self:SetKeyValue("rendercolor","145 145 145 135")
+			end
+		end)
 		timer.Simple(2,function()
-		self:SetKeyValue("rendercolor","96 96 96 95")
-		if GetConVarNumber("vj_npc_noidleparticle") == 0 then
-			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("origin"))
-			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("chest"))
-			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_RH"))
-			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_LH"))
-			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("eyes"))
-			ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("origin"))
-			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("chest"))
-			ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_RH"))
-			ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_LH"))
-			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("eyes"))
-		end	end)
+		if IsValid(self) then
+			self:SetKeyValue("rendercolor","96 96 96 95")
+			if GetConVarNumber("vj_npc_noidleparticle") == 0 then
+				ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("origin"))
+				ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("chest"))
+				ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_head"))
+			end	
+		end	
+		end)
 		timer.Simple(2.5,function()
-		self:SetKeyValue("rendercolor","55 55 55 45") end)
+			if IsValid(self) then
+			self:SetKeyValue("rendercolor","55 55 55 45")
+			end
+		end)
 		timer.Simple(3,function()
-		self:SetKeyValue("rendercolor","0 0 0 1") end)
-		timer.Simple(5.9,function()
-		-- PrintMessage( HUD_PRINTTALK, "Hobo King has been banned permanently." )
-		-- PrintMessage( HUD_PRINTTALK, "Reason: RDM." )
+			if IsValid(self) then
+			self:SetKeyValue("rendercolor","0 0 0 1")
+			end
 		end)
 		end
 	end)
-		-- self:SetKeyValue("ColorAlpha","255 255 255 88")
 end
 end
 /*-----------------------------------------------

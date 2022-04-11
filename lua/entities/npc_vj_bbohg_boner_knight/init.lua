@@ -5,7 +5,9 @@ include('shared.lua')
 	No parts of this code or any of its contents may be reproduced, copied, modified or adapted,
 	without the prior written consent of the author, unless otherwise indicated for stand-alone materials.
 -----------------------------------------------*/
+---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnPreInitialize()
+	self.Model = {"models/bbohg/skeleton_knighted.mdl"}
 	self.SkelllyType = 1
 	self.StartHealth = 100
 end
