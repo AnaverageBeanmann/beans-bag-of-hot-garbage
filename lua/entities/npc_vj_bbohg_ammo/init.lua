@@ -48,8 +48,8 @@ ENT.ItemDropsOnDeath_EntityList = {"item_ammo_357",
 ENT.MeleeAttackDamage = math.Rand(1,1)
 ENT.MeleeAttackDamageType = DMG_CLUB
 ENT.AnimTbl_MeleeAttack = {"swing"}
-ENT.MeleeAttackDistance = 40
-ENT.MeleeAttackDamageDistance = 60
+ENT.MeleeAttackDistance = 35
+ENT.MeleeAttackDamageDistance = 50
 ENT.MeleeAttackAngleRadius = 70
 ENT.MeleeAttackDamageAngleRadius = 70
 ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -732,6 +732,51 @@ function ENT:GetSightDirection()
 	return self:GetAttachment(self:LookupAttachment("eyes")).Ang:Forward()
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:CustomOnMedic_OnHeal(ent)
+	if ent:IsPlayer() then
+		if ent:Armor() != 100 then
+			self.Medic_HealthAmount = 0
+		else
+			self.Medic_HealthAmount = 15
+		end
+		if ent:Armor() == 86 then
+			ent:SetArmor(ent:Armor() +14)
+		elseif ent:Armor() == 87 then
+			ent:SetArmor(ent:Armor() +13)
+		elseif ent:Armor() == 88 then
+			ent:SetArmor(ent:Armor() +12)
+		elseif ent:Armor() == 89 then
+			ent:SetArmor(ent:Armor() +11)
+		elseif ent:Armor() == 90 then
+			ent:SetArmor(ent:Armor() +10)
+		elseif ent:Armor() == 91 then
+			ent:SetArmor(ent:Armor() +9)
+		elseif ent:Armor() == 92 then
+			ent:SetArmor(ent:Armor() +8)
+		elseif ent:Armor() == 93 then
+			ent:SetArmor(ent:Armor() +7)
+		elseif ent:Armor() == 94 then
+			ent:SetArmor(ent:Armor() +6)
+		elseif ent:Armor() == 95 then
+			ent:SetArmor(ent:Armor() +5)
+		elseif ent:Armor() == 96 then
+			ent:SetArmor(ent:Armor() +4)
+		elseif ent:Armor() == 97 then
+			ent:SetArmor(ent:Armor() +3)
+		elseif ent:Armor() == 98 then
+			ent:SetArmor(ent:Armor() +2)
+		elseif ent:Armor() == 99 then
+			ent:SetArmor(ent:Armor() +1)
+		elseif ent:Armor() == 100 then
+			-- ent:SetArmor(ent:Armor() +10)
+		else
+			ent:SetArmor(ent:Armor() +15)
+		end
+	else
+		self.Medic_HealthAmount = 15
+	end
+return true end
+---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnAlert(argent)
 	if argent:IsNPC() then
 	if argent:GetClass() == "npc_headcrab"
@@ -883,7 +928,7 @@ function ENT:MultipleMeleeAttacks()
 	if randattack_stand == 1 then
 		self.AnimTbl_MeleeAttack = {"swing"}
 		if self.Gender == 1 then
-			self.TimeUntilMeleeAttackDamage = 0.7
+			self.TimeUntilMeleeAttackDamage = 0.69
 		else
 			self.TimeUntilMeleeAttackDamage = 0.4
 		end
@@ -894,7 +939,7 @@ function ENT:MultipleMeleeAttacks()
 	elseif randattack_stand == 2 then
 		self.AnimTbl_MeleeAttack = {"swing"}
 		if self.Gender == 1 then
-			self.TimeUntilMeleeAttackDamage = 0.7
+			self.TimeUntilMeleeAttackDamage = 0.69
 		else
 			self.TimeUntilMeleeAttackDamage = 0.4
 		end
@@ -905,7 +950,7 @@ function ENT:MultipleMeleeAttacks()
 	elseif randattack_stand == 3 then
 		self.AnimTbl_MeleeAttack = {"swing"}
 		if self.Gender == 1 then
-			self.TimeUntilMeleeAttackDamage = 0.7
+			self.TimeUntilMeleeAttackDamage = 0.69
 		else
 			self.TimeUntilMeleeAttackDamage = 0.4
 		end
@@ -916,7 +961,7 @@ function ENT:MultipleMeleeAttacks()
 	elseif randattack_stand == 4 then
 		self.AnimTbl_MeleeAttack = {"swing"}
 		if self.Gender == 1 then
-			self.TimeUntilMeleeAttackDamage = 0.7
+			self.TimeUntilMeleeAttackDamage = 0.69
 		else
 			self.TimeUntilMeleeAttackDamage = 0.4
 		end
@@ -926,7 +971,7 @@ function ENT:MultipleMeleeAttacks()
 		
 	elseif randattack_stand == 5 then
 		self.AnimTbl_MeleeAttack = {"throw1"}
-		self.TimeUntilMeleeAttackDamage = 0.95
+		self.TimeUntilMeleeAttackDamage = 1
 		self.MeleeAttackDamage = math.Rand(10,15)
 		self.MeleeAttackDamageType = DMG_CLUB
 		self.HasMeleeAttackKnockBack = false
@@ -934,7 +979,7 @@ function ENT:MultipleMeleeAttacks()
 	elseif randattack_stand == 6 then
 		self.AnimTbl_MeleeAttack = {"ThrowItem"}
 		self.TimeUntilMeleeAttackDamage = 1
-		self.MeleeAttackDamage = math.Rand(5,10)
+		self.MeleeAttackDamage = math.Rand(10,15)
 		self.MeleeAttackDamageType = DMG_CLUB
 		self.HasMeleeAttackKnockBack = true
 		self.MeleeAttackKnockBack_Forward1 = 55

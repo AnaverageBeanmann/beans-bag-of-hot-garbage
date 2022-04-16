@@ -46,8 +46,8 @@ ENT.MeleeAttackDamage = math.Rand(5,10)
 ENT.MeleeAttackDamageType = DMG_CLUB
 ENT.AnimTbl_MeleeAttack = {"swing"}
 ENT.TimeUntilMeleeAttackDamage = 0.4
-ENT.MeleeAttackDistance = 40
-ENT.MeleeAttackDamageDistance = 60
+ENT.MeleeAttackDistance = 35
+ENT.MeleeAttackDamageDistance = 50
 ENT.MeleeAttackAngleRadius = 70
 ENT.MeleeAttackDamageAngleRadius = 70
 ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -1597,8 +1597,8 @@ end
 function ENT:Controller_IntMsg(ply, controlEnt)
 	ply:ChatPrint("CROUCH - Summon Hobos (if possible)")
 	ply:ChatPrint("SUIT ZOOM - Kill all minions")
-	ply:ChatPrint("Melee + Reload - Change weapon")
-	ply:ChatPrint("Melee + Tab - Change voicepack")
+	ply:ChatPrint("MELEE + RELOAD - Change weapon")
+	ply:ChatPrint("MELEE + TAB - Change voicepack")
 end
 -------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnRemove()

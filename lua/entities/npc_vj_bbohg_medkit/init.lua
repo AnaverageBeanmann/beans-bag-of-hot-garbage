@@ -42,8 +42,8 @@ ENT.ItemDropsOnDeath_EntityList = {"item_healthkit"}
 ENT.MeleeAttackDamage = math.Rand(1,1)
 ENT.MeleeAttackDamageType = DMG_CLUB
 ENT.AnimTbl_MeleeAttack = {"swing"}
-ENT.MeleeAttackDistance = 40
-ENT.MeleeAttackDamageDistance = 60
+ENT.MeleeAttackDistance = 35
+ENT.MeleeAttackDamageDistance = 50
 ENT.MeleeAttackAngleRadius = 70
 ENT.MeleeAttackDamageAngleRadius = 70
 ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -917,7 +917,7 @@ function ENT:MultipleMeleeAttacks()
 	if randattack_stand == 1 then
 		self.AnimTbl_MeleeAttack = {"swing"}
 		if self.Gender == 1 then
-			self.TimeUntilMeleeAttackDamage = 0.7
+			self.TimeUntilMeleeAttackDamage = 0.69
 		else
 			self.TimeUntilMeleeAttackDamage = 0.4
 		end
@@ -928,7 +928,7 @@ function ENT:MultipleMeleeAttacks()
 	elseif randattack_stand == 2 then
 		self.AnimTbl_MeleeAttack = {"swing"}
 		if self.Gender == 1 then
-			self.TimeUntilMeleeAttackDamage = 0.7
+			self.TimeUntilMeleeAttackDamage = 0.69
 		else
 			self.TimeUntilMeleeAttackDamage = 0.4
 		end
@@ -939,7 +939,7 @@ function ENT:MultipleMeleeAttacks()
 	elseif randattack_stand == 3 then
 		self.AnimTbl_MeleeAttack = {"swing"}
 		if self.Gender == 1 then
-			self.TimeUntilMeleeAttackDamage = 0.7
+			self.TimeUntilMeleeAttackDamage = 0.69
 		else
 			self.TimeUntilMeleeAttackDamage = 0.4
 		end
@@ -950,7 +950,7 @@ function ENT:MultipleMeleeAttacks()
 	elseif randattack_stand == 4 then
 		self.AnimTbl_MeleeAttack = {"swing"}
 		if self.Gender == 1 then
-			self.TimeUntilMeleeAttackDamage = 0.7
+			self.TimeUntilMeleeAttackDamage = 0.69
 		else
 			self.TimeUntilMeleeAttackDamage = 0.4
 		end
@@ -968,7 +968,7 @@ function ENT:MultipleMeleeAttacks()
 	elseif randattack_stand == 6 then
 		self.AnimTbl_MeleeAttack = {"ThrowItem"}
 		self.TimeUntilMeleeAttackDamage = 1
-		self.MeleeAttackDamage = math.Rand(5,10)
+		self.MeleeAttackDamage = math.Rand(10,15)
 		self.MeleeAttackDamageType = DMG_CLUB
 		self.HasMeleeAttackKnockBack = true
 		self.MeleeAttackKnockBack_Forward1 = 55

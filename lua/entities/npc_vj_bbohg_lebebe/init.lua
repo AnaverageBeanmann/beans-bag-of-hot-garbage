@@ -27,8 +27,8 @@ ENT.GibOnDeathDamagesTable = {"All"} -- Damages that it gibs from | "UseDefault"
 ENT.MeleeAttackDamage = math.Rand(1,1)
 ENT.MeleeAttackDamageType = DMG_CLUB
 ENT.AnimTbl_MeleeAttack = {"swing"}
-ENT.MeleeAttackDistance = 40
-ENT.MeleeAttackDamageDistance = 60
+ENT.MeleeAttackDistance = 15
+ENT.MeleeAttackDamageDistance = 25
 ENT.MeleeAttackAngleRadius = 70
 ENT.MeleeAttackDamageAngleRadius = 70
 ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -40,6 +40,7 @@ ENT.GeneralSoundPitch2 = 65
 ENT.MeleeAttackSoundPitch = VJ_Set(100, 100)
 
 ENT.IdleDialogueDistance = 175
+ENT.EntitiesToNoCollide = {"npc_vj_bbohg_gorechild_giga"}
 ---------------------------------------------------------------------------------------------------------------------------------------------
 	-- ====== Sound File Paths ====== --
 -- Leave blank if you don't want any sounds to play
@@ -126,7 +127,7 @@ function ENT:MultipleMeleeAttacks()
 	elseif randattack_stand == 6 then
 		self.AnimTbl_MeleeAttack = {"ThrowItem"}
 		self.TimeUntilMeleeAttackDamage = 1
-		self.MeleeAttackDamage = math.Rand(1,5)
+		self.MeleeAttackDamage = math.Rand(5,10)
 		self.MeleeAttackDamageType = DMG_CLUB
 		self.HasMeleeAttackKnockBack = true
 		self.MeleeAttackKnockBack_Forward1 = 55

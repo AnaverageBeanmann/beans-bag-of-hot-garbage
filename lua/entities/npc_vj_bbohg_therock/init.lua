@@ -93,6 +93,8 @@ ENT.NextZombieSpawnT = 0
 ENT.AlreadySpawned = false
 ENT.CanSummonHelp = true
 ENT.CanAnnounceSpawnage = true
+ENT.PlayerKillMinionCooldown = false
+ENT.CanPlayTheSounds = true
 ---------------------------------------------------------------------------------------------------------------------------------------------
 	-- ====== Sound File Paths ====== --
 -- Leave blank if you don't want any sounds to play
@@ -189,14 +191,46 @@ end
 function ENT:CustomOnThink_AIEnabled()
 	if self.VJ_IsBeingControlled == true && self.CanAnnounceSpawnage == true && CurTime() > self.NextZombieSpawnT then
 		self.VJ_TheController:PrintMessage(HUD_PRINTCENTER,"Backup Rocklings can be summoned!")
+		VJ_EmitSound(self.VJ_TheController,{"buttons/blip1.wav"},50,100)
 		self.CanAnnounceSpawnage = false
+	end
+	if self.VJ_IsBeingControlled == true && self.VJ_TheController:KeyDown(IN_DUCK) && CurTime() < self.NextZombieSpawnT then
+		self.VJ_TheController:PrintMessage(HUD_PRINTCENTER,"Can't summon Rocklings, summon cooldown not over!")
+		if self.CanPlayTheSounds == true then
+			VJ_EmitSound(self.VJ_TheController,{"buttons/button10.wav"},50,100)
+			self.CanPlayTheSounds = false
+			timer.Simple(1,function() if IsValid(self) then
+				self.CanPlayTheSounds = true
+			end end)
+		end
+	end
+	if self.VJ_IsBeingControlled == true && self.VJ_TheController:KeyDown(IN_DUCK) && GetConVarNumber("vj_BBOHG_BossReinforcements") == 0 then
+		self.VJ_TheController:PrintMessage(HUD_PRINTCENTER,"Can't summon Rocklings, boss reinforcements is off!")
+		if self.CanPlayTheSounds == true then
+			VJ_EmitSound(VJ_TheController,{"buttons/button10.wav"},50,100)
+			self.CanPlayTheSounds = false
+			timer.Simple(1,function() if IsValid(self) then
+				self.CanPlayTheSounds = true
+			end end)
+		end
 	end
 	if GetConVarNumber("vj_BBOHG_BossReinforcements") == 1 && self.CanSummonHelp == true then
 		if IsValid(self:GetEnemy()) && CurTime() > self.NextZombieSpawnT then
 		if self.AlreadySpawned == false && self.VJ_IsBeingControlled == false or self.VJ_IsBeingControlled == true && self.VJ_TheController:KeyDown(IN_DUCK) then
+			if self.VJ_IsBeingControlled == true && IsValid(self.Zombie1) && IsValid(self.Zombie2) && IsValid(self.Zombie3) && IsValid(self.Zombie4) then
+				self.VJ_TheController:PrintMessage(HUD_PRINTCENTER,"Can't summon Rocklings, all minions alive!")
+				if self.CanPlayTheSounds == true then
+					VJ_EmitSound(self.VJ_TheController,{"buttons/button10.wav"},50,100)
+					self.CanPlayTheSounds = false
+					timer.Simple(1,function() if IsValid(self) then
+						self.CanPlayTheSounds = true
+					end end)
+				end
+			end
 			if !IsValid(self.Zombie1) or !IsValid(self.Zombie2) or !IsValid(self.Zombie3) or !IsValid(self.Zombie4) then
 			if self.VJ_IsBeingControlled == true then
 				self.VJ_TheController:PrintMessage(HUD_PRINTCENTER,"Summoning Rocklings...")
+				VJ_EmitSound(self.VJ_TheController,{"buttons/button19.wav"},50,100)
 			end
 				self.CanSummonHelp = false
 				self.AlreadySpawned = true
@@ -279,6 +313,56 @@ function ENT:CustomOnThink_AIEnabled()
 		end
 		end
 	end
+	if self.VJ_IsBeingControlled == true && self.VJ_TheController:KeyDown(IN_ZOOM) && self.PlayerKillMinionCooldown == false then
+		self.PlayerKillMinionCooldown = true
+		if self.VJ_IsBeingControlled == true && !IsValid(self.Zombie1) && !IsValid(self.Zombie2) && !IsValid(self.Zombie3) && !IsValid(self.Zombie4) then
+			self.VJ_TheController:PrintMessage(HUD_PRINTCENTER,"No minions to kill!")
+			if self.CanPlayTheSounds == true then
+				VJ_EmitSound(self.VJ_TheController,{"buttons/button10.wav"},50,100)
+				self.CanPlayTheSounds = false
+				timer.Simple(1,function() if IsValid(self) then
+					self.CanPlayTheSounds = true
+				end end)
+			end
+		end
+		if self.VJ_IsBeingControlled == true then
+			if IsValid(self.Zombie1) or IsValid(self.Zombie2) or IsValid(self.Zombie3) or IsValid(self.Zombie4) then
+				self.VJ_TheController:PrintMessage(HUD_PRINTCENTER,"Killing Minions...")
+				VJ_EmitSound(self.VJ_TheController,{"buttons/button19.wav"},50,100)
+			end
+		end
+		if IsValid(self.Zombie1) then
+			local d = DamageInfo()
+			d:SetDamage(self:GetMaxHealth())
+			d:SetAttacker(self.Zombie1)
+			d:SetDamageType(DMG_GENERIC) 
+			self.Zombie1:TakeDamageInfo(d)
+		end
+		if IsValid(self.Zombie2) then
+			local d = DamageInfo()
+			d:SetDamage(self:GetMaxHealth())
+			d:SetAttacker(self.Zombie2)
+			d:SetDamageType(DMG_GENERIC) 
+			self.Zombie2:TakeDamageInfo(d)
+		end
+		if IsValid(self.Zombie3) then
+			local d = DamageInfo()
+			d:SetDamage(self:GetMaxHealth())
+			d:SetAttacker(self.Zombie3)
+			d:SetDamageType(DMG_GENERIC) 
+			self.Zombie3:TakeDamageInfo(d)
+		end
+		if IsValid(self.Zombie4) then
+			local d = DamageInfo()
+			d:SetDamage(self:GetMaxHealth())
+			d:SetAttacker(self.Zombie4)
+			d:SetDamageType(DMG_GENERIC) 
+			self.Zombie4:TakeDamageInfo(d)
+		end
+		timer.Simple(1,function() if IsValid(self) then
+			self.PlayerKillMinionCooldown = false
+		end end)
+	end
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnAlert(argent)
@@ -328,7 +412,7 @@ function ENT:MultipleMeleeAttacks()
 	elseif randattack_stand == 6 then
 		self.AnimTbl_MeleeAttack = {"ThrowItem"}
 		self.TimeUntilMeleeAttackDamage = 1
-		self.MeleeAttackDamage = math.Rand(30,35)
+		self.MeleeAttackDamage = math.Rand(35,40)
 		self.MeleeAttackDamageType = DMG_CRUSH
 		self.HasMeleeAttackKnockBack = true
 		self.MeleeAttackKnockBack_Forward1 = 300
@@ -367,6 +451,7 @@ end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:Controller_IntMsg(ply, controlEnt)
 	ply:ChatPrint("CROUCH - Summon Rocklings (if possible)")
+	ply:ChatPrint("SUIT ZOOM - Kill all minions")
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnRemove()

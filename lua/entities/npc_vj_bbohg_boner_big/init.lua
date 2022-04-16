@@ -42,8 +42,8 @@ ENT.AllowedToGib = true
 ENT.MeleeAttackDamage = math.Rand(1,1)
 ENT.MeleeAttackDamageType = DMG_CLUB
 ENT.AnimTbl_MeleeAttack = {"swing"}
-ENT.MeleeAttackDistance = 80
-ENT.MeleeAttackDamageDistance = 120
+ENT.MeleeAttackDistance = 65
+ENT.MeleeAttackDamageDistance = 100
 ENT.MeleeAttackAngleRadius = 70
 ENT.MeleeAttackDamageAngleRadius = 70
 ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -115,8 +115,30 @@ function ENT:CustomOnInitialize()
 		self.VJ_NPC_Class = {"CLASS_BBOHG"}
 		self.FriendsWithAllPlayerAllies = false
 	end
+	if GetConVarNumber("vj_BBOHG_MusicVolume") == 0 then
+		self.SoundTrackVolume = 0.1
+	elseif GetConVarNumber("vj_BBOHG_MusicVolume") == 1 then
+		self.SoundTrackVolume = 0.2
+	elseif GetConVarNumber("vj_BBOHG_MusicVolume") == 2 then
+		self.SoundTrackVolume = 0.3
+	elseif GetConVarNumber("vj_BBOHG_MusicVolume") == 3 then
+		self.SoundTrackVolume = 0.4
+	elseif GetConVarNumber("vj_BBOHG_MusicVolume") == 4 then
+		self.SoundTrackVolume = 0.5
+	elseif GetConVarNumber("vj_BBOHG_MusicVolume") == 5 then
+		self.SoundTrackVolume = 0.6
+	elseif GetConVarNumber("vj_BBOHG_MusicVolume") == 6 then
+		self.SoundTrackVolume = 0.7
+	elseif GetConVarNumber("vj_BBOHG_MusicVolume") == 7 then
+		self.SoundTrackVolume = 0.8
+	elseif GetConVarNumber("vj_BBOHG_MusicVolume") == 8 then
+		self.SoundTrackVolume = 0.9
+	elseif GetConVarNumber("vj_BBOHG_MusicVolume") == 9 then
+		self.SoundTrackVolume = 1
+	end
 	self:SetCollisionBounds(Vector(11, 11, 71), Vector(-11, -11, 0))
 	self:SetModelScale(3)
+-- ENT.SoundTrackVolume = 1
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:GetSightDirection()
@@ -365,35 +387,26 @@ function ENT:CustomOnInitialKilled(dmginfo, hitgroup)
 	if GetConVarNumber("vj_BBOHG_BossNotifications") == 1 then
 		PrintMessage(HUD_PRINTCENTER, "A big b0ne(r) has been killed!")
 	end
-	self.CanSummonHelp = false
 	if IsValid(self) then
 	self.SoundTrackVolume = 0
-	-- self:StartSoundTrack()
-	-- self.SoundTbl_SoundTrack = {}
-	-- self:StartSoundTrack()
     self:AddFlags(FL_NOTARGET)
 	self:SetRenderFX( kRenderFxPulseSlowWide )
 	if GetConVarNumber("vj_npc_noidleparticle") == 0 then
-		-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("origin"))
 		ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("chest"))
 		timer.Simple(3.64,function() if IsValid(self) then
 			ParticleEffectAttach("explosion_huge_g",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("chest"))
 			ParticleEffectAttach("explosion_huge_g",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("origin"))
 		end end)
-		-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_RH"))
-		-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_LH"))
 		ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("eyes"))
 		ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("origin"))
 		ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("origin"))
 		ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("origin"))
-		-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("chest"))
 		ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_RH"))
 		ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_LH"))
-		-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("eyes"))
 	end
 	timer.Simple(0.1,function()
 	if IsValid(self) then
-	local STabb = math.random(1,2)
+		local STabb = math.random(1,2)
 		if STabb == 1 then
 			VJ_EmitSound(self,"fx/boss_death_initial_1.mp3",100,100)
 		else
@@ -401,40 +414,58 @@ function ENT:CustomOnInitialKilled(dmginfo, hitgroup)
 		end
 		VJ_EmitSound(self,"fx/boss_death.mp3",100,100)
 		VJ_EmitSound(self,"fx/boss_death.mp3",100,100)
-	
-	
-	-- self:SetKeyValue("rendercolor","255 255 255 250")
 		timer.Simple(0.5,function()
-		self:SetKeyValue("rendercolor","209 209 209 215") end)
+			if IsValid(self) then
+				self:SetKeyValue("rendercolor","209 209 209 215")
+			end
+		end)
 		timer.Simple(1,function()
-		self:SetKeyValue("rendercolor","177 177 177 175") end)
+			if IsValid(self) then
+				self:SetKeyValue("rendercolor","177 177 177 175")
+			end
+		end)
 		timer.Simple(1.5,function()
-		self:SetKeyValue("rendercolor","145 145 145 135") end)
+			if IsValid(self) then
+				self:SetKeyValue("rendercolor","145 145 145 135")
+			end
+		end)
 		timer.Simple(2,function()
-		self:SetKeyValue("rendercolor","96 96 96 95")
-		if GetConVarNumber("vj_npc_noidleparticle") == 0 then
-			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("origin"))
-			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("chest"))
-			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_RH"))
-			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_LH"))
-			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("eyes"))
-			ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("origin"))
-			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("chest"))
-			ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_RH"))
-			ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_LH"))
-			-- ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("eyes"))
-		end	end)
+		if IsValid(self) then
+			self:SetKeyValue("rendercolor","96 96 96 95")
+			if GetConVarNumber("vj_npc_noidleparticle") == 0 then
+				ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("origin"))
+				ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_RH"))
+				ParticleEffectAttach("generic_smoke",PATTACH_POINT_FOLLOW,self,self:LookupAttachment("anim_attachment_LH"))
+			end	
+		end	
+		end)
 		timer.Simple(2.5,function()
-		self:SetKeyValue("rendercolor","55 55 55 45") end)
+			if IsValid(self) then
+			self:SetKeyValue("rendercolor","55 55 55 45")
+			end
+		end)
 		timer.Simple(3,function()
-		self:SetKeyValue("rendercolor","0 0 0 1") end)
-		timer.Simple(5.9,function()
-		-- PrintMessage( HUD_PRINTTALK, "Hobo King has been banned permanently." )
-		-- PrintMessage( HUD_PRINTTALK, "Reason: RDM." )
+			if IsValid(self) then
+			self:SetKeyValue("rendercolor","0 0 0 1")
+			end
+		end)
+		timer.Simple(2,function()
+			if IsValid(self) && GetConVarNumber("vj_BBOHG_BossCleanup") == 1 then
+				local dissolver = ents.Create("env_entity_dissolver")
+				dissolver:SetKeyValue("dissolvetype", 0)
+				dissolver:SetKeyValue("magnitude", 0)
+				dissolver:SetPos(Vector(0, 0, 0))
+				dissolver:Spawn()
+				dissolver:Fire("Dissolve", "npc_vj_bbohg_boner")
+				dissolver:Fire("Dissolve", "npc_vj_bbohg_boner_frenzy")
+				dissolver:Fire("Dissolve", "npc_vj_bbohg_boner_knight")
+				dissolver:Fire("Dissolve", "npc_vj_bbohg_boner_reviver")
+				dissolver:Fire("Dissolve", "npc_vj_bbohg_boner_standard")
+				dissolver:Fire("Kill", "", 0)
+			end
 		end)
 		end
 	end)
-		-- self:SetKeyValue("ColorAlpha","255 255 255 88")
 end
 end
 /*-----------------------------------------------

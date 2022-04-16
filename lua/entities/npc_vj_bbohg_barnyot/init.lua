@@ -37,8 +37,8 @@ ENT.HasItemDropsOnDeath = false
 ENT.MeleeAttackDamage = math.Rand(1,1)
 ENT.MeleeAttackDamageType = DMG_CLUB
 ENT.AnimTbl_MeleeAttack = {"swing"}
-ENT.MeleeAttackDistance = 40
-ENT.MeleeAttackDamageDistance = 60
+ENT.MeleeAttackDistance = 35
+ENT.MeleeAttackDamageDistance = 50
 ENT.MeleeAttackAngleRadius = 70
 ENT.MeleeAttackDamageAngleRadius = 70
 ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -97,7 +97,8 @@ ENT.SoundTbl_OnReceiveOrder = {"vo/k_lab/ba_thingaway01.wav"}
 ENT.SoundTbl_FollowPlayer = {"vo/k_lab2/ba_goodnews_c.wav",
 	"vo/streetwar/sniper/ba_letsclearout.wav",
 	"vo/npc/barney/ba_imwithyou.wav",
-	"vo/npc/barney/ba_letsdoit.wav"}
+	"vo/npc/barney/ba_letsdoit.wav",
+	"npc/tossers/barnyot/myshift.mp3"}
 ENT.SoundTbl_UnFollowPlayer = {"vo/k_lab/ba_goodluck02.wav",
 	"vo/trainyard/ba_goodluck01.wav",
 	"vo/trainyard/ba_meetyoulater01.wav",
@@ -334,7 +335,7 @@ function ENT:MultipleMeleeAttacks()
 	elseif randattack_stand == 6 then
 		self.AnimTbl_MeleeAttack = {"ThrowItem"}
 		self.TimeUntilMeleeAttackDamage = 1
-		self.MeleeAttackDamage = math.Rand(5,10)
+		self.MeleeAttackDamage = math.Rand(10,15)
 		self.MeleeAttackDamageType = DMG_CLUB
 		self.HasMeleeAttackKnockBack = true
 		self.MeleeAttackKnockBack_Forward1 = 55

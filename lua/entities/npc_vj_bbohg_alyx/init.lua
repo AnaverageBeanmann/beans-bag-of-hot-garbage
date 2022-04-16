@@ -30,11 +30,11 @@ ENT.HasItemDropsOnDeath = false
 ENT.MeleeAttackDamage = math.Rand(10,15)
 ENT.MeleeAttackDamageType = DMG_CLUB
 ENT.AnimTbl_MeleeAttack = {"swing"}
-ENT.MeleeAttackDistance = 40
-ENT.MeleeAttackDamageDistance = 60
+ENT.MeleeAttackDistance = 35
+ENT.MeleeAttackDamageDistance = 50
 ENT.MeleeAttackAngleRadius = 70
 ENT.MeleeAttackDamageAngleRadius = 70
-ENT.TimeUntilMeleeAttackDamage = 0.7
+ENT.TimeUntilMeleeAttackDamage = 0.5
 ---------------------------------------------------------------------------------------------------------------------------------------------
 ENT.CanUseSecondaryOnWeaponAttack = true -- Can the NPC use a secondary fire if it's available?
 ENT.AnimTbl_WeaponAttackSecondary = {"swing"} -- Animations played when the SNPC fires a secondary weapon attack

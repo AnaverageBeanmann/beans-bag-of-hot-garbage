@@ -39,8 +39,8 @@ ENT.HasItemDropsOnDeath = false
 ENT.MeleeAttackDamage = math.Rand(1,1)
 ENT.MeleeAttackDamageType = DMG_CLUB
 ENT.AnimTbl_MeleeAttack = {"swing"}
-ENT.MeleeAttackDistance = 40
-ENT.MeleeAttackDamageDistance = 60
+ENT.MeleeAttackDistance = 35
+ENT.MeleeAttackDamageDistance = 50
 ENT.MeleeAttackAngleRadius = 70
 ENT.MeleeAttackDamageAngleRadius = 70
 ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -215,7 +215,7 @@ function ENT:MultipleMeleeAttacks()
 	if randattack_stand == 1 then
 		self.AnimTbl_MeleeAttack = {"swing"}
 		if self.Gender == 1 then
-			self.TimeUntilMeleeAttackDamage = 0.7
+			self.TimeUntilMeleeAttackDamage = 0.69
 		else
 			self.TimeUntilMeleeAttackDamage = 0.4
 		end
@@ -226,7 +226,7 @@ function ENT:MultipleMeleeAttacks()
 	elseif randattack_stand == 2 then
 		self.AnimTbl_MeleeAttack = {"swing"}
 		if self.Gender == 1 then
-			self.TimeUntilMeleeAttackDamage = 0.7
+			self.TimeUntilMeleeAttackDamage = 0.69
 		else
 			self.TimeUntilMeleeAttackDamage = 0.4
 		end
@@ -237,7 +237,7 @@ function ENT:MultipleMeleeAttacks()
 	elseif randattack_stand == 3 then
 		self.AnimTbl_MeleeAttack = {"swing"}
 		if self.Gender == 1 then
-			self.TimeUntilMeleeAttackDamage = 0.7
+			self.TimeUntilMeleeAttackDamage = 0.69
 		else
 			self.TimeUntilMeleeAttackDamage = 0.4
 		end
@@ -248,7 +248,7 @@ function ENT:MultipleMeleeAttacks()
 	elseif randattack_stand == 4 then
 		self.AnimTbl_MeleeAttack = {"swing"}
 		if self.Gender == 1 then
-			self.TimeUntilMeleeAttackDamage = 0.7
+			self.TimeUntilMeleeAttackDamage = 0.69
 		else
 			self.TimeUntilMeleeAttackDamage = 0.4
 		end
@@ -259,14 +259,14 @@ function ENT:MultipleMeleeAttacks()
 	elseif randattack_stand == 5 then
 		self.AnimTbl_MeleeAttack = {"throw1"}
 		self.TimeUntilMeleeAttackDamage = 0.95
-		self.MeleeAttackDamage = math.Rand(15,20)
+		self.MeleeAttackDamage = math.Rand(20,25)
 		self.MeleeAttackDamageType = DMG_CLUB
 		self.HasMeleeAttackKnockBack = false
 		
 	elseif randattack_stand == 6 then
 		self.AnimTbl_MeleeAttack = {"ThrowItem"}
 		self.TimeUntilMeleeAttackDamage = 1
-		self.MeleeAttackDamage = math.Rand(15,20)
+		self.MeleeAttackDamage = math.Rand(20,25)
 		self.MeleeAttackDamageType = DMG_CLUB
 		self.HasMeleeAttackKnockBack = true
 		self.MeleeAttackKnockBack_Forward1 = 55
@@ -307,6 +307,31 @@ function ENT:Controller_IntMsg(ply, controlEnt)
 	ply:ChatPrint("CROUCH - Enter Kamikaze Mode")
 end
 ---------------------------------------------------------------------------------------------------------------------------------------------
+function ENT:CustomOnKilled(dmginfo,hitgroup)
+	if self.Explosive == true then
+	local effectdata = EffectData()
+		effectdata:SetOrigin(self:GetPos())
+		//effectdata:SetScale( 500 )
+		//util.Effect( "HelicopterMegaBomb", effectdata )
+		//util.Effect( "ThumperDust", effectdata )
+		-- util.Effect( "Explosion", effectdata )
+		//util.Effect( "VJ_Small_Explosion1", effectdata )
+		VJ_EmitSound(self,"fx/explosion2.mp3",100)
+		VJ_EmitSound(self,"fx/explosion2.mp3",70)
+		VJ_EmitSound(self,"fx/explosion2.mp3",70)
+		ParticleEffect("vj_explosion2",self:GetPos() + self:GetUp()*48 + self:GetForward()*1,Angle(0,0,0),nil) 
+		ParticleEffect("vj_explosion1",self:GetPos() + self:GetUp()*15,Angle(0,0,0),nil)
+		ParticleEffect("vj_explosionfire2",self:GetPos() + self:GetUp()*20,Angle(0,0,0),nil)
+		ParticleEffect("vj_explosionfire1",self:GetPos() + self:GetUp()*20,Angle(0,0,0),nil)
+		util.VJ_SphereDamage(self,self,self:GetPos(),150,math.random(65,80),DMG_BLAST,true,true,{Force=20})
+		-- for k,v in ipairs(ents.FindInSphere(self:GetPos(),150)) do
+			-- v:TakeDamage(math.random(65,80),self,self)
+		-- end
+		util.ScreenShake(self:GetPos(),44,600,1.5,1000)
+		util.ScreenShake(self:GetPos(),44,600,1.5,1000)
+	end
+end
+---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:SetUpGibesOnDeath(dmginfo, hitgroup)
 	self.HasDeathSounds = false
 	if self.HasGibDeathParticles == true then
@@ -343,31 +368,6 @@ end
 function ENT:CustomGibOnDeathSounds(dmginfo, hitgroup)
 	VJ_EmitSound(self, "vj_gib/default_gib_splat.wav", 100, 100)
 	return false
-end
----------------------------------------------------------------------------------------------------------------------------------------------
-function ENT:CustomOnKilled(dmginfo,hitgroup)
-	if self.Explosive == true then
-	local effectdata = EffectData()
-		effectdata:SetOrigin(self:GetPos())
-		//effectdata:SetScale( 500 )
-		//util.Effect( "HelicopterMegaBomb", effectdata )
-		//util.Effect( "ThumperDust", effectdata )
-		-- util.Effect( "Explosion", effectdata )
-		//util.Effect( "VJ_Small_Explosion1", effectdata )
-		VJ_EmitSound(self,"fx/explosion2.mp3",100)
-		VJ_EmitSound(self,"fx/explosion2.mp3",70)
-		VJ_EmitSound(self,"fx/explosion2.mp3",70)
-		ParticleEffect("vj_explosion2",self:GetPos() + self:GetUp()*48 + self:GetForward()*1,Angle(0,0,0),nil) 
-		ParticleEffect("vj_explosion1",self:GetPos() + self:GetUp()*15,Angle(0,0,0),nil)
-		ParticleEffect("vj_explosionfire2",self:GetPos() + self:GetUp()*20,Angle(0,0,0),nil)
-		ParticleEffect("vj_explosionfire1",self:GetPos() + self:GetUp()*20,Angle(0,0,0),nil)
-		util.VJ_SphereDamage(self,self,self:GetPos(),150,math.random(65,80),DMG_BLAST,true,true,{Force=20})
-		-- for k,v in ipairs(ents.FindInSphere(self:GetPos(),150)) do
-			-- v:TakeDamage(math.random(65,80),self,self)
-		-- end
-		util.ScreenShake(self:GetPos(),44,600,1.5,1000)
-		util.ScreenShake(self:GetPos(),44,600,1.5,1000)
-	end
 end
 /*-----------------------------------------------
 	*** Copyright (c) 2012-2019 by DrVrej, All rights reserved. ***
