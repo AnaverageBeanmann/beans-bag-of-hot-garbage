@@ -76,6 +76,7 @@ if VJExists == true then
 		-- Gekkome -- gekko but gonome
 		-- G'nome
 		-- Zamkhin
+		-- Tank
 	
 	-- Rock and Stones
 		VJ.AddNPC("The Rock","npc_vj_bbohg_therock",vCat)
