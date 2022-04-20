@@ -52,7 +52,7 @@ if VJExists == true then
 		-- VJ.AddNPC("Fatman's Skeleton",npc_vj_bbohg_fat_skel",vCat)
 		-- VJ.AddNPC("small b0ne(r)",npc_vj_bbohg_boner_small",vCat)
 	
-	-- Zombknees
+	-- Zombknee Nation
 		VJ.AddNPC("Headcrap Xombie","npc_vj_bbohg_zombie",vCat)
 		VJ.AddNPC("Headcrap Xombie Torso","npc_vj_bbohg_zombie_torso",vCat)
 		VJ.AddNPC("Headcrap Xombie Legs","npc_vj_bbohg_zombie_legs",vCat)
@@ -61,7 +61,10 @@ if VJExists == true then
 		-- Krab -- voiced by mr krabs (boss?)
 		-- Krabomb -- make it play this https://gamebanana.com/sounds/27238
 		VJ.AddNPC("Crabomb","npc_vj_bbohg_crabomb",vCat)
-		-- Fat
+		VJ.AddNPC("Fat","npc_vj_bbohg_fat",vCat)
+		VJ.AddNPC("Fast Xombie","npc_vj_bbohg_zombie_fast",vCat)
+		VJ.AddNPC("Poison Xombie","npc_vj_bbohg_zombie_poison",vCat)
+		VJ.AddNPC("Spitballer","npc_vj_bbohg_spitball",vCat)
 		-- Explosive Poison Zombie
 		-- VJ.AddNPC("Poizamikaze","npc_vj_bbohg_poizamikaze",vCat)
 		-- VJ.AddNPC("Explosive Zombie","npc_vj_bbohg_exploder",vCat)
@@ -77,6 +80,8 @@ if VJExists == true then
 		-- G'nome
 		-- Zamkhin
 		-- Tank
+		VJ.AddNPC("Bogeyman","npc_vj_bbohg_bogeyman",vCat)
+		-- VJ.AddNPC("","",vCat)
 	
 	-- Rock and Stones
 		VJ.AddNPC("The Rock","npc_vj_bbohg_therock",vCat)
